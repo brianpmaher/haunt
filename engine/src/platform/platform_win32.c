@@ -70,24 +70,24 @@ static b8 register_window_class(HINSTANCE hinst, const char* class_name) {
 
 static HWND create_window(HINSTANCE hinst, const char* class_name, const char* app_name, i32 x, i32 y, i32 width, i32 height) {
 	// Set window properties
-	i32 client_x = x;
-	i32 client_y = y;
-	i32 client_width = width;
-	i32 client_height = height;
-	i32 window_x = client_x;
-	i32 window_y = client_y;
-	i32 window_width = client_width;
-	i32 window_height = client_height;
+	u32 client_x = x;
+	u32 client_y = y;
+	u32 client_width = width;
+	u32 client_height = height;
+	u32 window_x = client_x;
+	u32 window_y = client_y;
+	u32 window_width = client_width;
+	u32 window_height = client_height;
 
 	// Setup window style
-	i32 window_style = WS_OVERLAPPEDWINDOW | WS_SYSMENU | WS_CAPTION;
-	i32 window_ex_style = WS_EX_APPWINDOW;
+	u32 window_style = WS_OVERLAPPEDWINDOW | WS_SYSMENU | WS_CAPTION;
+	u32 window_ex_style = WS_EX_APPWINDOW;
 	window_style |= WS_MAXIMIZEBOX;
 	window_style |= WS_MINIMIZEBOX;
 	window_style |= WS_THICKFRAME;
 
 	// Get border size
-	RECT border_rect;
+	RECT border_rect = {0, 0, 0, 0};
 	AdjustWindowRectEx(&border_rect, window_style, false, window_ex_style);
 	window_x += border_rect.left;
 	window_y += border_rect.top;
@@ -98,7 +98,7 @@ static HWND create_window(HINSTANCE hinst, const char* class_name, const char* a
 	HWND handle = CreateWindowExA(
 		window_ex_style, class_name, app_name,
 		window_style, window_x, window_y, window_width, window_height,
-		null, null, hinst, null);
+		0, 0, hinst, 0);
 	if (!handle) {
 		MessageBoxA(null, "Failed to create window", "Error", MB_OK | MB_ICONERROR);
 		log_fatal("Failed to create window");
