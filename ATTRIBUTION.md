@@ -9,3 +9,7 @@ Below are a list of attributions for code used either directly or modified and a
 ## Project setup
 
 Core project structure is based on [Travis Vroman's](https://travisvroman.com/) [Kohi Engine](https://github.com/travisvroman/kohi) which is licensed under [Apache License 2.0](https://github.com/travisvroman/kohi/blob/main/LICENSE). Travis teaches game engine design and development on his [Youtube channel](https://www.youtube.com/playlist?list=PLv8Ddw9K0JPg1BEO-RS-0MYs423cvLVtj).
+
+## Windows CMD colors
+
+Credit to [Michele Locati](https://github.com/mlocati) for the [color codes script](https://gist.github.com/mlocati/fdabcaeb8071d5c75a2d51712db24011#file-win10colors-cmd).
