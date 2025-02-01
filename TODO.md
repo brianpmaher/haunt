@@ -3,16 +3,21 @@
 ## Version 0.1.0
 
 - [ ] Project setup
-  - [ ] Setup VSCode project
-  - [ ] Setup Build system
+  - [x] VSCode project for windows
+  - [ ] VSCode project for linux
+  - [x] Windows build system
+  - [x] Add gitattributes
+  - [ ] Linux build system
   - [ ] Plan engine architecture
   - [ ] Plan roadmap
   - [ ] Setup clang-format
 - [ ] Core systems
-  - [ ] Logging
-  - [ ] Memory
+  - [x] Logging
+  - [x] Memory
+  - [ ] Input
+  - [ ] Event
 - [ ] Platform
-  - [ ] Windows - Win32
+  - [x] Windows - Win32
   - [ ] Linux - X11
 - [ ] Editor
   - [ ] Open a window
