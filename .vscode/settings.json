@@ -1,0 +1,15 @@
+{
+	"[bat]": {
+		"editor.insertSpaces": false
+	},
+	"[json]": {
+		"editor.insertSpaces": false
+	},
+	"[c]": {
+		"editor.insertSpaces": false
+	},
+	"files.associations": {
+		"*.h": "cpp",
+		"system_error": "cpp"
+	},
+}
