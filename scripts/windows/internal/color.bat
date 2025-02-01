@@ -1,7 +1,7 @@
 @echo off
 
 ::
-:: Color codes for Windows 10 cmd prompt
+:: Color codes for Windows cmd prompt
 ::
 :: Credit to Michele Locati for the color codes (https://gist.github.com/mlocati/fdabcaeb8071d5c75a2d51712db24011#file-win10colors-cmd)
 ::
