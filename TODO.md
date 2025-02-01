@@ -19,5 +19,11 @@
 - [ ] Platform
   - [x] Windows - Win32
   - [ ] Linux - X11
+- [ ] Renderer
+  - [ ] OpenGL init
+  - [ ] Render triangle
+  - [ ] Render quad
+  - [ ] Render text
+  - [ ] Research and plan renderer abstraction
 - [ ] Editor
   - [ ] Open a window

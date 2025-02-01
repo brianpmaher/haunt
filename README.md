@@ -1,6 +1,8 @@
 # Haunt Game Engine
 
-Haunt is a game engine I'm developing for the kinds of games I want to make and how I want to make them. More info to come...
+Haunt is a game engine I'm developing for the kinds of games I want to make and how I want to make them.
+
+More info to come...
 
 ## Development
 
