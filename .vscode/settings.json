@@ -8,8 +8,14 @@
 	"[c]": {
 		"editor.insertSpaces": false
 	},
+	"[shellscript]": {
+		"editor.insertSpaces": false
+	},
+	"[glsl]": {
+		"editor.insertSpaces": false
+	},
 	"files.associations": {
-		"*.h": "cpp",
-		"system_error": "cpp"
+		"*.h": "c",
+		"*.c": "c"
 	},
 }
