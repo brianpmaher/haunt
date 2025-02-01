@@ -3,7 +3,7 @@
 #include "core/assert.h"
 
 // Null
-#define null 0
+#define null ((void*)0)
 
 // Boolean constants
 #define true 1
