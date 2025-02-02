@@ -21,7 +21,7 @@ typedef struct Clock {
     struct timeval start;
 } Clock;
 
-typedef struct Internal {
+typedef struct Platform_Internal {
     Display* display;
     Window window;
     XVisualInfo* visual_info;
@@ -29,7 +29,7 @@ typedef struct Internal {
     XSetWindowAttributes window_attributes;
     Atom wm_delete_window;
     Clock clock;
-} Internal;
+} Platform_Internal;
 
 static const char* console_colors[PLATFORM_CONSOLE_COLOR_COUNT] = {
     "\033[0m",     // PLATFORM_CONSOLE_COLOR_WHITE
@@ -40,15 +40,15 @@ static const char* console_colors[PLATFORM_CONSOLE_COLOR_COUNT] = {
     "\033[93m",    // PLATFORM_CONSOLE_COLOR_YELLOW
 };
 
-static Internal* create_internal(void) {
-    Internal* internal = memory_alloc(sizeof(Internal), MEMORY_TAG_PLATFORM);
-    memory_zero(internal, sizeof(Internal));
+static Platform_Internal* create_internal(void) {
+    Platform_Internal* internal = memory_alloc(sizeof(Platform_Internal), MEMORY_TAG_PLATFORM);
+    memory_zero(internal, sizeof(Platform_Internal));
     return internal;
 }
 
 b8 platform_start(Platform* platform, const char* app_name, i32 x, i32 y, i32 width, i32 height) {
     platform->internal = create_internal();
-    Internal* internal = (Internal*)platform->internal;
+    Platform_Internal* internal = (Platform_Internal*)platform->internal;
 
     // Open X display
     internal->display = XOpenDisplay(NULL);
@@ -129,7 +129,7 @@ b8 platform_start(Platform* platform, const char* app_name, i32 x, i32 y, i32 wi
 }
 
 void platform_shutdown(Platform* platform) {
-    Internal* internal = (Internal*)platform->internal;
+    Platform_Internal* internal = (Platform_Internal*)platform->internal;
 
     if (internal->display) {
         if (internal->window) {
@@ -144,11 +144,11 @@ void platform_shutdown(Platform* platform) {
         XCloseDisplay(internal->display);
     }
 
-    memory_free(platform->internal, sizeof(Internal), MEMORY_TAG_PLATFORM);
+    memory_free(platform->internal, sizeof(Platform_Internal), MEMORY_TAG_PLATFORM);
 }
 
 b8 platform_pump_messages(Platform* platform) {
-    Internal* internal = (Internal*)platform->internal;
+    Platform_Internal* internal = (Platform_Internal*)platform->internal;
 
     XEvent event;
     while (XPending(internal->display)) {

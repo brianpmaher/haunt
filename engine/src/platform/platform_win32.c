@@ -15,13 +15,13 @@ typedef struct Clock {
 	LARGE_INTEGER start;
 } Clock;
 
-typedef struct Internal {
+typedef struct Platform_Internal {
 	const char* class_name;
 	HINSTANCE hinst;
 	// TODO: Handle multiple windows
 	HWND hwnd;
 	Clock clock;
-} Internal;
+} Platform_Internal;
 
 static const u8 console_colors[PLATFORM_CONSOLE_COLOR_COUNT] = {
 	// PLATFORM_CONSOLE_COLOR_WHITE
@@ -38,8 +38,8 @@ static const u8 console_colors[PLATFORM_CONSOLE_COLOR_COUNT] = {
 	FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY,
 };
 
-static Internal* create_internal(void) {
-	Internal* internal = memory_alloc(sizeof(Internal), MEMORY_TAG_PLATFORM);
+static Platform_Internal* create_internal(void) {
+	Platform_Internal* internal = memory_alloc(sizeof(Platform_Internal), MEMORY_TAG_PLATFORM);
 	internal->class_name = "haunt_window_class";
 	internal->hinst = GetModuleHandle(0);
 	return internal;
@@ -120,7 +120,7 @@ static Platform* get_active_window_data(void) {
 	return get_window_data(GetActiveWindow());
 }
 
-static void show_window(Internal* internal) {
+static void show_window(Platform_Internal* internal) {
 	// TODO: make these parameters
 	b8 activate = true;
 	b8 minimized = false;
@@ -139,7 +139,7 @@ static void clock_start(Clock* clock);
 
 b8 platform_start(Platform* platform, const char* app_name, i32 x, i32 y, i32 width, i32 height) {
 	platform->internal = create_internal();
-	Internal* internal = (Internal*)platform->internal;
+	Platform_Internal* internal = (Platform_Internal*)platform->internal;
 
 	// Register window class and create window
 	if (!register_window_class(internal->hinst, internal->class_name)) {
@@ -160,7 +160,7 @@ b8 platform_start(Platform* platform, const char* app_name, i32 x, i32 y, i32 wi
 }
 
 void platform_shutdown(Platform* platform) {
-	Internal* internal = (Internal*)platform->internal;
+	Platform_Internal* internal = (Platform_Internal*)platform->internal;
 
 	if (internal->hwnd) {
 		DestroyWindow(internal->hwnd);
@@ -169,7 +169,7 @@ void platform_shutdown(Platform* platform) {
 
 	UnregisterClassA(internal->class_name, internal->hinst);
 
-	memory_free(platform->internal, sizeof(Internal), MEMORY_TAG_PLATFORM);
+	memory_free(platform->internal, sizeof(Platform_Internal), MEMORY_TAG_PLATFORM);
 }
 
 b8 platform_pump_messages(Platform* platform) {
@@ -229,7 +229,7 @@ static void clock_start(Clock* clock) {
 
 f64 platform_get_time() {
 	Platform* platform = get_active_window_data();
-	Internal* internal = (Internal*)platform->internal;
+	Platform_Internal* internal = (Platform_Internal*)platform->internal;
 
 	LARGE_INTEGER current;
 	QueryPerformanceCounter(&current);
