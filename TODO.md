@@ -54,6 +54,3 @@
   - [ ] Windows
   - [ ] Linux
 - [ ] MacOS platform
-- [ ] Misc build
-  - [ ] Support MSVC compiler for building on Windows
-  - [ ] Single translation unit builds
