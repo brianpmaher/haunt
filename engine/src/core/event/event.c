@@ -30,7 +30,9 @@ b8 event_system_init(void) {
 void event_system_shutdown(void) {
 }
 
-// TODO: Implement
+void event_system_update(void) {
+}
+
 HAPI b8 event_register(Event_Code code, void* listener, On_Event on_event) {
 	if (code >= EVENT_CODE_MAX) {
 		log_error("Event code %d is out of range", code);
@@ -59,7 +61,6 @@ HAPI b8 event_register(Event_Code code, void* listener, On_Event on_event) {
 	return true;
 }
 
-// TODO: Implement
 HAPI b8 event_unregister(Event_Code code, void* listener, On_Event on_event) {
 	if (code >= EVENT_CODE_MAX) {
 		log_error("Event code %d is out of range", code);
@@ -67,27 +68,34 @@ HAPI b8 event_unregister(Event_Code code, void* listener, On_Event on_event) {
 	}
 
 	Event_Code_Entry* entry = &event_system.entries[code];
-	b8 found = false;
 	for (u32 i = 0; i < entry->event_count; i++) {
 		Registered_Event* event = &entry->events[i];
 		if (event->listener == listener && event->on_event == on_event) {
-			found = true;
-			// TODO: use darray_unordered_remove_at
+			// TODO: use dynamic_array_unordered_remove
 			entry->events[i] = entry->events[entry->event_count - 1];
 			entry->event_count--;
-			break;
+			return true;
 		}
 	}
 
-	if (!found) {
-		log_error("Event code %d not found", code);
+	// Not found
+	return false;
+}
+
+HAPI b8 event_fire(Event_Code code, Event event, void* sender) {
+	if (code >= EVENT_CODE_MAX) {
+		log_error("Event code %d is out of range", code);
 		return false;
 	}
 
-	return true;
-}
+	Event_Code_Entry* entry = &event_system.entries[code];
+	for (u32 i = 0; i < entry->event_count; i++) {
+		Registered_Event* registered_event = &entry->events[i];
+		b8 handled = registered_event->on_event(&event, sender, registered_event->listener);
+		if (handled) {
+			return true;
+		}
+	}
 
-// TODO: Implement
-HAPI b8 event_fire(Event_Code code, Event event, void* sender) {
 	return true;
 }

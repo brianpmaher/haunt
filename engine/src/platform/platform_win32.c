@@ -236,11 +236,11 @@ static LRESULT CALLBACK process_message(HWND hwnd, UINT msg, WPARAM wparam, LPAR
 }
 
 void* platform_memory_alloc(u64 size, b8 aligned) {
-	return VirtualAlloc(null, size, MEMORY_COMMIT | MEMORY_RESERVE, PAGE_READWRITE);
+	return VirtualAlloc(null, size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 }
 
 void platform_memory_free(void* block, b8 aligned) {
-	VirtualFree(block, 0, MEMORY_RELEASE);
+	VirtualFree(block, 0, MEM_RELEASE);
 }
 
 void* platform_memory_zero(void* block, u64 size) {

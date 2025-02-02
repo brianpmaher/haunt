@@ -15,7 +15,7 @@
   - [x] Logging
   - [x] Memory
   - [ ] Input
-  - [ ] Event
+  - [x] Event
 - [ ] Memory_Arena
   - [ ] platform_memory_reserve, platform_memory_commit
 - [ ] Collection
@@ -34,3 +34,7 @@
   - [ ] Research and plan renderer abstraction
 - [ ] Editor
   - [ ] Open a window
+- [ ] Event system improvements
+  - [ ] Multithreaded event system
+  - [ ] Multi-frame event handling
+    - Use a free-list?
