@@ -2,7 +2,7 @@
 
 ## Version 0.1.0
 
-- [ ] Project setup
+- [x] Project setup
   - [x] VSCode project for windows
   - [x] VSCode project for linux
   - [x] Windows build system
@@ -54,3 +54,6 @@
   - [ ] Windows
   - [ ] Linux
 - [ ] MacOS platform
+- [ ] Misc build
+  - [ ] Support MSVC compiler for building on Windows
+  - [ ] Single translation unit builds
