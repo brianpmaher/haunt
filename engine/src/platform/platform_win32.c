@@ -4,7 +4,7 @@
 #include "core/log.h"
 #include "core/memory.h"
 #include "core/input/input.h"
-#include "core/event/event.h"
+#include "core/event.h"
 
 #ifdef PLATFORM_WINDOWS
 
@@ -248,7 +248,7 @@ static LRESULT CALLBACK process_message(HWND hwnd, UINT msg, WPARAM wparam, LPAR
 			// Tell OS that app is handling background erase to prevent flickering
 			return 1;
 		case WM_CLOSE:
-			// TODO: Event handling
+			event_fire(EVENT_TYPE_WINDOW_CLOSE, (Event_Context){0}, null);
 			return 0;
 		case WM_DESTROY:
 			PostQuitMessage(0);
@@ -258,7 +258,7 @@ static LRESULT CALLBACK process_message(HWND hwnd, UINT msg, WPARAM wparam, LPAR
 			GetClientRect(hwnd, &r);
 			u32 width = r.right - r.left;
 			u32 height = r.bottom - r.top;
-			event_fire((Event)window_resize_event_create(width, height), null);
+			event_fire(EVENT_TYPE_WINDOW_RESIZE, (Event_Context){ (i32)width, (i32)height }, null);
 		} break;
 		case WM_KEYDOWN:
 		case WM_SYSKEYDOWN:
@@ -279,8 +279,8 @@ static LRESULT CALLBACK process_message(HWND hwnd, UINT msg, WPARAM wparam, LPAR
 			if (delta != 0) {
 				// Flatten delta for OS-independent handling
 				delta = delta > 0 ? 1 : -1;
+				input_system_process_mouse_wheel(delta);
 			}
-			input_system_process_mouse_wheel(delta);
 		} break;
 		case WM_LBUTTONDOWN:
 		case WM_MBUTTONDOWN:

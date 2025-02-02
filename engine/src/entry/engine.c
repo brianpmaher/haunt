@@ -2,7 +2,7 @@
 
 #include "core/log.h"
 #include "core/memory.h"
-#include "core/event/event.h"
+#include "core/event.h"
 #include "core/input/input.h"
 
 #include "platform/platform.h"
@@ -22,6 +22,8 @@ static b8 init_subsystems(void);
 
 static void shutdown_subsystems(void);
 
+static b8 handle_window_close(Event_Code code, Event_Context* context, void* sender, void* listener);
+
 b8 _engine_init(const App_Config* config) {
 	if (!init_subsystems()) {
 		log_fatal("Failed to init subsystems");
@@ -30,6 +32,8 @@ b8 _engine_init(const App_Config* config) {
 
 	app.running = true;
 	app.suspended = false;
+
+	event_register(EVENT_TYPE_WINDOW_CLOSE, null, handle_window_close);
 
 	if (!platform_start(
 			&app.platform,
@@ -84,4 +88,10 @@ static void shutdown_subsystems(void) {
 
 b8 _engine_is_running(void) {
 	return app.running;
+}
+
+static b8 handle_window_close(Event_Code code, Event_Context* context, void* sender, void* listener) {
+	app.running = false;
+	event_fire(EVENT_TYPE_APP_QUIT, (Event_Context){0}, null);
+	return true;
 }

@@ -30,7 +30,6 @@ void assert_handler(const char* expression, const char* message, const char* fil
 }
 
 b8 logging_system_init() {
-	// TODO: Create log file
 	return true;
 }
 

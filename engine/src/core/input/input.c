@@ -1,7 +1,7 @@
 #include "core/input/input.h"
 
 #include "core/memory.h"
-#include "core/event/event.h"
+#include "core/event.h"
 
 typedef struct Key_State {
 	b8 pressed[KEY_COUNT];
@@ -41,9 +41,9 @@ static void fire_events(void) {
 	// Fire key events
 	for (u32 key = 0; key < KEY_COUNT; key++) {
 		if (input_system.key.pressed[key]) {
-			event_fire((Event)key_press_event_create(key), null);
+			event_fire(EVENT_TYPE_KEY_PRESS, (Event_Context){ (i32)key }, null);
 		} else if (input_system.key.released[key]) {
-			event_fire((Event)key_release_event_create(key), null);
+			event_fire(EVENT_TYPE_KEY_RELEASE, (Event_Context){ (i32)key }, null);
 		}
 	}
 
@@ -54,24 +54,24 @@ static void fire_events(void) {
 		i32 mouse_delta_x = mouse_x - input_system.mouse.position.prev_x;
 		i32 mouse_delta_y = mouse_y - input_system.mouse.position.prev_y;
 		if (mouse_delta_x | mouse_delta_y) {
-			event_fire((Event)mouse_move_event_create(mouse_x, mouse_y, mouse_delta_x, mouse_delta_y), null);
+			event_fire(EVENT_TYPE_MOUSE_MOVE, (Event_Context){ mouse_x, mouse_y, mouse_delta_x, mouse_delta_y }, null);
 		}
 	}
 
 	// Fire mouse wheel event
 	{
 		i32 mouse_wheel = input_system.mouse.wheel;
-		if (mouse_wheel) {
-			event_fire((Event)mouse_wheel_event_create(mouse_wheel), null);
+		if (mouse_wheel != 0) {
+			event_fire(EVENT_TYPE_MOUSE_WHEEL, (Event_Context){ mouse_wheel }, null);
 		}
 	}
 
 	// Fire button mouse events
 	for (u32 button = 0; button < MOUSE_BUTTON_COUNT; button++) {
 		if (input_system.mouse.pressed[button]) {
-			event_fire((Event)mouse_button_press_event_create(button), null);
+			event_fire(EVENT_TYPE_MOUSE_BUTTON_PRESS, (Event_Context){ button }, null);
 		} else if (input_system.mouse.released[button]) {
-			event_fire((Event)mouse_button_release_event_create(button), null);
+			event_fire(EVENT_TYPE_MOUSE_BUTTON_RELEASE, (Event_Context){ button }, null);
 		}
 	}
 }
@@ -97,7 +97,9 @@ void input_system_update(void) {
 }
 
 void input_system_process_key(Key key, b8 pressed) {
-	input_system.key.pressed[key] = pressed;
+	if (!input_system.key.down[key]) {
+		input_system.key.pressed[key] = pressed;
+	}
 	input_system.key.released[key] = !pressed;
 	input_system.key.down[key] = pressed;
 }
