@@ -2,15 +2,12 @@
 
 #include "core/api.h"
 
-// Config
 #define ASSERT_ENABLED 1
 
-// Static assert
 #if defined(__clang__) || defined(__gcc__)
 #	define static_assert _Static_assert
 #endif
 
-// Debug break and assert
 #if ASSERT_ENABLED
 #	if _MSC_VER
 #		include <intrin.h>

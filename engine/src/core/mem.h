@@ -1,13 +1,11 @@
 #pragma once
 
 #include "core/api.h"
-#include "core/type.h"
+#include "core/types.h"
 
-// Config
 #define MEM_TRACKING_ENABLED      1
 #define MEM_ZERO_ON_ALLOC_ENABLED 1
 
-// Size macros
 #define byte(x) ((u64)(x))
 #define kib(x) (byte(x) * 1024)
 #define mib(x) (kib(x) * 1024)
@@ -15,7 +13,6 @@
 #define tib(x) (gib(x) * 1024)
 #define pib(x) (tib(x) * 1024)
 
-// Memory tags for tracking
 typedef enum Mem_Tag {
 	MEM_TAG_UNKNOWN,
 	// Allocators
@@ -37,9 +34,9 @@ typedef enum Mem_Tag {
 	MEM_TAG_COUNT,
 } Mem_Tag;
 
-HAPI void _sys_mem_init(void);
+void memory_system_init(void);
 
-HAPI void _sys_mem_shutdown(void);
+void memory_system_shutdown(void);
 
 HAPI void* mem_alloc(u64 size, Mem_Tag tag);
 

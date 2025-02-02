@@ -1,9 +1,8 @@
 #pragma once
 
 #include "core/api.h"
-#include "core/type.h"
+#include "core/types.h"
 
-// Config
 #define LOG_WARN_ENABLED  1
 #define LOG_INFO_ENABLED  1
 #define LOG_DEBUG_ENABLED 1
@@ -19,9 +18,9 @@ typedef enum Log_Level {
 	LOG_LEVEL_COUNT,
 } Log_Level;
 
-HAPI b8 _sys_log_init();
+b8 logging_system_init();
 
-HAPI void _sys_log_shutdown();
+void logging_system_shutdown();
 
 HAPI void log_output(Log_Level level, const char* message, ...);
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/type.h"
+#include "core/types.h"
 
 typedef struct Platform {
 	void* internal;

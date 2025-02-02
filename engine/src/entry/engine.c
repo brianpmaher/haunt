@@ -1,4 +1,4 @@
-#include "entry/app.h"
+#include "entry/engine.h"
 
 #include "core/log.h"
 #include "core/mem.h"
@@ -14,12 +14,15 @@ typedef struct App {
 	f64 prev_time;
 } App;
 
-static b8 initialized = false;
 static App app;
 
-b8 _app_init(App_Config* config) {
-	if (initialized) {
-		log_fatal("App already initialized");
+static b8 init_subsystems(void);
+
+static void shutdown_subsystems(void);
+
+b8 _engine_init(const App_Config* config) {
+	if (!init_subsystems()) {
+		log_fatal("Failed to init subsystems");
 		return false;
 	}
 
@@ -37,23 +40,40 @@ b8 _app_init(App_Config* config) {
 		return false;
 	}
 
-	initialized = true;
+	log_debug("Engine initialized");
+	return true;
+}
+
+static b8 init_subsystems(void) {
+	if (!logging_system_init()) {
+		return false;
+	}
+	memory_system_init();
 
 	return true;
 }
 
-b8 _app_update(void) {
+b8 _engine_update(void) {
 	if (!platform_pump_messages(&app.platform)) {
 		app.running = false;
 	}
 
+	// log_trace("Engine updated");
 	return true;
 }
 
-void _app_shutdown(void) {
+void _engine_shutdown(void) {
 	platform_shutdown(&app.platform);
+	shutdown_subsystems();
+
+	log_debug("Engine shutdown");
 }
 
-HAPI b8 _app_is_running(void) {
+static void shutdown_subsystems(void) {
+	logging_system_shutdown();
+	memory_system_shutdown();
+}
+
+HAPI b8 _engine_is_running(void) {
 	return app.running;
 }

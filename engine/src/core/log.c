@@ -29,12 +29,12 @@ void assert_handler(const char* expression, const char* message, const char* fil
 	log_output(LOG_LEVEL_FATAL, "Assertion failed: (%s), message: \"%s\", file: \"%s\", line: %d", expression, message, file, line);
 }
 
-b8 _sys_log_init() {
+b8 logging_system_init() {
 	// TODO: Create log file
 	return true;
 }
 
-void _sys_log_shutdown() {
+void logging_system_shutdown() {
 	// TODO: Cleanup logging / close log file
 }
 

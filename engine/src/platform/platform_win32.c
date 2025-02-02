@@ -138,11 +138,10 @@ static void show_window(Internal* internal) {
 static void clock_start(Clock* clock);
 
 b8 platform_start(Platform* platform, const char* app_name, i32 x, i32 y, i32 width, i32 height) {
-	// Initialize internal state
 	platform->internal = create_internal();
 	Internal* internal = (Internal*)platform->internal;
 
-	// Create window
+	// Register window class and create window
 	if (!register_window_class(internal->hinst, internal->class_name)) {
 		log_fatal("Failed to register window class");
 		return false;
@@ -155,7 +154,6 @@ b8 platform_start(Platform* platform, const char* app_name, i32 x, i32 y, i32 wi
 	set_window_data(internal->hwnd, platform);
 	show_window(internal);
 
-	// Start clock
 	clock_start(&internal->clock);
 
 	return true;
@@ -164,16 +162,13 @@ b8 platform_start(Platform* platform, const char* app_name, i32 x, i32 y, i32 wi
 void platform_shutdown(Platform* platform) {
 	Internal* internal = (Internal*)platform->internal;
 
-	// Destroy window
 	if (internal->hwnd) {
 		DestroyWindow(internal->hwnd);
 		internal->hwnd = null;
 	}
 
-	// Unregister window class
 	UnregisterClassA(internal->class_name, internal->hinst);
 
-	// Free internal state
 	mem_free(platform->internal, sizeof(Internal), MEM_TAG_PLATFORM);
 }
 
