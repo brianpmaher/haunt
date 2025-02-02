@@ -6,6 +6,8 @@
 #define MEMORY_TRACKING_ENABLED      1
 #define MEMORY_ZERO_ON_ALLOC_ENABLED 1
 
+#define bit(x) (1 << x)
+
 #define byte(x) ((u64)(x))
 #define kib(x) (byte(x) * 1024)
 #define mib(x) (kib(x) * 1024)
