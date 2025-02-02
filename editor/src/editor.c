@@ -23,6 +23,7 @@ App_Result app_start(void** state, int argc, char** argv) {
 	*state = memory_alloc(sizeof(Editor), MEMORY_TAG_EDITOR);
 	Editor* editor = (Editor*)*state;
 
+	// Register events
 	event_register(EVENT_TYPE_KEY_PRESS, editor, handle_key_press);
 
 	return APP_RESULT_CONTINUE;
