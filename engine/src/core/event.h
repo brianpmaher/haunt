@@ -22,6 +22,7 @@ typedef enum Event_Type {
 // Using event code to allow for custom application events
 typedef u32 Event_Code;
 
+// TODO: Event context is currently very specific to the engine events, maybe add a pointer type or something to make it useful for other event types.
 typedef union Event_Context {
 	i32 vals[4];
 } Event_Context;
