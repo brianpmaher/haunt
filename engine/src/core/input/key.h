@@ -1,5 +1,6 @@
 #pragma once
 
+// TODO: Trim these down
 typedef enum Key {
 	KEY_A = 0x001E,
 	KEY_B = 0x0030,
