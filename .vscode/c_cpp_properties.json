@@ -16,6 +16,20 @@
 			"cStandard": "c17",
 			"cppStandard": "c++17",
 			"intelliSenseMode": "clang-x64"
+		},
+		{
+			"name": "Linux",
+			"includePath": [
+				"${workspaceFolder}/engine/src/**"
+			],
+			"defines": [
+				"_DEBUG",
+				"DLL_EXPORT"
+			],
+			"compilerPath": "/usr/bin/clang",
+			"cStandard": "c17",
+			"cppStandard": "c++17",
+			"intelliSenseMode": "linux-clang-x64"
 		}
 	],
 	"version": 4
