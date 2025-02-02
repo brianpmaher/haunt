@@ -6,6 +6,9 @@
 			"windows": {
 				"command": "${workspaceFolder}/scripts/windows/build-engine.bat"
 			},
+			"linux": {
+				"command": "${workspaceFolder}/scripts/linux/build-engine.sh"
+			},
 			"options": {
 				"cwd": "${workspaceFolder}"
 			},
@@ -20,6 +23,9 @@
 			"windows": {
 				"command": "${workspaceFolder}/scripts/windows/build-editor.bat"
 			},
+			"linux": {
+				"command": "${workspaceFolder}/scripts/linux/build-editor.sh"
+			},
 			"options": {
 				"cwd": "${workspaceFolder}"
 			},
@@ -33,6 +39,9 @@
 			"label": "Build All",
 			"windows": {
 				"command": "${workspaceFolder}/scripts/windows/build-all.bat"
+			},
+			"linux": {
+				"command": "${workspaceFolder}/scripts/linux/build-all.sh"
 			},
 			"options": {
 				"cwd": "${workspaceFolder}"
