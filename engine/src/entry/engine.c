@@ -3,6 +3,7 @@
 #include "core/log.h"
 #include "core/memory.h"
 #include "core/event/event.h"
+#include "core/input/input.h"
 
 #include "platform/platform.h"
 
@@ -51,11 +52,14 @@ static b8 init_subsystems(void) {
 	}
 	memory_system_init();
 	event_system_init();
+	input_system_init();
 
 	return true;
 }
 
 b8 _engine_update(void) {
+	input_system_update();
+
 	if (!platform_pump_messages(&app.platform)) {
 		app.running = false;
 	}
@@ -72,6 +76,7 @@ void _engine_shutdown(void) {
 }
 
 static void shutdown_subsystems(void) {
+	input_system_shutdown();
 	event_system_shutdown();
 	logging_system_shutdown();
 	memory_system_shutdown();

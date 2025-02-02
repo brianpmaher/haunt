@@ -1,25 +1,32 @@
 #pragma once
 
 typedef enum Key {
+	// Modifiers
 	KEY_BACKSPACE = 0x08,
 	KEY_TAB = 0x09,
 	KEY_CLEAR = 0x0C,
 	KEY_RETURN = 0x0D,
 	KEY_SHIFT = 0x10,
 	KEY_CONTROL = 0x11,
-	KEY_MENU = 0x12,
+	KEY_ALT = 0x12,
 	KEY_PAUSE = 0x13,
-	KEY_CAPITAL = 0x14,
+	KEY_CAPS_LOCK = 0x14,
 	KEY_ESCAPE = 0x1B,
 	KEY_SPACE = 0x20,
+
+	// Navigation
 	KEY_PAGE_UP = 0x21,
 	KEY_PAGE_DOWN = 0x22,
 	KEY_END = 0x23,
 	KEY_HOME = 0x24,
+
+	// Arrows
 	KEY_LEFT = 0x25,
 	KEY_UP = 0x26,
 	KEY_RIGHT = 0x27,
 	KEY_DOWN = 0x28,
+
+	// System
 	KEY_SELECT = 0x29,
 	KEY_PRINT = 0x2A,
 	KEY_EXECUTE = 0x2B,
@@ -27,6 +34,8 @@ typedef enum Key {
 	KEY_INSERT = 0x2D,
 	KEY_DELETE = 0x2E,
 	KEY_HELP = 0x2F,
+
+	// Numbers
 	KEY_0 = 0x30,
 	KEY_1 = 0x31,
 	KEY_2 = 0x32,
@@ -37,6 +46,8 @@ typedef enum Key {
 	KEY_7 = 0x37,
 	KEY_8 = 0x38,
 	KEY_9 = 0x39,
+
+	// Letters
 	KEY_A = 0x41,
 	KEY_B = 0x42,
 	KEY_C = 0x43,
@@ -63,6 +74,8 @@ typedef enum Key {
 	KEY_X = 0x58,
 	KEY_Y = 0x59,
 	KEY_Z = 0x5A,
+
+	// Numpad
 	KEY_PAD_0 = 0x60,
 	KEY_PAD_1 = 0x61,
 	KEY_PAD_2 = 0x62,
@@ -79,6 +92,8 @@ typedef enum Key {
 	KEY_PAD_SUBTRACT = 0x6D,
 	KEY_PAD_DECIMAL = 0x6E,
 	KEY_PAD_DIVIDE = 0x6F,
+
+	// Function keys
 	KEY_F1 = 0x70,
 	KEY_F2 = 0x71,
 	KEY_F3 = 0x72,
@@ -103,20 +118,6 @@ typedef enum Key {
 	KEY_F22 = 0x85,
 	KEY_F23 = 0x86,
 	KEY_F24 = 0x87,
-	KEY_NUM_LOCK = 0x90,
-	KEY_SCROLL_LOCK = 0x91,
-	KEY_LEFT_SHIFT = 0xA0,
-	KEY_RIGHT_SHIFT = 0xA1,
-	KEY_LEFT_CONTROL = 0xA2,
-	KEY_RIGHT_CONTROL = 0xA3,
-	KEY_LEFT_ALT = 0xA4,
-	KEY_RIGHT_ALT = 0xA5,
-	KEY_VOLUME_MUTE = 0xAD,
-	KEY_VOLUME_DOWN = 0xAE,
-	KEY_VOLUME_UP = 0xAF,
-	KEY_MEDIA_NEXT_TRACK = 0xB0,
-	KEY_MEDIA_PREV_TRACK = 0xB1,
-	KEY_MEDIA_STOP = 0xB2,
-	KEY_MEDIA_PLAY_PAUSE = 0xB3,
-	KEY_MAX = 0xFF,
+
+	KEY_COUNT,
 } Key;

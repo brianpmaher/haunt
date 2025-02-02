@@ -16,8 +16,10 @@ typedef enum Event_Type {
 	EVENT_TYPE_MOUSE_WHEEL,
 	EVENT_TYPE_MOUSE_BUTTON_PRESS,
 	EVENT_TYPE_MOUSE_BUTTON_RELEASE,
-	// Not an actual event code that is fired.  Application should define its own event code that starts here.
-	EVENT_TYPE_CUSTOM,
+	// Begin custom application events
+	EVENT_TYPE_CUSTOM = 256,
+	// No events beyond 512 allowed
+	EVENT_TYPE_MAX = 512
 } Event_Type;
 
 // Using event code to allow for custom application events

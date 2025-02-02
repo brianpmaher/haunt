@@ -2,7 +2,7 @@
 
 #include "core/log.h"
 
-#define EVENT_CODE_MAX 512
+#define EVENT_CODE_MAX EVENT_TYPE_MAX
 #define EVENT_CODE_ENTRY_MAX 512
 
 typedef struct Registered_Event {
@@ -11,7 +11,7 @@ typedef struct Registered_Event {
 } Registered_Event;
 
 typedef struct Event_Code_Entry {
-	// TODO: Use a darray
+	// TODO: Use a dynamic_array
 	Registered_Event events[EVENT_CODE_ENTRY_MAX];
 	u32 event_count;
 } Event_Code_Entry;
@@ -28,9 +28,6 @@ b8 event_system_init(void) {
 }
 
 void event_system_shutdown(void) {
-}
-
-void event_system_update(void) {
 }
 
 b8 event_register(Event_Code code, void* listener, On_Event on_event) {
