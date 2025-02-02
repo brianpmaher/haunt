@@ -37,7 +37,7 @@ void input_system_init(void) {
 void input_system_shutdown(void) {
 }
 
-void input_system_update(void) {
+static void fire_events(void) {
 	// Fire key events
 	for (u32 key = 0; key < KEY_COUNT; key++) {
 		if (input_system.key.pressed[key]) {
@@ -74,7 +74,9 @@ void input_system_update(void) {
 			event_fire((Event)mouse_button_release_event_create(button), null);
 		}
 	}
+}
 
+static void reset_state(void) {
 	// Reset pressed and released
 	memory_zero(input_system.key.pressed, sizeof(input_system.key.pressed));
 	memory_zero(input_system.key.released, sizeof(input_system.key.released));
@@ -87,6 +89,11 @@ void input_system_update(void) {
 
 	// Reset wheel
 	input_system.mouse.wheel = 0;
+}
+
+void input_system_update(void) {
+	fire_events();
+	reset_state();
 }
 
 void input_system_process_key(Key key, b8 pressed) {

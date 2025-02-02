@@ -3,6 +3,8 @@
 #include "core/context.h"
 #include "core/log.h"
 #include "core/memory.h"
+#include "core/input/input.h"
+#include "core/event/event.h"
 
 #ifdef PLATFORM_WINDOWS
 
@@ -252,33 +254,33 @@ static LRESULT CALLBACK process_message(HWND hwnd, UINT msg, WPARAM wparam, LPAR
 			PostQuitMessage(0);
 			return 0;
 		case WM_SIZE: {
-			// RECT r;
-			// GetClientRect(hwnd, &r);
-			// u32 width = r.right - r.left;
-			// u32 height = r.bottom - r.top;
-			// TODO: Event handling
+			RECT r;
+			GetClientRect(hwnd, &r);
+			u32 width = r.right - r.left;
+			u32 height = r.bottom - r.top;
+			event_fire((Event)window_resize_event_create(width, height), null);
 		} break;
 		case WM_KEYDOWN:
 		case WM_SYSKEYDOWN:
 		case WM_KEYUP:
 		case WM_SYSKEYUP: {
-			// Key pressed/released
-			// b8 pressed = msg == WM_KEYDOWN || msg == WM_SYSTEMKEYDOWN;
-			// TODO: Event handling
+			b8 pressed = msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN;
+			WORD vkcode = LOWORD(wparam);
+			Key key = (Key)vkcode;
+			input_system_process_key(key, pressed);
 		} break;
 		case WM_MOUSEMOVE: {
-			// Mouse move
-			// i32 x = GET_X_LPARAM(lparam);
-			// i32 y = GET_Y_LPARAM(lparam);
-			// TODO: Event handling
+			i32 x = GET_X_LPARAM(lparam);
+			i32 y = GET_Y_LPARAM(lparam);
+			input_system_process_mouse_position(x, y);
 		} break;
 		case WM_MOUSEWHEEL: {
-			// i32 delta = GET_WHEEL_DELTA_WPARAM(wparam);
-			// if (delta != 0) {
-			// 	// Flatten delta for OS-independent handling
-			// 	delta = delta > 0 ? 1 : -1;
-			// }
-			// TODO: Event handling
+			i32 delta = GET_WHEEL_DELTA_WPARAM(wparam);
+			if (delta != 0) {
+				// Flatten delta for OS-independent handling
+				delta = delta > 0 ? 1 : -1;
+			}
+			input_system_process_mouse_wheel(delta);
 		} break;
 		case WM_LBUTTONDOWN:
 		case WM_MBUTTONDOWN:
@@ -286,8 +288,14 @@ static LRESULT CALLBACK process_message(HWND hwnd, UINT msg, WPARAM wparam, LPAR
 		case WM_LBUTTONUP:
 		case WM_MBUTTONUP:
 		case WM_RBUTTONUP: {
-			// b8 pressed = msg == WM_LBUTTONDOWN || msg == WM_MBUTTONDOWN || msg == WM_RBUTTONDOWN;
-			// TODO: Event handling
+			b8 pressed = msg == WM_LBUTTONDOWN || msg == WM_MBUTTONDOWN || msg == WM_RBUTTONDOWN;
+			if (msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP) {
+				input_system_process_mouse_button(MOUSE_BUTTON_LEFT, pressed);
+			} else if (msg == WM_MBUTTONDOWN || msg == WM_MBUTTONUP) {
+				input_system_process_mouse_button(MOUSE_BUTTON_MIDDLE, pressed);
+			} else if (msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP) {
+				input_system_process_mouse_button(MOUSE_BUTTON_RIGHT, pressed);
+			}
 		} break;
 	}
 
