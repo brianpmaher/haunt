@@ -4,10 +4,10 @@
 
 - [ ] Project setup
   - [x] VSCode project for windows
-  - [ ] VSCode project for linux
+  - [x] VSCode project for linux
   - [x] Windows build system
   - [x] Add gitattributes
-  - [ ] Linux build system
+  - [x] Linux build system
   - [ ] Plan engine architecture
   - [ ] Plan roadmap
   - [ ] Setup clang-format
@@ -25,7 +25,7 @@
   - [ ] String
 - [ ] Platform
   - [x] Windows - Win32
-  - [ ] Linux - X11
+  - [x] Linux - X11
 - [ ] Renderer
   - [ ] OpenGL init
   - [ ] Render triangle
