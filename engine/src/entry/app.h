@@ -1,7 +1,6 @@
 #pragma once
 
 #include "core/types.h"
-#include "core/event.h"
 
 typedef struct Window_Config {
 	i32 x;
@@ -24,8 +23,6 @@ typedef enum App_Result {
 extern App_Config app_config(void);
 
 extern App_Result app_start(void** state, int argc, char** argv);
-
-extern App_Result app_event(void* state, Event* event);
 
 extern App_Result app_update(void* state);
 

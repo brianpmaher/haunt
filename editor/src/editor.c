@@ -20,10 +20,6 @@ App_Result app_update(void* state) {
 	return APP_RESULT_CONTINUE;
 }
 
-App_Result app_event(void* state, Event* event) {
-	return APP_RESULT_CONTINUE;
-}
-
 App_Result app_render(void* state) {
 	return APP_RESULT_CONTINUE;
 }

@@ -90,24 +90,10 @@ typedef union Mouse_Event {
 	Mouse_Button_Release_Event button_release;
 } Mouse_Event;
 
-typedef struct Custom_Event {
-	Event_Code code;
-	void* data;
-} Custom_Event;
-
 typedef union Event {
 	Event_Code code;
 	App_Event app;
 	Window_Event window;
 	Key_Event key;
 	Mouse_Event mouse;
-	Custom_Event custom;
 } Event;
-
-typedef b8 (*On_Event)(Event* event, void* sender, void* listener);
-
-HAPI b8 event_register(Event_Code code, On_Event on_event, void* listener);
-
-HAPI b8 event_unregister(Event_Code code, On_Event on_event, void* listener);
-
-HAPI b8 event_fire(Event_Code code, Event event, void* sender);
