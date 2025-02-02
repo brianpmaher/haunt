@@ -4,26 +4,27 @@
 #include "core/input/key_sym.h"
 #include "core/input/mouse_button.h"
 
-typedef enum Core_Event_Type {
+// Should never be fired by the application
+typedef enum Event_Type {
 	// Engine events
-	CORE_EVENT_TYPE_APP_QUIT,
-	CORE_EVENT_TYPE_WINDOW_CLOSE,
-	CORE_EVENT_TYPE_WINDOW_RESIZE,
-	CORE_EVENT_TYPE_KEY_PRESS,
-	CORE_EVENT_TYPE_KEY_RELEASE,
-	CORE_EVENT_TYPE_MOUSE_MOVE,
-	CORE_EVENT_TYPE_MOUSE_SCROLL,
-	CORE_EVENT_TYPE_MOUSE_BUTTON_PRESS,
-	CORE_EVENT_TYPE_MOUSE_BUTTON_RELEASE,
-	// Not an actual event type that is fired.  Application should define its own event type that starts here.
-	CORE_EVENT_TYPE_CUSTOM,
-} Core_Event_Type;
+	EVENT_TYPE_APP_QUIT,
+	EVENT_TYPE_WINDOW_CLOSE,
+	EVENT_TYPE_WINDOW_RESIZE,
+	EVENT_TYPE_KEY_PRESS,
+	EVENT_TYPE_KEY_RELEASE,
+	EVENT_TYPE_MOUSE_MOVE,
+	EVENT_TYPE_MOUSE_SCROLL,
+	EVENT_TYPE_MOUSE_BUTTON_PRESS,
+	EVENT_TYPE_MOUSE_BUTTON_RELEASE,
+	// Not an actual event code that is fired.  Application should define its own event code that starts here.
+	EVENT_TYPE_CUSTOM,
+} Event_Type;
 
-// Using event type to allow for custom application events
-typedef u16 Event_Type;
+// Using event code to allow for custom application events
+typedef u16 Event_Code;
 
 typedef struct App_Quit_Event {
-	Event_Type type; // EVENT_TYPE_APP_QUIT
+	Event_Code code; // EVENT_TYPE_APP_QUIT
 } App_Quit_Event;
 
 typedef union App_Event {
@@ -31,11 +32,11 @@ typedef union App_Event {
 } App_Event;
 
 typedef struct Window_Close_Event {
-	Event_Type type; // EVENT_TYPE_WINDOW_CLOSE
+	Event_Code code; // EVENT_TYPE_WINDOW_CLOSE
 } Window_Close_Event;
 
 typedef struct Window_Resize_Event {
-	Event_Type type; // EVENT_TYPE_WINDOW_RESIZE
+	Event_Code code; // EVENT_TYPE_WINDOW_RESIZE
 	i32 width;
 	i32 height;
 } Window_Resize_Event;
@@ -46,13 +47,13 @@ typedef union Window_Event {
 } Window_Event;
 
 typedef struct Key_Press_Event {
-	Event_Type type; // EVENT_TYPE_KEY_PRESS
+	Event_Code code; // EVENT_TYPE_KEY_PRESS
 	Key_Sym key;
 	Key_Mod_Flags mods;
 } Key_Press_Event;
 
 typedef struct Key_Release_Event {
-	Event_Type type; // EVENT_TYPE_KEY_RELEASE
+	Event_Code code; // EVENT_TYPE_KEY_RELEASE
 	Key_Sym key;
 	Key_Mod_Flags mods;
 } Key_Release_Event;
@@ -63,23 +64,23 @@ typedef union Key_Event {
 } Key_Event;
 
 typedef union Mouse_Move_Event {
-	Event_Type type; // EVENT_TYPE_MOUSE_MOVE
+	Event_Code code; // EVENT_TYPE_MOUSE_MOVE
 	i32 x;
 	i32 y;
 } Mouse_Move_Event;
 
 typedef struct Mouse_Scroll_Event {
-	Event_Type type; // EVENT_TYPE_MOUSE_SCROLL
+	Event_Code code; // EVENT_TYPE_MOUSE_SCROLL
 	i32 delta;
 } Mouse_Scroll_Event;
 
 typedef struct Mouse_Button_Press_Event {
-	Event_Type type; // EVENT_TYPE_MOUSE_BUTTON_PRESS
+	Event_Code code; // EVENT_TYPE_MOUSE_BUTTON_PRESS
 	Mouse_Button button;
 } Mouse_Button_Press_Event;
 
 typedef struct Mouse_Button_Release_Event {
-	Event_Type type; // EVENT_TYPE_MOUSE_BUTTON_RELEASE
+	Event_Code code; // EVENT_TYPE_MOUSE_BUTTON_RELEASE
 	Mouse_Button button;
 } Mouse_Button_Release_Event;
 
@@ -90,12 +91,12 @@ typedef union Mouse_Event {
 } Mouse_Event;
 
 typedef struct Custom_Event {
-	Event_Type type;
+	Event_Code code;
 	void* data;
 } Custom_Event;
 
 typedef union Event {
-	Event_Type type;
+	Event_Code code;
 	App_Event app;
 	Window_Event window;
 	Key_Event key;
@@ -103,8 +104,10 @@ typedef union Event {
 	Custom_Event custom;
 } Event;
 
-typedef b8 (*On_Event)(Event* event);
+typedef b8 (*On_Event)(Event* event, void* sender, void* listener);
 
-HAPI b8 event_subscribe(Event_Type type, On_Event on_event);
+HAPI b8 event_register(Event_Code code, On_Event on_event, void* listener);
 
-HAPI b8 event_unsubscribe(Event_Type type, On_Event on_event);
+HAPI b8 event_unregister(Event_Code code, On_Event on_event, void* listener);
+
+HAPI b8 event_fire(Event_Code code, Event event, void* sender);

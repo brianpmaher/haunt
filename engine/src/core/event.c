@@ -1,9 +1,16 @@
 #include "event.h"
 
-b8 event_subscribe(Event_Type type, On_Event on_event) {
-	return false;
+// TODO: Implement
+HAPI b8 event_register(Event_Code code, On_Event on_event, void* listener) {
+	return true;
 }
 
-b8 event_unsubscribe(Event_Type type, On_Event on_event) {
-	return false;
+// TODO: Implement
+HAPI b8 event_unregister(Event_Code code, On_Event on_event, void* listener) {
+	return true;
+}
+
+// TODO: Implement
+HAPI b8 event_fire(Event_Code code, Event event, void* sender) {
+	return true;
 }
