@@ -38,3 +38,4 @@
   - [ ] Multithreaded event system
   - [ ] Multi-frame event handling
     - Use a free-list?
+- [ ] Document functions
