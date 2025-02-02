@@ -13,7 +13,7 @@ typedef enum Event_Type {
 	EVENT_TYPE_KEY_PRESS,
 	EVENT_TYPE_KEY_RELEASE,
 	EVENT_TYPE_MOUSE_MOVE,
-	EVENT_TYPE_MOUSE_SCROLL,
+	EVENT_TYPE_MOUSE_WHEEL,
 	EVENT_TYPE_MOUSE_BUTTON_PRESS,
 	EVENT_TYPE_MOUSE_BUTTON_RELEASE,
 	// Not an actual event code that is fired.  Application should define its own event code that starts here.
@@ -69,10 +69,10 @@ typedef union Mouse_Move_Event {
 	i32 y;
 } Mouse_Move_Event;
 
-typedef struct Mouse_Scroll_Event {
-	Event_Code code; // EVENT_TYPE_MOUSE_SCROLL
+typedef struct Mouse_Wheel_Event {
+	Event_Code code; // EVENT_TYPE_MOUSE_WHEEL
 	i32 delta;
-} Mouse_Scroll_Event;
+} Mouse_Wheel_Event;
 
 typedef struct Mouse_Button_Press_Event {
 	Event_Code code; // EVENT_TYPE_MOUSE_BUTTON_PRESS
@@ -85,7 +85,7 @@ typedef struct Mouse_Button_Release_Event {
 } Mouse_Button_Release_Event;
 
 typedef union Mouse_Event {
-	Mouse_Scroll_Event scroll;
+	Mouse_Wheel_Event wheel;
 	Mouse_Button_Press_Event button_press;
 	Mouse_Button_Release_Event button_release;
 } Mouse_Event;

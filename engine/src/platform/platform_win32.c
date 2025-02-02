@@ -181,60 +181,6 @@ b8 platform_pump_messages(Platform* platform) {
 	return true;
 }
 
-static LRESULT CALLBACK process_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
-	switch (msg) {
-		case WM_ERASEBKGND:
-			// Tell OS that app is handling background erase to prevent flickering
-			return 1;
-		case WM_CLOSE:
-			// TODO: Event handling
-			return 0;
-		case WM_DESTROY:
-			PostQuitMessage(0);
-			return 0;
-		case WM_SIZE: {
-			// RECT r;
-			// GetClientRect(hwnd, &r);
-			// u32 width = r.right - r.left;
-			// u32 height = r.bottom - r.top;
-			// TODO: Event handling
-		} break;
-		case WM_KEYDOWN:
-		case WM_SYSKEYDOWN:
-		case WM_KEYUP:
-		case WM_SYSKEYUP: {
-			// Key pressed/released
-			// b8 pressed = msg == WM_KEYDOWN || msg == WM_SYSTEMKEYDOWN;
-			// TODO: Event handling
-		} break;
-		case WM_MOUSEMOVE: {
-			// Mouse move
-			// i32 x = GET_X_LPARAM(lparam);
-			// i32 y = GET_Y_LPARAM(lparam);
-			// TODO: Event handling
-		} break;
-		case WM_MOUSEWHEEL: {
-			// i32 delta = GET_WHEEL_DELTA_WPARAM(wparam);
-			// if (delta != 0) {
-			// 	// Flatten delta for OS-independent handling
-			// 	delta = delta > 0 ? 1 : -1;
-			// }
-			// TODO: Event handling
-		} break;
-		case WM_LBUTTONDOWN:
-		case WM_MBUTTONDOWN:
-		case WM_RBUTTONDOWN:
-		case WM_LBUTTONUP:
-		case WM_MBUTTONUP:
-		case WM_RBUTTONUP: {
-			// b8 pressed = msg == WM_LBUTTONDOWN || msg == WM_MBUTTONDOWN || msg == WM_RBUTTONDOWN;
-			// TODO: Event handling
-		} break;
-	}
-
-	return DefWindowProcA(hwnd, msg, wparam, lparam);
-}
-
 void* platform_memory_alloc(u64 size, b8 aligned) {
 	return VirtualAlloc(null, size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 }
@@ -292,6 +238,60 @@ f64 platform_get_time() {
 
 void platform_sleep(u64 ms) {
 	Sleep(ms);
+}
+
+static LRESULT CALLBACK process_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+	switch (msg) {
+		case WM_ERASEBKGND:
+			// Tell OS that app is handling background erase to prevent flickering
+			return 1;
+		case WM_CLOSE:
+			// TODO: Event handling
+			return 0;
+		case WM_DESTROY:
+			PostQuitMessage(0);
+			return 0;
+		case WM_SIZE: {
+			// RECT r;
+			// GetClientRect(hwnd, &r);
+			// u32 width = r.right - r.left;
+			// u32 height = r.bottom - r.top;
+			// TODO: Event handling
+		} break;
+		case WM_KEYDOWN:
+		case WM_SYSKEYDOWN:
+		case WM_KEYUP:
+		case WM_SYSKEYUP: {
+			// Key pressed/released
+			// b8 pressed = msg == WM_KEYDOWN || msg == WM_SYSTEMKEYDOWN;
+			// TODO: Event handling
+		} break;
+		case WM_MOUSEMOVE: {
+			// Mouse move
+			// i32 x = GET_X_LPARAM(lparam);
+			// i32 y = GET_Y_LPARAM(lparam);
+			// TODO: Event handling
+		} break;
+		case WM_MOUSEWHEEL: {
+			// i32 delta = GET_WHEEL_DELTA_WPARAM(wparam);
+			// if (delta != 0) {
+			// 	// Flatten delta for OS-independent handling
+			// 	delta = delta > 0 ? 1 : -1;
+			// }
+			// TODO: Event handling
+		} break;
+		case WM_LBUTTONDOWN:
+		case WM_MBUTTONDOWN:
+		case WM_RBUTTONDOWN:
+		case WM_LBUTTONUP:
+		case WM_MBUTTONUP:
+		case WM_RBUTTONUP: {
+			// b8 pressed = msg == WM_LBUTTONDOWN || msg == WM_MBUTTONDOWN || msg == WM_RBUTTONDOWN;
+			// TODO: Event handling
+		} break;
+	}
+
+	return DefWindowProcA(hwnd, msg, wparam, lparam);
 }
 
 #endif
