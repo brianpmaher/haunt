@@ -33,7 +33,7 @@ void event_system_shutdown(void) {
 void event_system_update(void) {
 }
 
-HAPI b8 event_register(Event_Code code, void* listener, On_Event on_event) {
+b8 event_register(Event_Code code, void* listener, On_Event on_event) {
 	if (code >= EVENT_CODE_MAX) {
 		log_error("Event code %d is out of range", code);
 		return false;
@@ -61,7 +61,7 @@ HAPI b8 event_register(Event_Code code, void* listener, On_Event on_event) {
 	return true;
 }
 
-HAPI b8 event_unregister(Event_Code code, void* listener, On_Event on_event) {
+b8 event_unregister(Event_Code code, void* listener, On_Event on_event) {
 	if (code >= EVENT_CODE_MAX) {
 		log_error("Event code %d is out of range", code);
 		return false;
@@ -82,7 +82,7 @@ HAPI b8 event_unregister(Event_Code code, void* listener, On_Event on_event) {
 	return false;
 }
 
-HAPI b8 event_fire(Event_Code code, Event event, void* sender) {
+b8 event_fire(Event_Code code, Event event, void* sender) {
 	if (code >= EVENT_CODE_MAX) {
 		log_error("Event code %d is out of range", code);
 		return false;

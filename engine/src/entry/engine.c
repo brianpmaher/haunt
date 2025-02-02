@@ -77,6 +77,6 @@ static void shutdown_subsystems(void) {
 	memory_system_shutdown();
 }
 
-HAPI b8 _engine_is_running(void) {
+b8 _engine_is_running(void) {
 	return app.running;
 }

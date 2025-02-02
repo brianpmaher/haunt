@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/types.h"
-#include "core/input/key_sym.h"
+#include "core/input/key.h"
 #include "core/input/mouse_button.h"
 
 // Should never be fired by the application
@@ -46,16 +46,16 @@ typedef union Window_Event {
 	Window_Resize_Event resize;
 } Window_Event;
 
+// TODO: Add mods?
 typedef struct Key_Press_Event {
 	Event_Code code; // EVENT_TYPE_KEY_PRESS
-	Key_Sym key;
-	Key_Mod_Flags mods;
+	Key key;
 } Key_Press_Event;
 
+// TODO: Add mods?
 typedef struct Key_Release_Event {
 	Event_Code code; // EVENT_TYPE_KEY_RELEASE
-	Key_Sym key;
-	Key_Mod_Flags mods;
+	Key key;
 } Key_Release_Event;
 
 typedef union Key_Event {
