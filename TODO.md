@@ -14,8 +14,12 @@
 - [ ] Core systems
   - [x] Logging
   - [x] Memory
-  - [ ] Input
+  - [x] Input
+    - [ ] Win32 Platform Input
+    - [ ] Linux Platform Input
   - [x] Event
+    - [ ] Win32 Platform Event
+    - [ ] Linux Platform Event
 - [ ] Memory_Arena
   - [ ] platform_memory_reserve, platform_memory_commit
 - [ ] Collection
