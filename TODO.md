@@ -8,16 +8,20 @@
   - [x] Windows build system
   - [x] Add gitattributes
   - [x] Linux build system
+- [ ] Planning
   - [ ] Plan engine architecture
   - [ ] Plan roadmap
-  - [ ] Setup clang-format
 - [ ] Core systems
   - [x] Logging
   - [x] Memory
-  - [x] Input
+  - [ ] Input
+    - [ ] Input system
     - [ ] Win32 Platform Input
     - [ ] Linux Platform Input
-  - [x] Event
+  - [ ] Event
+    - [x] Event system
+    - [ ] Test all engine events
+    - [ ] Test custom events
     - [ ] Win32 Platform Event
     - [ ] Linux Platform Event
 - [ ] Memory_Arena

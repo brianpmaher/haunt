@@ -1,6 +1,7 @@
 #include "core/input/input.h"
 
 #include "core/memory.h"
+#include "core/event/event.h"
 
 typedef struct Key_State {
 	b8 pressed[KEY_COUNT];
@@ -37,32 +38,74 @@ void input_system_shutdown(void) {
 }
 
 void input_system_update(void) {
+	// Fire key events
+	for (u32 key = 0; key < KEY_COUNT; key++) {
+		if (input_system.key.pressed[key]) {
+			event_fire((Event)key_press_event_create(key), null);
+		} else if (input_system.key.released[key]) {
+			event_fire((Event)key_release_event_create(key), null);
+		}
+	}
+
+	// Fire mouse move event
+	{
+		i32 mouse_x = input_system.mouse.position.x;
+		i32 mouse_y = input_system.mouse.position.y;
+		i32 mouse_delta_x = mouse_x - input_system.mouse.position.prev_x;
+		i32 mouse_delta_y = mouse_y - input_system.mouse.position.prev_y;
+		if (mouse_delta_x | mouse_delta_y) {
+			event_fire((Event)mouse_move_event_create(mouse_x, mouse_y, mouse_delta_x, mouse_delta_y), null);
+		}
+	}
+
+	// Fire mouse wheel event
+	{
+		i32 mouse_wheel = input_system.mouse.wheel;
+		if (mouse_wheel) {
+			event_fire((Event)mouse_wheel_event_create(mouse_wheel), null);
+		}
+	}
+
+	// Fire button mouse events
+	for (u32 button = 0; button < MOUSE_BUTTON_COUNT; button++) {
+		if (input_system.mouse.pressed[button]) {
+			event_fire((Event)mouse_button_press_event_create(button), null);
+		} else if (input_system.mouse.released[button]) {
+			event_fire((Event)mouse_button_release_event_create(button), null);
+		}
+	}
+
+	// Reset pressed and released
 	memory_zero(input_system.key.pressed, sizeof(input_system.key.pressed));
 	memory_zero(input_system.key.released, sizeof(input_system.key.released));
 	memory_zero(input_system.mouse.pressed, sizeof(input_system.mouse.pressed));
 	memory_zero(input_system.mouse.released, sizeof(input_system.mouse.released));
 
-	input_system.mouse.position.x = input_system.mouse.position.prev_x;
-	input_system.mouse.position.y = input_system.mouse.position.prev_y;
+	// Update prev positions
+	input_system.mouse.position.prev_x = input_system.mouse.position.x;
+	input_system.mouse.position.prev_y = input_system.mouse.position.y;
+
+	// Reset wheel
+	input_system.mouse.wheel = 0;
 }
 
-void input_system_update_key(Key key, b8 pressed) {
+void input_system_process_key(Key key, b8 pressed) {
 	input_system.key.pressed[key] = pressed;
 	input_system.key.released[key] = !pressed;
 	input_system.key.down[key] = pressed;
 }
 
-void input_system_update_mouse_button(Mouse_Button button, b8 pressed) {
+void input_system_process_mouse_button(Mouse_Button button, b8 pressed) {
 	input_system.mouse.pressed[button] = pressed;
 	input_system.mouse.released[button] = !pressed;
 	input_system.mouse.down[button] = pressed;
 }
 
-void input_system_update_mouse_wheel(i32 y) {
+void input_system_process_mouse_wheel(i32 y) {
 	input_system.mouse.wheel = y;
 }
 
-void input_system_update_mouse_position(i32 x, i32 y) {
+void input_system_process_mouse_position(i32 x, i32 y) {
 	input_system.mouse.position.x = x;
 	input_system.mouse.position.y = y;
 }
