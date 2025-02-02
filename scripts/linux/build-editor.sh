@@ -16,8 +16,8 @@ echo "Building $assembly..."
 clang $sources $cflags -o bin/$assembly $defines $includes $linker
 
 if [ $? -ne 0 ]; then
-    echo "Failed to build $assembly"
-    exit 1
+	echo "Failed to build $assembly"
+	exit 1
 fi
 
 echo "Done building $assembly" 

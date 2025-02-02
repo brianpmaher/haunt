@@ -31,7 +31,14 @@ To setup the project for the first time, or after changes have been made, run `s
 
 ### Linux
 
-<span style="color:yellow">Linux platform setup has not yet started. Open to contributions.</span>.
+To setup the project for the first time, or after changes have been made, run `scripts/linux/setup.bat` from a bash terminal.
+
+#### Scripts
+
+- `setup.sh` - Setup the project and all of its dependencies
+- `build-all.sh` - Build the engine and editor
+- `build-engine.sh` - Build the engine
+- `build-engine.sh` - Build the editor
 
 ### MacOS
 

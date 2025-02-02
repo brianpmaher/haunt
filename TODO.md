@@ -8,14 +8,23 @@
   - [x] Windows build system
   - [x] Add gitattributes
   - [x] Linux build system
+- [ ] Planning
   - [ ] Plan engine architecture
   - [ ] Plan roadmap
-  - [ ] Setup clang-format
 - [ ] Core systems
   - [x] Logging
   - [x] Memory
   - [ ] Input
-  - [x] Event
+    - [x] Input system
+    - [ ] Test all input types
+    - [x] Win32 Platform Input
+    - [ ] Linux Platform Input
+  - [ ] Event
+    - [x] Event system
+    - [x] Test all engine events
+    - [ ] Test custom events
+    - [x] Win32 Platform Event
+    - [ ] Linux Platform Event
 - [ ] Memory_Arena
   - [ ] platform_memory_reserve, platform_memory_commit
 - [ ] Collection
@@ -38,3 +47,8 @@
   - [ ] Multithreaded event system
   - [ ] Multi-frame event handling
     - Use a free-list?
+- [ ] Document functions
+- [ ] Multiple windows
+  - [ ] Windows
+  - [ ] Linux
+- [ ] MacOS platform

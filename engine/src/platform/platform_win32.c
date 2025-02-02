@@ -3,6 +3,8 @@
 #include "core/context.h"
 #include "core/log.h"
 #include "core/memory.h"
+#include "core/input/input.h"
+#include "core/event.h"
 
 #ifdef PLATFORM_WINDOWS
 
@@ -15,13 +17,13 @@ typedef struct Clock {
 	LARGE_INTEGER start;
 } Clock;
 
-typedef struct Internal {
+typedef struct Platform_Internal {
 	const char* class_name;
 	HINSTANCE hinst;
 	// TODO: Handle multiple windows
 	HWND hwnd;
 	Clock clock;
-} Internal;
+} Platform_Internal;
 
 static const u8 console_colors[PLATFORM_CONSOLE_COLOR_COUNT] = {
 	// PLATFORM_CONSOLE_COLOR_WHITE
@@ -38,8 +40,8 @@ static const u8 console_colors[PLATFORM_CONSOLE_COLOR_COUNT] = {
 	FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY,
 };
 
-static Internal* create_internal(void) {
-	Internal* internal = memory_alloc(sizeof(Internal), MEMORY_TAG_PLATFORM);
+static Platform_Internal* create_internal(void) {
+	Platform_Internal* internal = memory_alloc(sizeof(Platform_Internal), MEMORY_TAG_PLATFORM);
 	internal->class_name = "haunt_window_class";
 	internal->hinst = GetModuleHandle(0);
 	return internal;
@@ -120,7 +122,7 @@ static Platform* get_active_window_data(void) {
 	return get_window_data(GetActiveWindow());
 }
 
-static void show_window(Internal* internal) {
+static void show_window(Platform_Internal* internal) {
 	// TODO: make these parameters
 	b8 activate = true;
 	b8 minimized = false;
@@ -139,7 +141,7 @@ static void clock_start(Clock* clock);
 
 b8 platform_start(Platform* platform, const char* app_name, i32 x, i32 y, i32 width, i32 height) {
 	platform->internal = create_internal();
-	Internal* internal = (Internal*)platform->internal;
+	Platform_Internal* internal = (Platform_Internal*)platform->internal;
 
 	// Register window class and create window
 	if (!register_window_class(internal->hinst, internal->class_name)) {
@@ -160,7 +162,7 @@ b8 platform_start(Platform* platform, const char* app_name, i32 x, i32 y, i32 wi
 }
 
 void platform_shutdown(Platform* platform) {
-	Internal* internal = (Internal*)platform->internal;
+	Platform_Internal* internal = (Platform_Internal*)platform->internal;
 
 	if (internal->hwnd) {
 		DestroyWindow(internal->hwnd);
@@ -169,7 +171,7 @@ void platform_shutdown(Platform* platform) {
 
 	UnregisterClassA(internal->class_name, internal->hinst);
 
-	memory_free(platform->internal, sizeof(Internal), MEMORY_TAG_PLATFORM);
+	memory_free(platform->internal, sizeof(Platform_Internal), MEMORY_TAG_PLATFORM);
 }
 
 b8 platform_pump_messages(Platform* platform) {
@@ -179,60 +181,6 @@ b8 platform_pump_messages(Platform* platform) {
 		DispatchMessageA(&msg);
 	}
 	return true;
-}
-
-static LRESULT CALLBACK process_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
-	switch (msg) {
-		case WM_ERASEBKGND:
-			// Tell OS that app is handling background erase to prevent flickering
-			return 1;
-		case WM_CLOSE:
-			// TODO: Event handling
-			return 0;
-		case WM_DESTROY:
-			PostQuitMessage(0);
-			return 0;
-		case WM_SIZE: {
-			// RECT r;
-			// GetClientRect(hwnd, &r);
-			// u32 width = r.right - r.left;
-			// u32 height = r.bottom - r.top;
-			// TODO: Event handling
-		} break;
-		case WM_KEYDOWN:
-		case WM_SYSKEYDOWN:
-		case WM_KEYUP:
-		case WM_SYSKEYUP: {
-			// Key pressed/released
-			// b8 pressed = msg == WM_KEYDOWN || msg == WM_SYSTEMKEYDOWN;
-			// TODO: Event handling
-		} break;
-		case WM_MOUSEMOVE: {
-			// Mouse move
-			// i32 x = GET_X_LPARAM(lparam);
-			// i32 y = GET_Y_LPARAM(lparam);
-			// TODO: Event handling
-		} break;
-		case WM_MOUSEWHEEL: {
-			// i32 delta = GET_WHEEL_DELTA_WPARAM(wparam);
-			// if (delta != 0) {
-			// 	// Flatten delta for OS-independent handling
-			// 	delta = delta > 0 ? 1 : -1;
-			// }
-			// TODO: Event handling
-		} break;
-		case WM_LBUTTONDOWN:
-		case WM_MBUTTONDOWN:
-		case WM_RBUTTONDOWN:
-		case WM_LBUTTONUP:
-		case WM_MBUTTONUP:
-		case WM_RBUTTONUP: {
-			// b8 pressed = msg == WM_LBUTTONDOWN || msg == WM_MBUTTONDOWN || msg == WM_RBUTTONDOWN;
-			// TODO: Event handling
-		} break;
-	}
-
-	return DefWindowProcA(hwnd, msg, wparam, lparam);
 }
 
 void* platform_memory_alloc(u64 size, b8 aligned) {
@@ -283,7 +231,7 @@ static void clock_start(Clock* clock) {
 
 f64 platform_get_time() {
 	Platform* platform = get_active_window_data();
-	Internal* internal = (Internal*)platform->internal;
+	Platform_Internal* internal = (Platform_Internal*)platform->internal;
 
 	LARGE_INTEGER current;
 	QueryPerformanceCounter(&current);
@@ -292,6 +240,66 @@ f64 platform_get_time() {
 
 void platform_sleep(u64 ms) {
 	Sleep(ms);
+}
+
+static LRESULT CALLBACK process_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+	switch (msg) {
+		case WM_ERASEBKGND:
+			// Tell OS that app is handling background erase to prevent flickering
+			return 1;
+		case WM_CLOSE:
+			event_fire(EVENT_TYPE_WINDOW_CLOSE, (Event_Context){0}, null);
+			return 0;
+		case WM_DESTROY:
+			PostQuitMessage(0);
+			return 0;
+		case WM_SIZE: {
+			RECT r;
+			GetClientRect(hwnd, &r);
+			u32 width = r.right - r.left;
+			u32 height = r.bottom - r.top;
+			event_fire(EVENT_TYPE_WINDOW_RESIZE, (Event_Context){ (i32)width, (i32)height }, null);
+		} break;
+		case WM_KEYDOWN:
+		case WM_SYSKEYDOWN:
+		case WM_KEYUP:
+		case WM_SYSKEYUP: {
+			b8 pressed = msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN;
+			WORD vkcode = LOWORD(wparam);
+			Key key = (Key)vkcode;
+			input_system_process_key(key, pressed);
+		} break;
+		case WM_MOUSEMOVE: {
+			i32 x = GET_X_LPARAM(lparam);
+			i32 y = GET_Y_LPARAM(lparam);
+			input_system_process_mouse_position(x, y);
+		} break;
+		case WM_MOUSEWHEEL: {
+			i32 delta = GET_WHEEL_DELTA_WPARAM(wparam);
+			if (delta != 0) {
+				// Flatten delta for OS-independent handling
+				delta = delta > 0 ? 1 : -1;
+				input_system_process_mouse_wheel(delta);
+			}
+		} break;
+		case WM_LBUTTONDOWN:
+		case WM_MBUTTONDOWN:
+		case WM_RBUTTONDOWN:
+		case WM_LBUTTONUP:
+		case WM_MBUTTONUP:
+		case WM_RBUTTONUP: {
+			b8 pressed = msg == WM_LBUTTONDOWN || msg == WM_MBUTTONDOWN || msg == WM_RBUTTONDOWN;
+			if (msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP) {
+				input_system_process_mouse_button(MOUSE_BUTTON_LEFT, pressed);
+			} else if (msg == WM_MBUTTONDOWN || msg == WM_MBUTTONUP) {
+				input_system_process_mouse_button(MOUSE_BUTTON_MIDDLE, pressed);
+			} else if (msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP) {
+				input_system_process_mouse_button(MOUSE_BUTTON_RIGHT, pressed);
+			}
+		} break;
+	}
+
+	return DefWindowProcA(hwnd, msg, wparam, lparam);
 }
 
 #endif
