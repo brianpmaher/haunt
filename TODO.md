@@ -37,6 +37,8 @@
   - [x] Linux - X11
 - [ ] Renderer
   - [ ] OpenGL init
+    - [ ] Windows
+    - [ ] Linux
   - [ ] Render triangle
   - [ ] Render quad
   - [ ] Render text
