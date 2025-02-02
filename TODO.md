@@ -15,15 +15,15 @@
   - [x] Logging
   - [x] Memory
   - [ ] Input
-    - [ ] Input system
+    - [x] Input system
     - [ ] Test all input types
-    - [ ] Win32 Platform Input
+    - [x] Win32 Platform Input
     - [ ] Linux Platform Input
   - [ ] Event
     - [x] Event system
-    - [ ] Test all engine events
+    - [x] Test all engine events
     - [ ] Test custom events
-    - [ ] Win32 Platform Event
+    - [x] Win32 Platform Event
     - [ ] Linux Platform Event
 - [ ] Memory_Arena
   - [ ] platform_memory_reserve, platform_memory_commit
