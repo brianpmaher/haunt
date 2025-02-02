@@ -16,6 +16,7 @@
   - [x] Memory
   - [ ] Input
     - [ ] Input system
+    - [ ] Test all input types
     - [ ] Win32 Platform Input
     - [ ] Linux Platform Input
   - [ ] Event
