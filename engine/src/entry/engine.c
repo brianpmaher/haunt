@@ -1,7 +1,8 @@
 #include "entry/engine.h"
 
 #include "core/log.h"
-#include "core/mem.h"
+#include "core/memory.h"
+#include "core/event/event.h"
 
 #include "platform/platform.h"
 
@@ -49,6 +50,7 @@ static b8 init_subsystems(void) {
 		return false;
 	}
 	memory_system_init();
+	event_system_init();
 
 	return true;
 }
@@ -70,6 +72,7 @@ void _engine_shutdown(void) {
 }
 
 static void shutdown_subsystems(void) {
+	event_system_shutdown();
 	logging_system_shutdown();
 	memory_system_shutdown();
 }

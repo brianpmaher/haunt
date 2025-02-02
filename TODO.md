@@ -16,6 +16,13 @@
   - [x] Memory
   - [ ] Input
   - [ ] Event
+- [ ] Memory_Arena
+  - [ ] platform_memory_reserve, platform_memory_commit
+- [ ] Collection
+  - [ ] Dynamic_Array
+  - [ ] Array
+  - [ ] Hash_Table
+  - [ ] String
 - [ ] Platform
   - [x] Windows - Win32
   - [ ] Linux - X11

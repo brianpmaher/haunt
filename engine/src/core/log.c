@@ -1,5 +1,5 @@
 #include "core/log.h"
-#include "core/mem.h"
+#include "core/memory.h"
 
 #include "platform/platform.h"
 
@@ -43,7 +43,7 @@ void log_output(Log_Level level, const char* message, ...) {
 
 	const i32 buffer_size = 32768;
 	char buffer1[buffer_size];
-	// TODO: Use mem_zero
+	// TODO: Use memory_zero
 	memset(buffer1, 0, sizeof(buffer1));
 
 	va_list args;

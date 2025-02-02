@@ -2,7 +2,7 @@
 
 #include "core/context.h"
 #include "core/log.h"
-#include "core/mem.h"
+#include "core/memory.h"
 
 #ifdef PLATFORM_WINDOWS
 
@@ -39,7 +39,7 @@ static const u8 console_colors[PLATFORM_CONSOLE_COLOR_COUNT] = {
 };
 
 static Internal* create_internal(void) {
-	Internal* internal = mem_alloc(sizeof(Internal), MEM_TAG_PLATFORM);
+	Internal* internal = memory_alloc(sizeof(Internal), MEMORY_TAG_PLATFORM);
 	internal->class_name = "haunt_window_class";
 	internal->hinst = GetModuleHandle(0);
 	return internal;
@@ -169,7 +169,7 @@ void platform_shutdown(Platform* platform) {
 
 	UnregisterClassA(internal->class_name, internal->hinst);
 
-	mem_free(platform->internal, sizeof(Internal), MEM_TAG_PLATFORM);
+	memory_free(platform->internal, sizeof(Internal), MEMORY_TAG_PLATFORM);
 }
 
 b8 platform_pump_messages(Platform* platform) {
@@ -235,25 +235,25 @@ static LRESULT CALLBACK process_message(HWND hwnd, UINT msg, WPARAM wparam, LPAR
 	return DefWindowProcA(hwnd, msg, wparam, lparam);
 }
 
-void* platform_mem_alloc(u64 size, b8 aligned) {
-	return VirtualAlloc(null, size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+void* platform_memory_alloc(u64 size, b8 aligned) {
+	return VirtualAlloc(null, size, MEMORY_COMMIT | MEMORY_RESERVE, PAGE_READWRITE);
 }
 
-void platform_mem_free(void* block, b8 aligned) {
-	VirtualFree(block, 0, MEM_RELEASE);
+void platform_memory_free(void* block, b8 aligned) {
+	VirtualFree(block, 0, MEMORY_RELEASE);
 }
 
-void* platform_mem_zero(void* block, u64 size) {
+void* platform_memory_zero(void* block, u64 size) {
 	ZeroMemory(block, size);
 	return block;
 }
 
-void* platform_mem_copy(void* dest, const void* src, u64 size) {
+void* platform_memory_copy(void* dest, const void* src, u64 size) {
 	CopyMemory(dest, src, size);
 	return dest;
 }
 
-void* platform_mem_set(void* dest, i32 value, u64 size) {
+void* platform_memory_set(void* dest, i32 value, u64 size) {
 	FillMemory(dest, size, value);
 	return dest;
 }
