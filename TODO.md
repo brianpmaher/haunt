@@ -48,3 +48,7 @@
   - [ ] Multi-frame event handling
     - Use a free-list?
 - [ ] Document functions
+- [ ] Multiple windows
+  - [ ] Windows
+  - [ ] Linux
+- [ ] MacOS platform
