@@ -2,7 +2,7 @@
 
 ## Version 0.1.0
 
-- [ ] Project setup
+- [x] Project setup
   - [x] VSCode project for windows
   - [x] VSCode project for linux
   - [x] Windows build system
@@ -36,7 +36,10 @@
   - [x] Windows - Win32
   - [x] Linux - X11
 - [ ] Renderer
-  - [ ] OpenGL init
+  - [x] OpenGL init
+    - [x] Windows
+    - [ ] Linux
+  - [ ] Support gl debug callback
   - [ ] Render triangle
   - [ ] Render quad
   - [ ] Render text
@@ -52,3 +55,8 @@
   - [ ] Windows
   - [ ] Linux
 - [ ] MacOS platform
+- [ ] Build improvements
+  - [ ] Use msvc compiler for Windows
+  - [ ] Use single translation unit builds
+    - [ ] Windows
+    - [ ] Linux

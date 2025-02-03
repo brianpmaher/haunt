@@ -38,11 +38,16 @@ int main(int argc, char** argv) {
 			log_info("App render returned %d", result);
 			break;
 		}
+
+		if (!_engine_render()) {
+			log_error("Engine render failed");
+			break;
+		}
 	}
 
 	result = app_shutdown(state);
 	if (result == APP_RESULT_CONTINUE) {
-		log_warn("App shutdown returned APP_RESULT_CONTINUE, ignoring");
+		log_warn("Engine shutdown returned APP_RESULT_CONTINUE, ignoring");
 		result = APP_RESULT_SUCCESS;
 	}
 
