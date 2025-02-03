@@ -53,4 +53,4 @@ typedef union Vector4 {
 #ifdef SIMD_USE_NEON
 	float32x4_t neon;
 #endif
-};
+} Vector4;

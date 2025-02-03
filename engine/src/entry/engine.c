@@ -77,19 +77,12 @@ b8 _engine_update(void) {
 }
 
 b8 _engine_render(void) {
-	// TODO: Move into opengl.h
-	glClearColor(0.392, 0.584, 0.929, 1.0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
-	// Change color with sine function
-	{
-		f64 time = platform_get_time(&engine.platform);
-		f32 red = sin(time) * 2.0 / 2.0;
-		f32 green = sin(time - 2.0 * pi / 3.0) * 2.0 / 2.0;
-		f32 blue = sin(time - 4.0 * pi / 3.0) * 2.0 / 2.0;
-		glClearColor(red, green, blue, 1.0);
-		glClear(GL_COLOR_BUFFER_BIT);
-	}
+	f64 time = platform_get_time(&engine.platform);
+	f32 red = sin(time) * 2.0 / 2.0;
+	f32 green = sin(time - 2.0 * pi / 3.0) * 2.0 / 2.0;
+	f32 blue = sin(time - 4.0 * pi / 3.0) * 2.0 / 2.0;
+	glClearColor(red, green, blue, 1.0);
+	glClear(GL_COLOR_BUFFER_BIT);
 
 	return platform_swap_buffers(&engine.platform);
 }

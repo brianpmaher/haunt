@@ -1,6 +1,9 @@
 #pragma once
 
 #include "core/context.h"
+
+#include "math/vector4.h"
+
 #include "platform/platform.h"
 
 #ifdef PLATFORM_WINDOWS

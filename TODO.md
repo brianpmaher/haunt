@@ -39,6 +39,7 @@
   - [x] OpenGL init
     - [x] Windows
     - [ ] Linux
+  - [ ] Support gl debug callback
   - [ ] Render triangle
   - [ ] Render quad
   - [ ] Render text

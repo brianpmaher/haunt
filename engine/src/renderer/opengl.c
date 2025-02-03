@@ -2,6 +2,8 @@
 
 #include "core/log.h"
 
+// TODO: Support gl debug callback
+
 #if GL_DEBUG_ENABLED
 //static void CALLBACK gl_debug_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *user);
 #endif
