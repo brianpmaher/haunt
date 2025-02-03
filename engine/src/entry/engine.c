@@ -7,16 +7,18 @@
 
 #include "platform/platform.h"
 
-typedef struct App {
+#include "renderer/opengl.h"
+
+typedef struct Engine {
 	b8 running;
 	b8 suspended;
 	Platform platform;
 	i32 width;
 	i32 height;
 	f64 prev_time;
-} App;
+} Engine;
 
-static App app;
+static Engine engine;
 
 static b8 init_subsystems(void);
 
@@ -30,13 +32,13 @@ b8 _engine_init(const App_Config* config) {
 		return false;
 	}
 
-	app.running = true;
-	app.suspended = false;
+	engine.running = true;
+	engine.suspended = false;
 
 	event_register(EVENT_TYPE_WINDOW_CLOSE, null, handle_window_close);
 
 	if (!platform_start(
-			&app.platform,
+			&engine.platform,
 			config->name,
 			config->window.x,
 			config->window.y,
@@ -64,16 +66,24 @@ static b8 init_subsystems(void) {
 b8 _engine_update(void) {
 	input_system_update();
 
-	if (!platform_pump_messages(&app.platform)) {
-		app.running = false;
+	if (!platform_pump_messages(&engine.platform)) {
+		engine.running = false;
 	}
 
 	// log_trace("Engine updated");
 	return true;
 }
 
+b8 _engine_render(void) {
+	// TODO: Move into opengl.h
+	glClearColor(0.392, 0.584, 0.929, 1.0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+	return platform_swap_buffers();
+}
+
 void _engine_shutdown(void) {
-	platform_shutdown(&app.platform);
+	platform_shutdown(&engine.platform);
 	shutdown_subsystems();
 
 	log_debug("Engine shutdown");
@@ -87,11 +97,11 @@ static void shutdown_subsystems(void) {
 }
 
 b8 _engine_is_running(void) {
-	return app.running;
+	return engine.running;
 }
 
 static b8 handle_window_close(Event_Code code, Event_Context* context, void* sender, void* listener) {
-	app.running = false;
+	engine.running = false;
 	event_fire(EVENT_TYPE_APP_QUIT, (Event_Context){0}, null);
 	return true;
 }

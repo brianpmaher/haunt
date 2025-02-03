@@ -167,6 +167,11 @@ b8 platform_pump_messages(Platform* platform) {
 	return true;
 }
 
+b8 platform_swap_buffers(void) {
+	log_error("platform_swap_buffers is not implemented for the Linux platform");
+	return false;
+}
+
 void* platform_memory_alloc(u64 size, b8 aligned) {
 	// TODO: Handle alignment
 	return malloc(size);

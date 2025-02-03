@@ -11,8 +11,9 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <Windowsx.h> // GET_X_LPARAM, GET_Y_LPARAM
-#include "renderer/opengl.h.h"
-#include <GL/wglext.h>
+
+// Must be included after Windows.h
+#include "renderer/opengl.h"
 
 typedef struct Clock {
 	f64 frequency;
@@ -24,6 +25,7 @@ typedef struct Platform_Internal {
 	HINSTANCE hinst;
 	// TODO: Handle multiple windows
 	HWND hwnd;
+	HDC device_context;
 	Clock clock;
 } Platform_Internal;
 
@@ -47,9 +49,10 @@ static PFNWGLCHOOSEPIXELFORMATARBPROC wglChoosePixelFormatARB = null;
 static PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = null;
 static PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = null;
 static void load_wgl_functions(void);
-static b8 equals_cstr_blen(const char* a, const char* b, size_t blen);
+static b8 cstring_equals_blen(const char* a, const char* b, size_t blen);
 
 static LRESULT CALLBACK process_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+
 static Platform_Internal* create_internal(void) {
 	Platform_Internal* internal = memory_alloc(sizeof(Platform_Internal), MEMORY_TAG_PLATFORM);
 	internal->class_name = "haunt_window_class";
@@ -164,6 +167,80 @@ b8 platform_start(Platform* platform, const char* app_name, i32 x, i32 y, i32 wi
 		return false;
 	}
 	set_window_data(internal->hwnd, platform);
+
+	internal->device_context = GetDC(internal->hwnd);
+	HDC dc = internal->device_context;
+	// Set pixel format for OpenGL context
+	{
+		i32 attrib[] = {
+			WGL_DRAW_TO_WINDOW_ARB, GL_TRUE,
+			WGL_SUPPORT_OPENGL_ARB, GL_TRUE,
+			WGL_DOUBLE_BUFFER_ARB,  GL_TRUE,
+			WGL_PIXEL_TYPE_ARB,     WGL_TYPE_RGBA_ARB,
+			WGL_COLOR_BITS_ARB,     24,
+			WGL_DEPTH_BITS_ARB,     24,
+			WGL_STENCIL_BITS_ARB,   8,
+
+#if SRGB_ENABLED
+			// sRGB framebuffer from WGL_ARB_framebuffer_sRGB extension
+		    // https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_framebuffer_sRGB.txt
+		    WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB, GL_TRUE,
+#endif
+
+#if MSAA_ENABLED
+			// Multisampled framebuffer from WGL_ARB_multisample extension
+		    // https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_multisample.txt
+		    WGL_SAMPLE_BUFFERS_ARB, 1,
+		    WGL_SAMPLES_ARB,        4, // 4x MSAA
+#endif
+
+			0,
+		};
+
+		i32 format;
+		u32 formats;
+		if (
+			!wglChoosePixelFormatARB(dc, attrib, NULL, 1, &format, &formats)
+				|| formats == 0
+		) {
+			log_fatal("OpenGL does not support required pixel format!");
+		}
+
+		PIXELFORMATDESCRIPTOR desc = {.nSize = sizeof(desc)};
+		i32 ok = DescribePixelFormat(dc, format, sizeof(desc), &desc);
+		assert(ok && "Failed to describe OpenGL pixel format");
+
+		if (!SetPixelFormat(dc, format, &desc)) {
+			log_fatal("Cannot set OpenGL selected pixel format!");
+		}
+	}
+
+	// Create modern OpenGL context
+	{
+		i32 attrib[] = {
+			WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
+			WGL_CONTEXT_MINOR_VERSION_ARB, 6,
+			WGL_CONTEXT_PROFILE_MASK_ARB,  WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
+#if GL_DEBUG_ENABLED
+			// Ask for debug context for debug builds to enable debug callback
+			WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_DEBUG_BIT_ARB,
+#endif
+			0,
+		};
+
+		HGLRC rc = wglCreateContextAttribsARB(dc, NULL, attrib);
+		if (!rc) {
+			log_fatal("Cannot create modern OpenGL context! OpenGL version 4.6 not supported?");
+		}
+
+		b32 ok = wglMakeCurrent(dc, rc);
+		assert(ok && "Failed to make current OpenGL context");
+
+		gladLoadGL();
+	}
+
+	wglSwapIntervalEXT(VSYNC_ENABLED);
+
 	show_window(internal);
 
 	clock_start(&internal->clock);
@@ -191,6 +268,12 @@ b8 platform_pump_messages(Platform* platform) {
 		DispatchMessageA(&msg);
 	}
 	return true;
+}
+
+b8 platform_swap_buffers(void) {
+	Platform* platform = get_active_window_data();
+	Platform_Internal* internal = (Platform_Internal*)platform->internal;
+	return SwapBuffers(internal->device_context);
 }
 
 void* platform_memory_alloc(u64 size, b8 aligned) {
@@ -252,7 +335,10 @@ void platform_sleep(u64 ms) {
 	Sleep(ms);
 }
 
-static b8 equals_cstr_blen(const char* a, const char* b, size_t blen) {
+/**
+ * Checks if the two cstrings are equal, while sizing by cstring b's length
+ */
+static b8 cstring_equals_blen(const char* a, const char* b, u64 blen) {
 	while (*a && blen-- && *b) {
 		if (*a++ != *b++) {
 			return false;
@@ -263,10 +349,9 @@ static b8 equals_cstr_blen(const char* a, const char* b, size_t blen) {
 }
 
 static void load_wgl_functions(void) {
-	// WGL functions need valid GL context, so create dummy window for dummy GL
-	// context
-	HWND dummy = CreateWindowExW(
-		0, L"STATIC", L"DummyWindow", WS_OVERLAPPED, CW_USEDEFAULT,
+	// WGL functions need valid GL context, so create dummy window for dummy GL context
+	HWND dummy = CreateWindowExA(
+		0, "STATIC", "DummyWindow", WS_OVERLAPPED, CW_USEDEFAULT,
 		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, NULL, NULL);
 	assert_message(dummy, "Failed to create dummy window");
 
@@ -281,16 +366,15 @@ static void load_wgl_functions(void) {
 		.cColorBits = 24,
 	};
 
-	int format = ChoosePixelFormat(dc, &desc);
+	i32 format = ChoosePixelFormat(dc, &desc);
 	if (!format) {
 		log_fatal("Cannot choose OpenGL pixel format for dummy window!");
 	}
 
-	int ok = DescribePixelFormat(dc, format, sizeof(desc), &desc);
+	i32 ok = DescribePixelFormat(dc, format, sizeof(desc), &desc);
 	assert_message(ok, "Failed to describe OpenGL pixel format");
 
-	// Reason to create dummy window is that SetPixelFormat can be called only
-	// once for the window
+	// Reason to create dummy window is that SetPixelFormat can be called only once for the window
 	if (!SetPixelFormat(dc, format, &desc)) {
 		log_fatal("Cannot set OpenGL pixel format for dummy window!");
 	}
@@ -317,15 +401,15 @@ static void load_wgl_functions(void) {
 		}
 
 		size_t length = ext - start;
-		if (equals_cstr_blen("WGL_ARB_pixel_format", start, length)) {
+		if (cstring_equals_blen("WGL_ARB_pixel_format", start, length)) {
 			// https://www.khronos.org/registry/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt
 			wglChoosePixelFormatARB =
 				(void*)wglGetProcAddress("wglChoosePixelFormatARB");
-		} else if (equals_cstr_blen("WGL_ARB_create_context", start, length)) {
+		} else if (cstring_equals_blen("WGL_ARB_create_context", start, length)) {
 			// https://www.khronos.org/registry/OpenGL/extensions/ARB/WGL_ARB_create_context.txt
 			wglCreateContextAttribsARB =
 				(void*)wglGetProcAddress("wglCreateContextAttribsARB");
-		} else if (equals_cstr_blen("WGL_EXT_swap_control", start, length)) {
+		} else if (cstring_equals_blen("WGL_EXT_swap_control", start, length)) {
 			// https://www.khronos.org/registry/OpenGL/extensions/EXT/WGL_EXT_swap_control.txt
 			wglSwapIntervalEXT = (void*)wglGetProcAddress("wglSwapIntervalEXT");
 		}
@@ -351,7 +435,7 @@ static void load_wgl_functions(void) {
 static LRESULT CALLBACK process_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	switch (msg) {
 		case WM_ERASEBKGND:
-			// Tell OS that app is handling background erase to prevent flickering
+			// Tell OS that engine is handling background erase to prevent flickering
 			return 1;
 		case WM_CLOSE:
 			event_fire(EVENT_TYPE_WINDOW_CLOSE, (Event_Context){0}, null);

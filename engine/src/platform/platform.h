@@ -22,6 +22,8 @@ void platform_shutdown(Platform* platform);
 
 b8 platform_pump_messages(Platform* platform);
 
+b8 platform_swap_buffers(void);
+
 // TODO: Separate this into platform reserve and commit
 void* platform_memory_alloc(u64 size, b8 aligned);
 
