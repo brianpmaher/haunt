@@ -39,3 +39,5 @@ void platform_console_write_error(const char* message, Platform_Console_Color co
 f64 platform_get_time();
 
 void platform_sleep(u64 ms);
+
+b8 platform_is_debugging(void);

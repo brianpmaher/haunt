@@ -1,6 +1,8 @@
-#include "platform/gl.h"
+#include "renderer/opengl.h.h"
 
-#if OPENGL_DEBUG_ENABLED
+#include "core/log.h"
+
+#if GL_DEBUG_ENABLED
 static void CALLBACK gl_debug_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *user);
 #endif
 
@@ -14,11 +16,11 @@ static void CALLBACK gl_debug_callback(GLenum source, GLenum type, GLuint id, GL
 	log_debug(message);
 
 	if (severity == GL_DEBUG_SEVERITY_HIGH || severity == GL_DEBUG_SEVERITY_MEDIUM) {
-		if (is_debugging()) {
+		if (platform_is_debugging()) {
 			assert_message(false, "OpenGL error - check the callstack in debugger");
 		}
 
-		fatal_error("OpenGL API usage error! Use debugger to examine call stack!");
+		log_fatal("OpenGL API usage error! Use debugger to examine call stack!");
 	}
 }
 #endif

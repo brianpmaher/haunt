@@ -20,7 +20,7 @@ echo !COMPILE_INFO! Files: %sources% !LOG_END!
 :: Build the engine
 set assembly=haunt
 set cflags=-g -shared -Wvarargs -Wall -Werror
-set includes=-Iengine/src -engine/deps
+set includes=-Iengine/src -Iengine/deps -Iengine/deps/glad/include
 set linker=-luser32 -lgdi32 -lopengl32
 set defines=-D_DEBUG -D_CRT_SECURE_NO_WARNINGS -DDLL_EXPORT
 echo !COMPILE_INFO! Building %assembly%... !LOG_END!

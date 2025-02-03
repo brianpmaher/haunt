@@ -11,9 +11,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <Windowsx.h> // GET_X_LPARAM, GET_Y_LPARAM
-
-// OpenGL includes for windows require Windows.h to be included first
-#include "platform/gl.h"
+#include "renderer/opengl.h.h"
 #include <GL/wglext.h>
 
 typedef struct Clock {
@@ -44,22 +42,20 @@ static const u8 console_colors[PLATFORM_CONSOLE_COLOR_COUNT] = {
 	FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY,
 };
 
+// OpenGL
+static PFNWGLCHOOSEPIXELFORMATARBPROC wglChoosePixelFormatARB = null;
+static PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = null;
+static PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = null;
+static void load_wgl_functions(void);
+static b8 equals_cstr_blen(const char* a, const char* b, size_t blen);
+
+static LRESULT CALLBACK process_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 static Platform_Internal* create_internal(void) {
 	Platform_Internal* internal = memory_alloc(sizeof(Platform_Internal), MEMORY_TAG_PLATFORM);
 	internal->class_name = "haunt_window_class";
 	internal->hinst = GetModuleHandle(0);
 	return internal;
 }
-
-static LRESULT CALLBACK process_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
-
-// OpenGL
-static PFNWGLCHOOSEPIXELFORMATARBPROC wglChoosePixelFormatARB = null;
-static PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = null;
-static PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = null;
-
-static void load_wgl_functions(void);
-static bool _equals_cstr_blen(const char* a, const char* b, size_t blen);
 
 static b8 register_window_class(HINSTANCE hinst, const char* class_name) {
 	HICON icon = LoadIcon(hinst, IDI_APPLICATION);
@@ -256,7 +252,7 @@ void platform_sleep(u64 ms) {
 	Sleep(ms);
 }
 
-FUNC bool _equals_cstr_blen(const char* a, const char* b, size_t blen) {
+static b8 equals_cstr_blen(const char* a, const char* b, size_t blen) {
 	while (*a && blen-- && *b) {
 		if (*a++ != *b++) {
 			return false;
@@ -287,7 +283,7 @@ static void load_wgl_functions(void) {
 
 	int format = ChoosePixelFormat(dc, &desc);
 	if (!format) {
-		fatal_error("Cannot choose OpenGL pixel format for dummy window!");
+		log_fatal("Cannot choose OpenGL pixel format for dummy window!");
 	}
 
 	int ok = DescribePixelFormat(dc, format, sizeof(desc), &desc);
@@ -296,7 +292,7 @@ static void load_wgl_functions(void) {
 	// Reason to create dummy window is that SetPixelFormat can be called only
 	// once for the window
 	if (!SetPixelFormat(dc, format, &desc)) {
-		fatal_error("Cannot set OpenGL pixel format for dummy window!");
+		log_fatal("Cannot set OpenGL pixel format for dummy window!");
 	}
 
 	HGLRC rc = wglCreateContext(dc);
@@ -308,7 +304,7 @@ static void load_wgl_functions(void) {
 	// https://www.khronos.org/registry/OpenGL/extensions/ARB/WGL_ARB_extensions_string.txt
 	PFNWGLGETEXTENSIONSSTRINGARBPROC wglGetExtensionsStringARB = (void *)wglGetProcAddress("wglGetExtensionsStringARB");
 	if (!wglGetExtensionsStringARB) {
-		fatal_error("OpenGL does not support WGL_ARB_extensions_string extension!");
+		log_fatal("OpenGL does not support WGL_ARB_extensions_string extension!");
 	}
 
 	const char* ext = wglGetExtensionsStringARB(dc);
@@ -321,15 +317,15 @@ static void load_wgl_functions(void) {
 		}
 
 		size_t length = ext - start;
-		if (_equals_cstr_blen("WGL_ARB_pixel_format", start, length)) {
+		if (equals_cstr_blen("WGL_ARB_pixel_format", start, length)) {
 			// https://www.khronos.org/registry/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt
 			wglChoosePixelFormatARB =
 				(void*)wglGetProcAddress("wglChoosePixelFormatARB");
-		} else if (_equals_cstr_blen("WGL_ARB_create_context", start, length)) {
+		} else if (equals_cstr_blen("WGL_ARB_create_context", start, length)) {
 			// https://www.khronos.org/registry/OpenGL/extensions/ARB/WGL_ARB_create_context.txt
 			wglCreateContextAttribsARB =
 				(void*)wglGetProcAddress("wglCreateContextAttribsARB");
-		} else if (_equals_cstr_blen("WGL_EXT_swap_control", start, length)) {
+		} else if (equals_cstr_blen("WGL_EXT_swap_control", start, length)) {
 			// https://www.khronos.org/registry/OpenGL/extensions/EXT/WGL_EXT_swap_control.txt
 			wglSwapIntervalEXT = (void*)wglGetProcAddress("wglSwapIntervalEXT");
 		}
@@ -343,7 +339,7 @@ static void load_wgl_functions(void) {
 	}
 
 	if (!wglChoosePixelFormatARB || !wglCreateContextAttribsARB || !wglSwapIntervalEXT) {
-		fatal_error("OpenGL does not support required WGL extensions for modern context!");
+		log_fatal("OpenGL does not support required WGL extensions for modern context!");
 	}
 
 	wglMakeCurrent(NULL, NULL);
@@ -412,4 +408,8 @@ static LRESULT CALLBACK process_message(HWND hwnd, UINT msg, WPARAM wparam, LPAR
 	return DefWindowProcA(hwnd, msg, wparam, lparam);
 }
 
-#endif
+b8 platform_is_debugging(void) {
+	return IsDebuggerPresent();
+}
+
+#endif // PLATFORM_WINDOWS

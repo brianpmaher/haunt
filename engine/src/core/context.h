@@ -1,7 +1,7 @@
 #pragma once
 
-#	if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
-#		define PLATFORM_WINDOWS 1
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
+#	define PLATFORM_WINDOWS 1
 #	ifndef _WIN64
 #		error "64-bit Windows is required"
 #	endif

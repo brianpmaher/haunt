@@ -206,5 +206,10 @@ f64 platform_get_time() {
 void platform_sleep(u64 ms) {
 	usleep(ms * 1000);
 }
+ 
+b8 platform_is_debugging(void) {
+	log_error("platform_is_debugging is not implemented for Linux platform");
+	return false;
+}
 
-#endif 
+#endif // PLATFORM_LINUX
