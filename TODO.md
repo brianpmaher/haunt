@@ -36,8 +36,8 @@
   - [x] Windows - Win32
   - [x] Linux - X11
 - [ ] Renderer
-  - [ ] OpenGL init
-    - [ ] Windows
+  - [x] OpenGL init
+    - [x] Windows
     - [ ] Linux
   - [ ] Render triangle
   - [ ] Render quad
@@ -54,3 +54,8 @@
   - [ ] Windows
   - [ ] Linux
 - [ ] MacOS platform
+- [ ] Build improvements
+  - [ ] Use msvc compiler for Windows
+  - [ ] Use single translation unit builds
+    - [ ] Windows
+    - [ ] Linux

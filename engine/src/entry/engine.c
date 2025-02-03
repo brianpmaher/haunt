@@ -5,6 +5,8 @@
 #include "core/event.h"
 #include "core/input/input.h"
 
+#include "math/constants.h"
+
 #include "platform/platform.h"
 
 #include "renderer/opengl.h"
@@ -79,7 +81,17 @@ b8 _engine_render(void) {
 	glClearColor(0.392, 0.584, 0.929, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-	return platform_swap_buffers();
+	// Change color with sine function
+	{
+		f64 time = platform_get_time(&engine.platform);
+		f32 red = sin(time) * 2.0 / 2.0;
+		f32 green = sin(time - 2.0 * pi / 3.0) * 2.0 / 2.0;
+		f32 blue = sin(time - 4.0 * pi / 3.0) * 2.0 / 2.0;
+		glClearColor(red, green, blue, 1.0);
+		glClear(GL_COLOR_BUFFER_BIT);
+	}
+
+	return platform_swap_buffers(&engine.platform);
 }
 
 void _engine_shutdown(void) {

@@ -121,18 +121,6 @@ static HWND create_window(HINSTANCE hinst, const char* class_name, const char* a
 	return handle;
 }
 
-static void set_window_data(HWND hwnd, Platform* platform) {
-	SetWindowLongPtrA(hwnd, GWLP_USERDATA, (LONG_PTR)platform);
-}
-
-static Platform* get_window_data(HWND hwnd) {
-	return (Platform*)GetWindowLongPtrA(hwnd, GWLP_USERDATA);
-}
-
-static Platform* get_active_window_data(void) {
-	return get_window_data(GetActiveWindow());
-}
-
 static void show_window(Platform_Internal* internal) {
 	// TODO: make these parameters
 	b8 activate = true;
@@ -166,7 +154,6 @@ b8 platform_start(Platform* platform, const char* app_name, i32 x, i32 y, i32 wi
 		log_fatal("Failed to create window");
 		return false;
 	}
-	set_window_data(internal->hwnd, platform);
 
 	internal->device_context = GetDC(internal->hwnd);
 	HDC dc = internal->device_context;
@@ -270,8 +257,7 @@ b8 platform_pump_messages(Platform* platform) {
 	return true;
 }
 
-b8 platform_swap_buffers(void) {
-	Platform* platform = get_active_window_data();
+b8 platform_swap_buffers(Platform* platform) {
 	Platform_Internal* internal = (Platform_Internal*)platform->internal;
 	return SwapBuffers(internal->device_context);
 }
@@ -322,8 +308,7 @@ static void clock_start(Clock* clock) {
 	QueryPerformanceCounter(&clock->start);
 }
 
-f64 platform_get_time() {
-	Platform* platform = get_active_window_data();
+f64 platform_get_time(Platform* platform) {
 	Platform_Internal* internal = (Platform_Internal*)platform->internal;
 
 	LARGE_INTEGER current;
