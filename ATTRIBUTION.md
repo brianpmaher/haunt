@@ -13,3 +13,7 @@ Core project structure is based on [Travis Vroman's](https://travisvroman.com/) 
 ## Windows CMD colors
 
 Credit to [Michele Locati](https://github.com/mlocati) for the [color codes script](https://gist.github.com/mlocati/fdabcaeb8071d5c75a2d51712db24011#file-win10colors-cmd).
+
+## Font and Logo
+
+The font is [Scary Momster from 1001fonts](https://www.1001fonts.com/scary-momster-font.html#license) and is available under a free license for non-commercial use, which this project falls under. The logo for the Haunt Engine is created using the Scary Momster font.
