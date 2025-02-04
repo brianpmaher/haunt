@@ -29,7 +29,7 @@ To setup the project for the first time, or after changes have been made, run `s
 - `setup.bat` - Setup the project and all of its dependencies
 - `build-all.bat` - Build the engine and editor
 - `build-engine.bat` - Build the engine
-- `build-engine.bat` - Build the editor
+- `build-editor.bat` - Build the editor
 
 ### Linux
 
@@ -40,7 +40,7 @@ To setup the project for the first time, or after changes have been made, run `s
 - `setup.sh` - Setup the project and all of its dependencies
 - `build-all.sh` - Build the engine and editor
 - `build-engine.sh` - Build the engine
-- `build-engine.sh` - Build the editor
+- `build-editor.sh` - Build the editor
 
 ### MacOS
 
