@@ -1,8 +1,7 @@
 #pragma once
 
 #include "core/context.h"
-
-#include "math/vector4.h"
+#include "core/math.h"
 
 #include "platform/platform.h"
 
