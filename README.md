@@ -39,6 +39,8 @@ To setup the project for the first time, or after changes have been made, run `s
 
 ### Linux
 
+<span style="color: red;">Linux support is currently broken.</span>
+
 To setup the project for the first time, or after changes have been made, run `scripts/linux/setup.bat` from a bash terminal.
 
 #### Scripts
