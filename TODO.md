@@ -16,7 +16,7 @@
   - [x] Memory
   - [ ] Input
     - [x] Input system
-    - [ ] Test all input types
+    - [x] Test all input types
     - [x] Win32 Platform Input
     - [ ] Linux Platform Input
   - [ ] Event
@@ -60,3 +60,7 @@
   - [ ] Use single translation unit builds
     - [ ] Windows
     - [ ] Linux
+- [ ] Make a single translation unit build
+  - [ ] Windows
+    - [ ] Support msvc compiler
+  - [ ] Linux
