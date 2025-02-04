@@ -6,6 +6,8 @@ Haunt is a game engine I'm developing for the kinds of games I want to make and 
 
 More info to come...
 
+![Clear colors](./docs/media/clear_colors.gif)
+
 ## Index
 
 - [Attributions](ATTRIBUTION.md)
