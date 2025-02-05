@@ -1,11 +1,5 @@
 #pragma once
 
-#include "core/context.h"
-
-#include "math/vector4.h"
-
-#include "platform/platform.h"
-
 #ifdef PLATFORM_WINDOWS
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -18,6 +12,12 @@
 #include <GL/glext.h>
 #include <GL/wglext.h>
 #endif
+
+#include "core/context.h"
+
+#include "math/vector4.h"
+
+#include "platform/platform.h"
 
 #define GL_DEBUG_ENABLED 1
 #define VSYNC_ENABLED 1

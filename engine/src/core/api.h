@@ -1,15 +1,17 @@
 #pragma once
 
+// #define func static
+
 #ifdef DLL_EXPORT
 #	ifdef _MSC_VER
-#		define HAPI __declspec(dllexport)
+#		define export __declspec(dllexport)
 #	else
-#		define HAPI __attribute__((visibility("default")))
+#		define export __attribute__((visibility("default")))
 #	endif
 #else // DLL_IMPORT
 #	ifdef _MSC_VER
-#		define HAPI __declspec(dllimport)
+#		define export __declspec(dllimport)
 #	else
-#		define HAPI
+#		define export
 #	endif
 #endif

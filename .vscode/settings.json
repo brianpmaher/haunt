@@ -20,5 +20,8 @@
 	},
 	"markdownlint.config": {
 		"no-inline-html": false,
-	}
+	},
+	"cSpell.words": [
+		"MSAA"
+	]
 }

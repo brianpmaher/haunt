@@ -33,8 +33,8 @@ b8 event_system_init(void);
 
 void event_system_shutdown(void);
 
-HAPI b8 event_register(Event_Code code, void* listener, On_Event on_event);
+export b8 event_register(Event_Code code, void* listener, On_Event on_event);
 
-HAPI b8 event_unregister(Event_Code code, void* listener, On_Event on_event);
+export b8 event_unregister(Event_Code code, void* listener, On_Event on_event);
 
-HAPI b8 event_fire(Event_Code code, Event_Context context, void* sender);
+export b8 event_fire(Event_Code code, Event_Context context, void* sender);

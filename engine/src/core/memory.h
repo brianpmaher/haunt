@@ -39,12 +39,12 @@ void memory_system_init(void);
 
 void memory_system_shutdown(void);
 
-HAPI void* memory_alloc(u64 size, Memory_Tag tag);
+export void* memory_alloc(u64 size, Memory_Tag tag);
 
-HAPI void memory_free(void* block, u64 size, Memory_Tag tag);
+export void memory_free(void* block, u64 size, Memory_Tag tag);
 
-HAPI void* memory_zero(void* block, u64 size);
+export void* memory_zero(void* block, u64 size);
 
-HAPI void* memory_copy(void* dest, const void* src, u64 size);
+export void* memory_copy(void* dest, const void* src, u64 size);
 
-HAPI void* memory_set(void* dest, i32 value, u64 size);
+export void* memory_set(void* dest, i32 value, u64 size);

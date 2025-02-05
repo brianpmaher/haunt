@@ -22,7 +22,7 @@ b8 logging_system_init();
 
 void logging_system_shutdown();
 
-HAPI void log_output(Log_Level level, const char* message, ...);
+export void log_output(Log_Level level, const char* message, ...);
 
 #define log_fatal(message, ...) log_output(LOG_LEVEL_FATAL, message, ##__VA_ARGS__)
 

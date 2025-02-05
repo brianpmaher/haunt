@@ -1,5 +1,8 @@
 #pragma once
 
+#include "core/api.h"
+#include "core/types.h"
+
 typedef enum Key {
 	// Modifiers
 	KEY_BACKSPACE = 0x08,
@@ -121,3 +124,54 @@ typedef enum Key {
 
 	KEY_COUNT,
 } Key;
+
+typedef enum Mouse_Button {
+	MOUSE_BUTTON_LEFT,
+	MOUSE_BUTTON_MIDDLE,
+	MOUSE_BUTTON_RIGHT,
+	MOUSE_BUTTON_COUNT,
+} Mouse_Button;
+
+void input_system_init(void);
+
+void input_system_shutdown(void);
+
+void input_system_update(void);
+
+void input_system_process_key(Key key, b8 pressed);
+
+void input_system_process_mouse_button(Mouse_Button button, b8 pressed);
+
+void input_system_process_mouse_wheel(i32 y);
+
+void input_system_process_mouse_position(i32 x, i32 y);
+
+// Key pressed this frame
+export b8 input_is_key_pressed(Key key);
+
+// Key released this frame
+export b8 input_is_key_released(Key key);
+
+// Key is down
+export b8 input_is_key_down(Key key);
+
+// Key is up
+export b8 input_is_key_up(Key key);
+
+// Key pressed this frame
+export b8 input_is_mouse_button_pressed(Mouse_Button button);
+
+// Key released this frame
+export b8 input_is_mouse_button_released(Mouse_Button button);
+
+// Key is down
+export b8 input_is_mouse_button_down(Mouse_Button button);
+
+// Key is up
+export b8 input_is_mouse_button_up(Mouse_Button button);
+
+export i32 input_get_mouse_wheel_delta(void);
+
+export void input_get_mouse_position(i32* x, i32* y);
+
+export void input_get_mouse_position_delta(i32* x, i32* y);
