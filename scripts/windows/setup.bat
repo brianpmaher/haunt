@@ -10,18 +10,22 @@ echo !SETUP_INFO! Checking for required tools... !LOG_END!
 :: git
 call git --version >nul 2>&1
 if %errorlevel% neq 0 (
-	echo !SETUP_ERROR! Git is not installed. Please install Git and try again. Link: https://git-scm.com/downloads/win !LOG_END!
+	echo !SETUP_ERROR! git is not installed. Please install Git and try again. Link: https://git-scm.com/downloads/win !LOG_END!
 	goto exit_error
 )
 echo !SETUP_INFO! git found
 
 :: cl
-call clang --version >nul 2>&1
+call cl >nul 2>&1
 if %errorlevel% neq 0 (
-	echo !SETUP_ERROR! Clang is not installed. Please install Clang and try again. Link: https://llvm.org/builds/ !LOG_END!
-	goto exit_error
+	echo !SETUP_WARN! cl not found. Trying vcvarsall.bat x64 !LOG_END!
+	if !errorlevel! neq 0 (
+		echo !SETUP_ERROR! Visual C compiler not found. If you don't have visual studio installed install it. Link: https://visualstudio.microsoft.com/downloads/ ^
+			If you do have it installed, run vcvarsll.bat x64 and try again. !LOG_END!
+		goto exit_error
+	)
 )
-echo !SETUP_INFO! clang found !LOG_END!
+echo !SETUP_INFO! cl found !LOG_END!
 
 :: Done checking for required tools
 echo !SETUP_INFO! All required tools found !LOG_END!
@@ -45,9 +49,7 @@ if not exist bin (
 echo !SETUP_SUCCESS! Setup complete !LOG_END!
 
 :exit
-endlocal
 exit /b 0
 
 :exit_error
-endlocal
 exit /b 1
