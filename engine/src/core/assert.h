@@ -1,6 +1,5 @@
-#pragma once
-
-#include "core/api.h"
+#ifndef HAUNT_CORE_ASSERT_H
+#define HAUNT_CORE_ASSERT_H
 
 #define ASSERT_ENABLED 1
 
@@ -22,3 +21,5 @@ export void assert_handler(const char* expression, const char* message, const ch
 #	define assert(expression)
 #	define assert_message(expression, message)
 #endif
+
+#endif // HAUNT_CORE_ASSERT_H

@@ -1,16 +1,3 @@
-#include "entry/engine.h"
-
-#include "core/log.h"
-#include "core/memory.h"
-#include "core/event.h"
-#include "core/input.h"
-
-#include "math/constants.h"
-
-#include "platform/platform.h"
-
-#include "renderer/opengl.h"
-
 typedef struct Engine {
 	b8 running;
 	b8 suspended;
@@ -79,8 +66,8 @@ b8 _engine_update(void) {
 b8 _engine_render(void) {
 	f64 time = platform_get_time(&engine.platform);
 	f32 red = sin(time) * 2.0 / 2.0;
-	f32 green = sin(time - 2.0 * pi / 3.0) * 2.0 / 2.0;
-	f32 blue = sin(time - 4.0 * pi / 3.0) * 2.0 / 2.0;
+	f32 green = sin(time - 2.0 * PI / 3.0) * 2.0 / 2.0;
+	f32 blue = sin(time - 4.0 * PI / 3.0) * 2.0 / 2.0;
 	glClearColor(red, green, blue, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 

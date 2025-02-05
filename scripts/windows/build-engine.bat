@@ -9,12 +9,7 @@ setlocal EnableDelayedExpansion
 call scripts\windows\internal\log.bat
 
 :: Find all source files
-pushd engine
-set sources=
-for /r %%f in (*.c) do (
-	set sources=!sources! %%f
-)
-popd
+set sources=engine/src/haunt.c
 echo !COMPILE_INFO! Files: %sources% !LOG_END!
 
 :: Build the engine

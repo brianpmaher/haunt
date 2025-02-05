@@ -1,7 +1,5 @@
-#pragma once
-
-#include "core/api.h"
-#include "core/types.h"
+#ifndef HAUNT_CORE_LOG_H
+#define HAUNT_CORE_LOG_H
 
 #define LOG_WARN_ENABLED  1
 #define LOG_INFO_ENABLED  1
@@ -51,3 +49,5 @@ export void log_output(Log_Level level, const char* message, ...);
 #else
 #define log_trace(message, ...)
 #endif
+
+#endif // HAUNT_CORE_LOG_H

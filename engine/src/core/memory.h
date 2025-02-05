@@ -1,7 +1,5 @@
-#pragma once
-
-#include "core/api.h"
-#include "core/types.h"
+#ifndef HAUNT_CORE_MEMORY_H
+#define HAUNT_CORE_MEMORY_H
 
 #define MEMORY_TRACKING_ENABLED      1
 #define MEMORY_ZERO_ON_ALLOC_ENABLED 1
@@ -48,3 +46,5 @@ export void* memory_zero(void* block, u64 size);
 export void* memory_copy(void* dest, const void* src, u64 size);
 
 export void* memory_set(void* dest, i32 value, u64 size);
+
+#endif // HAUNT_CORE_MEMORY_H

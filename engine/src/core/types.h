@@ -1,6 +1,5 @@
-#pragma once
-
-#include "core/assert.h"
+#ifndef HAUNT_CORE_TYPES_H
+#define HAUNT_CORE_TYPES_H
 
 #define null ((void*)0)
 
@@ -38,3 +37,5 @@ static_assert(sizeof(f64) == 8, "Expected f64 to be 8 bytes");
 
 static_assert(sizeof(b8) == 1, "Expected b8 to be 1 byte");
 static_assert(sizeof(b32) == 4, "Expected b32 to be 4 bytes");
+
+#endif // HAUNT_CORE_TYPES_H

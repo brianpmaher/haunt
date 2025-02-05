@@ -1,6 +1,5 @@
-#pragma once
-
-#include "core/types.h"
+#ifndef HAUNT_PLATFORM_H
+#define HAUNT_PLATFORM_H
 
 typedef struct Platform {
 	void* internal;
@@ -43,3 +42,5 @@ f64 platform_get_time(Platform* platform);
 void platform_sleep(u64 ms);
 
 b8 platform_is_debugging(void);
+
+#endif // HAUNT_PLATFORM_H

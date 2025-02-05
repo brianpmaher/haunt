@@ -1,7 +1,3 @@
-#include "core/event.h"
-
-#include "core/log.h"
-
 #define EVENT_CODE_MAX EVENT_TYPE_MAX
 #define EVENT_CODE_ENTRY_MAX 512
 
@@ -21,9 +17,10 @@ typedef struct Event_System {
 	u32 entry_count;
 } Event_System;
 
-static Event_System event_system = {0};
+static Event_System event_system;
 
 b8 event_system_init(void) {
+	memory_zero(&event_system, sizeof(event_system));
 	return true;
 }
 

@@ -247,6 +247,7 @@ static int has_ext(const char *ext) {
             const char *e = exts_i[index];
 
             if(exts_i[index] != NULL && strcmp(e, ext) == 0) {
+
                 return 1;
             }
         }

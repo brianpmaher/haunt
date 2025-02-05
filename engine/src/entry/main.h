@@ -1,9 +1,5 @@
-#pragma once
-
-#include "entry/app.h"
-#include "entry/engine.h"
-
-#include "core/log.h"
+#ifndef HAUNT_ENTRY_MAIN_H
+#define HAUNT_ENTRY_MAIN_H
 
 int main(int argc, char** argv) {
 	App_Config config = app_config();
@@ -55,3 +51,5 @@ int main(int argc, char** argv) {
 
 	return result;
 }
+
+#endif // HAUNT_ENTRY_MAIN_H

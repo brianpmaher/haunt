@@ -1,20 +1,3 @@
-#include "platform/platform.h"
-
-#include "core/context.h"
-#include "core/log.h"
-#include "core/memory.h"
-#include "core/input.h"
-#include "core/event.h"
-
-#ifdef PLATFORM_WINDOWS
-
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#include <Windowsx.h> // GET_X_LPARAM, GET_Y_LPARAM
-
-// Must be included after Windows.h
-#include "renderer/opengl.h"
-
 typedef struct Clock {
 	f64 frequency;
 	LARGE_INTEGER start;
@@ -480,5 +463,3 @@ static LRESULT CALLBACK process_message(HWND hwnd, UINT msg, WPARAM wparam, LPAR
 b8 platform_is_debugging(void) {
 	return IsDebuggerPresent();
 }
-
-#endif // PLATFORM_WINDOWS

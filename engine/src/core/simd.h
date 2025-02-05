@@ -1,8 +1,5 @@
-#pragma once
-
-/**
- * Checks for SIMD support.
- */
+#ifndef HAUNT_CORE_SIMD_H
+#define HAUNT_CORE_SIMD_H
 
 // Config
 #define SIMD_ENABLED 1
@@ -33,3 +30,5 @@
 #ifdef SIMD_USE_NEON
 #	include <arm_neon.h>
 #endif
+
+#endif // HAUNT_CORE_SIMD_H

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef HAUNT_CORE_CONTEXT_H
+#define HAUNT_CORE_CONTEXT_H
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
 #	define PLATFORM_WINDOWS 1
@@ -26,3 +27,5 @@
 #else
 #	error "Unknown platform"
 #endif
+
+#endif // HAUNT_CORE_CONTEXT_H

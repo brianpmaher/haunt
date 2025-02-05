@@ -1,8 +1,3 @@
-#include "core/input.h"
-
-#include "core/memory.h"
-#include "core/event.h"
-
 typedef struct Key_State {
 	b8 pressed[KEY_COUNT];
 	b8 released[KEY_COUNT];

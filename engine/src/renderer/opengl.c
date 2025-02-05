@@ -1,7 +1,3 @@
-#include "renderer/opengl.h"
-
-#include "core/log.h"
-
 // TODO: Support gl debug callback
 
 #if GL_DEBUG_ENABLED

@@ -1,12 +1,3 @@
-#include "core/log.h"
-#include "core/memory.h"
-
-#include "platform/platform.h"
-
-#include <stdio.h>
-#include <string.h>
-#include <stdarg.h>
-
 static const char* level_strings[LOG_LEVEL_COUNT] = {
 	"[FATAL] ",
 	"[ERROR] ",

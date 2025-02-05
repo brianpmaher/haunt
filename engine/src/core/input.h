@@ -1,7 +1,5 @@
-#pragma once
-
-#include "core/api.h"
-#include "core/types.h"
+#ifndef HAUNT_CORE_INPUT_H
+#define HAUNT_CORE_INPUT_H
 
 typedef enum Key {
 	// Modifiers
@@ -175,3 +173,5 @@ export i32 input_get_mouse_wheel_delta(void);
 export void input_get_mouse_position(i32* x, i32* y);
 
 export void input_get_mouse_position_delta(i32* x, i32* y);
+
+#endif // HAUNT_CORE_INPUT_H

@@ -1,6 +1,5 @@
-#pragma once
-
-#include "core/types.h"
+#ifndef HAUNT_CORE_EVENT_H
+#define HAUNT_CORE_EVENT_H
 
 typedef enum Event_Type {
 	// Engine events
@@ -38,3 +37,5 @@ export b8 event_register(Event_Code code, void* listener, On_Event on_event);
 export b8 event_unregister(Event_Code code, void* listener, On_Event on_event);
 
 export b8 event_fire(Event_Code code, Event_Context context, void* sender);
+
+#endif // HAUNT_CORE_EVENT_H

@@ -1,10 +1,3 @@
-#include "core/memory.h"
-#include "core/log.h"
-
-#include "platform/platform.h"
-
-#include <stdio.h>
-
 #if MEMORY_TRACKING_ENABLED
 typedef struct Mem_Stats {
 	u64 total_allocated;

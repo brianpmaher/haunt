@@ -15,7 +15,7 @@ if %errorlevel% neq 0 (
 )
 echo !SETUP_INFO! git found
 
-:: clang
+:: cl
 call clang --version >nul 2>&1
 if %errorlevel% neq 0 (
 	echo !SETUP_ERROR! Clang is not installed. Please install Clang and try again. Link: https://llvm.org/builds/ !LOG_END!

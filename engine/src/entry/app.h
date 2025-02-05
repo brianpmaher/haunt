@@ -1,6 +1,5 @@
-#pragma once
-
-#include "core/types.h"
+#ifndef HAUNT_ENTRY_APP_H
+#define HAUNT_ENTRY_APP_H
 
 typedef struct Window_Config {
 	i32 x;
@@ -31,3 +30,5 @@ extern App_Result app_render(void* state);
 extern App_Result app_on_resize(void* state);
 
 extern App_Result app_shutdown(void* state);
+
+#endif // HAUNT_ENTRY_APP_H
