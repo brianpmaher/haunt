@@ -18,12 +18,9 @@ echo !SETUP_INFO! git found
 :: cl
 call cl >nul 2>&1
 if %errorlevel% neq 0 (
-	echo !SETUP_WARN! cl not found. Trying vcvarsall.bat x64 !LOG_END!
-	if !errorlevel! neq 0 (
-		echo !SETUP_ERROR! Visual C compiler not found. If you don't have visual studio installed install it. Link: https://visualstudio.microsoft.com/downloads/ ^
-			If you do have it installed, run vcvarsll.bat x64 and try again. !LOG_END!
-		goto exit_error
-	)
+	echo !SETUP_ERROR! Visual C compiler not found. If you don't have visual studio installed install it. ^
+		Link: https://visualstudio.microsoft.com/downloads/ ^
+		If you do have it installed, run vcvarsll.bat x64 and try again. !LOG_END!
 )
 echo !SETUP_INFO! cl found !LOG_END!
 
