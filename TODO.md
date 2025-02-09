@@ -29,17 +29,19 @@ Objective: Provide all of the foundation necessary to make a basic 2D or 3D game
   - Window
     - [x] Create and display window
     - [ ] Show engine version in window title
-  - [ ] Input
+  - Input
     - [x] Input system
-    - [x] Test all input types
     - [x] Win32 Platform Input
+      - [x] Test key, mouse button, mouse move, and scroll events
     - [ ] Linux Platform Input
-  - [ ] Event
+      - [ ] Test key, mouse button, mouse move, and scroll events
+  - Event
     - [x] Event system
-    - [x] Test all engine events
     - [ ] Test custom events
     - [x] Win32 Platform Event
+      - [x] Test engine events
     - [ ] Linux Platform Event
+      - [ ] Test engine events
 - Math
   - [ ] Include all common linear algebra functions
 - Collections
