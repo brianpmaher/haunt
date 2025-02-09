@@ -2,6 +2,10 @@
 	"recommendations": [
 		"ms-vscode.cpptools",
 		"slevesque.shader",
-		"aaron-bond.better-comments"
+		"aaron-bond.better-comments",
+		"streetsidesoftware.code-spell-checker",
+		"bierner.markdown-checkbox",
+		"eamodio.gitlens",
+		"davidanson.vscode-markdownlint"
 	]
 }
