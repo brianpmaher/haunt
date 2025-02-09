@@ -39,10 +39,6 @@ Objective: Provide all of the foundation necessary to make a basic 2D or 3D game
     - [x] Test engine events
   - [ ] Linux Platform Event
     - [ ] Test engine events
-- Audio
-  - [ ] Audio system
-  - [ ] Play music
-  - [ ] Play one-shot audio
 - Math
   - [x] Include all common linear algebra functions
 - Collections
@@ -64,13 +60,18 @@ Objective: Provide all of the foundation necessary to make a basic 2D or 3D game
   - [ ] Render sprite animation
 - Camera
   - [ ] Plan camera system
+- Audio
+  - [ ] Audio system
+  - [ ] Play music
+  - [ ] Play one-shot audio
 - Collision
   - [ ] Plan collision system
+- [ ] Editor
+  - [x] Open a window
+  - [ ] Show logo
 
 ## Backlog
 
-- [ ] Editor
-  - [ ] Open a window
 - [ ] Event system improvements
   - [ ] Multithreaded event system
   - [ ] Multi-frame event handling
