@@ -1,6 +1,6 @@
 #include "core/log.h"
-#include "core/memory.h"
 
+#include "core/memory.h"
 #include "platform/platform.h"
 
 #include <stdio.h>

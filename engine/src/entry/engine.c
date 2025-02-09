@@ -4,11 +4,8 @@
 #include "core/memory.h"
 #include "core/event.h"
 #include "core/input.h"
-
-#include "math/constants.h"
-
+#include "math/linalg.h"
 #include "platform/platform.h"
-
 #include "renderer/opengl.h"
 
 typedef struct Engine {

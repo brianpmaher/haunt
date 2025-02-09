@@ -1,9 +1,8 @@
 #pragma once
 
+#include "core/log.h"
 #include "entry/app.h"
 #include "entry/engine.h"
-
-#include "core/log.h"
 
 int main(int argc, char** argv) {
 	App_Config config = app_config();
