@@ -16,9 +16,6 @@ Objective: Provide all of the foundation necessary to make a basic 2D or 3D game
     - This will also be a necessity for any server development support we choose to include in the future.
   - [ ] Generate documentation from `include` directory
   - [ ] Setup .clang-format for automatic formatting
-- Planning
-  - [ ] Plan engine architecture
-  - [ ] Plan roadmap
 - Core systems
   - [x] Logging
   - Memory
