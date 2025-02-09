@@ -1,6 +1,7 @@
 #include "renderer/opengl.h"
 
 #include "core/log.h"
+#include "platform/platform.h"
 
 // TODO: Linux implementation?
 #if GL_DEBUG_ENABLED
