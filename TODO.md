@@ -40,7 +40,7 @@ Objective: Provide all of the foundation necessary to make a basic 2D or 3D game
     - [ ] Linux Platform Event
       - [ ] Test engine events
 - Math
-  - [ ] Include all common linear algebra functions
+  - [x] Include all common linear algebra functions
 - Collections
   - [ ] Dynamic_Array
   - [ ] Array
