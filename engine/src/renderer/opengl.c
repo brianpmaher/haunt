@@ -19,6 +19,8 @@ static void gl_debug_callback(GLenum source, GLenum type, GLuint id, GLenum seve
 #endif
 
 void gl_init(void) {
+#if GL_DEBUG_ENABLED
 	glDebugMessageCallback(&gl_debug_callback, NULL);
 	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+#endif
 }
