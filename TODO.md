@@ -4,7 +4,7 @@
 
 Objective: Provide all of the foundation necessary to make a basic 2D or 3D game for Windows and Linux.
 
-- Project setup
+- Project
   - [x] VSCode project for windows
   - [x] VSCode project for linux
   - [x] Windows build system
@@ -12,10 +12,11 @@ Objective: Provide all of the foundation necessary to make a basic 2D or 3D game
   - [x] Linux build system
   - [ ] Separate public functionality into `include` directory to keep separate from internal headers
   - [ ] Document public types and functions
+  - [ ] Generate documentation from `include` directory
   - [ ] Support headless (windowless?) mode for being able to write scripts in C while reusing the library functionality from Haunt
     - This will also be a necessity for any server development support we choose to include in the future.
-  - [ ] Generate documentation from `include` directory
   - [ ] Setup .clang-format for automatic formatting
+  - [ ] Cleanup unnecessary forward declarations... It makes things messy
 - Core systems
   - [x] Logging
   - Memory
@@ -50,10 +51,10 @@ Objective: Provide all of the foundation necessary to make a basic 2D or 3D game
   - [x] Windows - Win32
   - [x] Linux - X11
 - Renderer
-  - [x] OpenGL init
+  - [x] OpenGL 4.6 init
     - [x] Windows
     - [ ] Linux
-  - [ ] Support gl debug callback
+  - [x] Support gl debug callback
   - [ ] Render triangle
   - [ ] Render quad
   - [ ] Render text
