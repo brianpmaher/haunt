@@ -31,8 +31,7 @@ Objective: Provide all of the foundation necessary to make a basic 2D or 3D game
     - [ ] Show engine version in window title
   - [ ] Input
     - [x] Input system
-    - [ ] Test all input types
-      - [ ] BUG: Mouse event fires down before pressed
+    - [x] Test all input types
     - [x] Win32 Platform Input
     - [ ] Linux Platform Input
   - [ ] Event
