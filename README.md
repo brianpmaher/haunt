@@ -1,3 +1,5 @@
+# Haunt Game Engine
+
 <p align="center">
   <img src="./docs/media/haunt_logo_white.png" alt="haunt logo">
 </p>
@@ -30,7 +32,7 @@ Scripts for each host platform are location within `scripts/<platform>`. For exa
 
 To setup the project for the first time, or after changes have been made, run `scripts\windows\setup.bat` from a cmd terminal.
 
-#### Scripts
+#### Windows Scripts
 
 - `setup.bat` - Setup the project and all of its dependencies
 - `build-all.bat` - Build the engine and editor
@@ -41,7 +43,7 @@ To setup the project for the first time, or after changes have been made, run `s
 
 To setup the project for the first time, or after changes have been made, run `scripts/linux/setup.bat` from a bash terminal.
 
-#### Scripts
+#### Linux Scripts
 
 - `setup.sh` - Setup the project and all of its dependencies
 - `build-all.sh` - Build the engine and editor
