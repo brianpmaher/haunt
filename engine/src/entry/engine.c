@@ -47,6 +47,8 @@ b8 _engine_init(const App_Config* config) {
 		return false;
 	}
 
+	gl_init();
+
 	log_debug("Engine initialized");
 	return true;
 }
