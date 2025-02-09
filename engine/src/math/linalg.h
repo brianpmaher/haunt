@@ -1,10 +1,5 @@
 #pragma once
 
-// TODO: Visually inspect all functions, variable names, comments, etc
-// TODO: Add handmade-math attribution
-// TODO: Add quat_from_mat4_rh insomniac attribution
-// TODO: Add rotate_vec3_quat molecular matters attribution
-
 #include "math/base.h"
 #include "math/angle.h"
 #include "math/types.h"

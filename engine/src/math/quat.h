@@ -261,17 +261,14 @@ static inline Quat slerp(Quat left, f32 t, Quat right) {
 // This method taken from Mike Day at Insomniac Games.
 // https://d3cw3dd2w32x2b.cloudfront.net/wp-content/uploads/2015/01/matrix-to-quat.pdf
 //
-// Note that as mentioned at the top of the paper, the paper assumes the mat
-// would be *post*-multiplied to a vec to rotate it, meaning the mat is
+// Note that as mentioned at the top of the paper, the paper assumes the matrix
+// would be post-multiplied to a vector to rotate it, meaning the matrix is
 // the transpose of what we're dealing with. But, because our matrices are
-// stored in column-major order, the indices *appear* to match the paper.
+// stored in column-major order, the indices appear to match the paper.
 //
 // For example, m12 in the paper is row 1, column 2. We need to transpose it to
 // row 2, column 1. But, because the column comes first when referencing
 // elements, it looks like mat.elements[1][2].
-//
-// Don't be confused! Or if you must be confused, at least trust this
-// comment. :)
 static inline Quat quat_from_mat4_rh(Mat4 mat) {
 	f32 t;
 	Quat q;
