@@ -1,6 +1,6 @@
 # Haunt Game Engine
 
-<p align="center" style="padding-top: 16px;">
+<p align="center">
   <img src="./docs/media/haunt_logo_white.png" alt="haunt logo">
 </p>
 
