@@ -7,7 +7,7 @@ sources=$(find editor/src -name "*.c")
 
 # Build the editor
 assembly="editor"
-cflags="-g -Wall -Werror -Wno-gnu-folding-constant -std=c17"
+cflags="-g -Wall -Werror -Wno-gnu-folding-constant -Wno-unused-function -std=c17"
 includes="-Ieditor/src -Iengine/src"
 linker="-Lbin -lhaunt -lX11"
 defines="-D_DEBUG -DDLL_IMPORT"

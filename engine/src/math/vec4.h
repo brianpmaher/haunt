@@ -4,13 +4,18 @@
 
 static inline Vec4 vec4(f32 x, f32 y, f32 z, f32 w) {
 	Vec4 vec;
+
 #ifdef SIMD_USE_SSE
 	vec.sse = _mm_setr_ps(x, y, z, w);
 #elif defined(SIMD_USE_NEON)
 	vec.neon = (float32x4_t){x, y, z, w};
 #else
-	vec = (Vec4){x, y, z, w};
+	vec.x = x;
+	vec.y = y;
+	vec.z = z;
+	vec.w = w;
 #endif
+
 	return vec;
 }
 
@@ -142,22 +147,14 @@ static inline f32 dot_vec4(Vec4 left, Vec4 right) {
 	see_res_one = _mm_add_ps(see_res_one, sse_res_two);
 	_mm_store_ss(&result, see_res_one);
 #elif defined(SIMD_USE_NEON)
-	float32x4_t NEONMultiplyResult = vmulq_f32(left.neon, right.neon);
-	float32x4_t NEONHalfAdd = vpaddq_f32(NEONMultiplyResult, NEONMultiplyResult);
-	float32x4_t NEONFullAdd = vpaddq_f32(NEONHalfAdd, NEONHalfAdd);
-	result = vgetq_lane_f32(NEONFullAdd, 0);
+	float32x4_t neon_multiply_result = vmulq_f32(left.neon, right.neon);
+	float32x4_t neon_half_add = vpaddq_f32(neon_multiply_result, neon_multiply_result);
+	float32x4_t neon_full_add = vpaddq_f32(neon_half_add, neon_half_add);
+	result = vgetq_lane_f32(neon_full_add, 0);
 #else
 	result = ((left.x * right.x) + (left.z * right.z)) + ((left.y * right.y) + (left.w * right.w));
 #endif
 
-	return result;
-}
-
-static inline Vec3 cross(Vec3 left, Vec3 right) {
-	Vec3 result;
-	result.x = (left.y * right.z) - (left.z * right.y);
-	result.y = (left.z * right.x) - (left.x * right.z);
-	result.z = (left.x * right.y) - (left.y * right.x);
 	return result;
 }
 
@@ -170,7 +167,7 @@ static inline f32 len_vec4(Vec4 a) {
 }
 
 static inline Vec4 norm_vec4(Vec4 a) {
-	return mul_vec4_f32(a, invsqrtf(dot_vec4(a, a)));
+	return mul_vec4_f32(a, invsqrt_f32(dot_vec4(a, a)));
 }
 
 static inline Vec4 lerp_vec4(Vec4 a, f32 t, Vec4 b) {

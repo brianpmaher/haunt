@@ -3,48 +3,65 @@
 #include "math/types.h"
 
 static inline Vec2 vec2(f32 x, f32 y) {
-	return (Vec2){x, y};
+	Vec2 vec;
+
+	vec.x = x;
+	vec.y = y;
+
+	return vec;
 }
 
 static inline Vec2 add_vec2(Vec2 left, Vec2 right) {
 	Vec2 result;
+
 	result.x = left.x + right.x;
 	result.y = left.y + right.y;
+
 	return result;
 }
 
 static inline Vec2 sub_vec2(Vec2 left, Vec2 right) {
 	Vec2 result;
+
 	result.x = left.x - right.x;
 	result.y = left.y - right.y;
+
 	return result;
 }
 
 static inline Vec2 mul_vec2(Vec2 left, Vec2 right) {
 	Vec2 result;
+
 	result.x = left.x * right.x;
 	result.y = left.y * right.y;
+
 	return result;
 }
 
 static inline Vec2 mul_vec2_f32(Vec2 left, f32 right) {
 	Vec2 result;
+
 	result.x = left.x * right;
 	result.y = left.y * right;
+
 	return result;
 }
 
 static inline Vec2 div_vec2(Vec2 left, Vec2 right) {
 	Vec2 result;
+
 	result.x = left.x / right.x;
 	result.y = left.y / right.y;
+
 	return result;
 }
 
 static inline Vec2 div_vec2_f32(Vec2 left, f32 right) {
 	Vec2 result;
+
 	result.x = left.x / right;
 	result.y = left.y / right;
+
 	return result;
 }
 

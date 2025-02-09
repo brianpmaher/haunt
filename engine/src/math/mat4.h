@@ -21,21 +21,21 @@ static inline Mat4 mat4_diagonal(f32 diagonal) {
 static inline Mat4 mat4_from_quat(Quat left) {
 	Mat4 result;
 
-	Quat noramlized_quat = norm_quat(left);
+	Quat normalized_quat = norm_quat(left);
 
 	f32 xx, yy, zz,
-		  xy, xz, yz,
-		  wx, wy, wz;
+		xy, xz, yz,
+		wx, wy, wz;
 
-	xx = noramlized_quat.x * noramlized_quat.x;
-	yy = noramlized_quat.y * noramlized_quat.y;
-	zz = noramlized_quat.z * noramlized_quat.z;
-	xy = noramlized_quat.x * noramlized_quat.y;
-	xz = noramlized_quat.x * noramlized_quat.z;
-	yz = noramlized_quat.y * noramlized_quat.z;
-	wx = noramlized_quat.w * noramlized_quat.x;
-	wy = noramlized_quat.w * noramlized_quat.y;
-	wz = noramlized_quat.w * noramlized_quat.z;
+	xx = normalized_quat.x * normalized_quat.x;
+	yy = normalized_quat.y * normalized_quat.y;
+	zz = normalized_quat.z * normalized_quat.z;
+	xy = normalized_quat.x * normalized_quat.y;
+	xz = normalized_quat.x * normalized_quat.z;
+	yz = normalized_quat.y * normalized_quat.z;
+	wx = normalized_quat.w * normalized_quat.x;
+	wy = normalized_quat.w * normalized_quat.y;
+	wz = normalized_quat.w * normalized_quat.z;
 
 	result.elements[0][0] = 1.0f - 2.0f * (yy + zz);
 	result.elements[0][1] = 2.0f * (xy + wz);
@@ -62,15 +62,16 @@ static inline Mat4 mat4_from_quat(Quat left) {
 
 static inline Mat4 transpose_mat4(Mat4 mat) {
 	Mat4 result;
+
 #ifdef SIMD_USE_SSE
 	result = mat;
 	_MM_TRANSPOSE4_PS(result.columns[0].sse, result.columns[1].sse, result.columns[2].sse, result.columns[3].sse);
 #elif defined(SIMD_USE_NEON)
-	float32x4x4_t Transposed = vld4q_f32((f32*)mat.columns);
-	result.columns[0].neon = Transposed.val[0];
-	result.columns[1].neon = Transposed.val[1];
-	result.columns[2].neon = Transposed.val[2];
-	result.columns[3].neon = Transposed.val[3];
+	float32x4x4_t transposed = vld4q_f32((f32*)mat.columns);
+	result.columns[0].neon = transposed.val[0];
+	result.columns[1].neon = transposed.val[1];
+	result.columns[2].neon = transposed.val[2];
+	result.columns[3].neon = transposed.val[3];
 #else
 	result.elements[0][0] = mat.elements[0][0];
 	result.elements[0][1] = mat.elements[1][0];
@@ -117,6 +118,7 @@ static inline Mat4 sub_mat4(Mat4 left, Mat4 right) {
 
 static inline Vec4 linear_combine_vec4_mat4(Vec4 left, Mat4 right) {
 	Vec4 result;
+
 #ifdef SIMD_USE_SSE
 	result.sse = _mm_mul_ps(_mm_shuffle_ps(left.sse, left.sse, 0x00), right.columns[0].sse);
 	result.sse = _mm_add_ps(result.sse, _mm_mul_ps(_mm_shuffle_ps(left.sse, left.sse, 0x55), right.columns[1].sse));
@@ -213,11 +215,11 @@ static inline Mat4 div_mat4_f32(Mat4 mat, f32 scalar) {
 	result.columns[2].sse = _mm_div_ps(mat.columns[2].sse, sse_scalar);
 	result.columns[3].sse = _mm_div_ps(mat.columns[3].sse, sse_scalar);
 #elif defined(SIMD_USE_NEON)
-	float32x4_t NEONScalar = vdupq_n_f32(scalar);
-	result.columns[0].neon = vdivq_f32(mat.columns[0].neon, NEONScalar);
-	result.columns[1].neon = vdivq_f32(mat.columns[1].neon, NEONScalar);
-	result.columns[2].neon = vdivq_f32(mat.columns[2].neon, NEONScalar);
-	result.columns[3].neon = vdivq_f32(mat.columns[3].neon, NEONScalar);
+	float32x4_t neon_scalar = vdupq_n_f32(scalar);
+	result.columns[0].neon = vdivq_f32(mat.columns[0].neon, neon_scalar);
+	result.columns[1].neon = vdivq_f32(mat.columns[1].neon, neon_scalar);
+	result.columns[2].neon = vdivq_f32(mat.columns[2].neon, neon_scalar);
+	result.columns[3].neon = vdivq_f32(mat.columns[3].neon, neon_scalar);
 #else
 	result.elements[0][0] = mat.elements[0][0] / scalar;
 	result.elements[0][1] = mat.elements[0][1] / scalar;
@@ -241,19 +243,19 @@ static inline Mat4 div_mat4_f32(Mat4 mat, f32 scalar) {
 }
 
 static inline f32 determinant_mat4(Mat4 mat) {
-	Vec3 c01 = cross(mat.columns[0].xyz, mat.columns[1].xyz);
-	Vec3 c23 = cross(mat.columns[2].xyz, mat.columns[3].xyz);
+	Vec3 c01 = cross_vec3(mat.columns[0].xyz, mat.columns[1].xyz);
+	Vec3 c23 = cross_vec3(mat.columns[2].xyz, mat.columns[3].xyz);
 	Vec3 b10 = sub_vec3(mul_vec3_f32(mat.columns[0].xyz, mat.columns[1].w), mul_vec3_f32(mat.columns[1].xyz, mat.columns[0].w));
 	Vec3 b32 = sub_vec3(mul_vec3_f32(mat.columns[2].xyz, mat.columns[3].w), mul_vec3_f32(mat.columns[3].xyz, mat.columns[2].w));
 
 	return dot_vec3(c01, b32) + dot_vec3(c23, b10);
 }
 
-// Returns a general-purpose inverse of an Mat4. Note that special-purpose inverses of many transformations
-// are available and will be more efficient.
+// General-purpose inverse of a Mat4.
+// Special-purpose inverses of many transformations are available in transform.h and will be more efficient.
 static inline Mat4 inv_general_mat4(Mat4 mat) {
-	Vec3 c01 = cross(mat.columns[0].xyz, mat.columns[1].xyz);
-	Vec3 c23 = cross(mat.columns[2].xyz, mat.columns[3].xyz);
+	Vec3 c01 = cross_vec3(mat.columns[0].xyz, mat.columns[1].xyz);
+	Vec3 c23 = cross_vec3(mat.columns[2].xyz, mat.columns[3].xyz);
 	Vec3 b10 = sub_vec3(mul_vec3_f32(mat.columns[0].xyz, mat.columns[1].w), mul_vec3_f32(mat.columns[1].xyz, mat.columns[0].w));
 	Vec3 b32 = sub_vec3(mul_vec3_f32(mat.columns[2].xyz, mat.columns[3].w), mul_vec3_f32(mat.columns[3].xyz, mat.columns[2].w));
 
@@ -264,10 +266,10 @@ static inline Mat4 inv_general_mat4(Mat4 mat) {
 	b32 = mul_vec3_f32(b32, inv_det);
 
 	Mat4 result;
-	result.columns[0] = vec4_from_vec3(add_vec3(cross(mat.columns[1].xyz, b32), mul_vec3_f32(c23, mat.columns[1].w)), -dot_vec3(mat.columns[1].xyz, c23));
-	result.columns[1] = vec4_from_vec3(sub_vec3(cross(b32, mat.columns[0].xyz), mul_vec3_f32(c23, mat.columns[0].w)), +dot_vec3(mat.columns[0].xyz, c23));
-	result.columns[2] = vec4_from_vec3(add_vec3(cross(mat.columns[3].xyz, b10), mul_vec3_f32(c01, mat.columns[3].w)), -dot_vec3(mat.columns[3].xyz, c01));
-	result.columns[3] = vec4_from_vec3(sub_vec3(cross(b10, mat.columns[2].xyz), mul_vec3_f32(c01, mat.columns[2].w)), +dot_vec3(mat.columns[2].xyz, c01));
+	result.columns[0] = vec4_from_vec3(add_vec3(cross_vec3(mat.columns[1].xyz, b32), mul_vec3_f32(c23, mat.columns[1].w)), -dot_vec3(mat.columns[1].xyz, c23));
+	result.columns[1] = vec4_from_vec3(sub_vec3(cross_vec3(b32, mat.columns[0].xyz), mul_vec3_f32(c23, mat.columns[0].w)), +dot_vec3(mat.columns[0].xyz, c23));
+	result.columns[2] = vec4_from_vec3(add_vec3(cross_vec3(mat.columns[3].xyz, b10), mul_vec3_f32(c01, mat.columns[3].w)), -dot_vec3(mat.columns[3].xyz, c01));
+	result.columns[3] = vec4_from_vec3(sub_vec3(cross_vec3(b10, mat.columns[2].xyz), mul_vec3_f32(c01, mat.columns[2].w)), +dot_vec3(mat.columns[2].xyz, c01));
 
 	return transpose_mat4(result);
 }

@@ -123,7 +123,9 @@ typedef union Quat {
 		union {
 			Vec3 xyz;
 			struct {
-				f32 x, y, z;
+				f32 x;
+				f32 y;
+				f32 z;
 			};
 		};
 		f32 w;

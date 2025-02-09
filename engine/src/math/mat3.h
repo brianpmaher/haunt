@@ -124,9 +124,9 @@ static inline Mat3 div_mat3_f32(Mat3 mat, f32 scalar) {
 static inline f32 determinant_mat3(Mat3 mat) {
 	Mat3 cross_val;
 
-	cross_val.columns[0] = cross(mat.columns[1], mat.columns[2]);
-	cross_val.columns[1] = cross(mat.columns[2], mat.columns[0]);
-	cross_val.columns[2] = cross(mat.columns[0], mat.columns[1]);
+	cross_val.columns[0] = cross_vec3(mat.columns[1], mat.columns[2]);
+	cross_val.columns[1] = cross_vec3(mat.columns[2], mat.columns[0]);
+	cross_val.columns[2] = cross_vec3(mat.columns[0], mat.columns[1]);
 
 	return dot_vec3(cross_val.columns[2], mat.columns[2]);
 }
@@ -134,9 +134,9 @@ static inline f32 determinant_mat3(Mat3 mat) {
 static inline Mat3 inv_general_mat3(Mat3 mat) {
 	Mat3 cross_val;
 
-	cross_val.columns[0] = cross(mat.columns[1], mat.columns[2]);
-	cross_val.columns[1] = cross(mat.columns[2], mat.columns[0]);
-	cross_val.columns[2] = cross(mat.columns[0], mat.columns[1]);
+	cross_val.columns[0] = cross_vec3(mat.columns[1], mat.columns[2]);
+	cross_val.columns[1] = cross_vec3(mat.columns[2], mat.columns[0]);
+	cross_val.columns[2] = cross_vec3(mat.columns[0], mat.columns[1]);
 
 	f32 inv_det = 1.0f / dot_vec3(cross_val.columns[2], mat.columns[2]);
 

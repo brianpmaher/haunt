@@ -45,7 +45,6 @@ static inline Quat add_quat(Quat left, Quat right) {
 #elif defined(SIMD_USE_NEON)
 	result.neon = vaddq_f32(left.neon, right.neon);
 #else
-
 	result.x = left.x + right.x;
 	result.y = left.y + right.y;
 	result.z = left.z + right.z;
@@ -76,32 +75,32 @@ static inline Quat mul_quat(Quat left, Quat right) {
 	Quat result;
 
 #ifdef SIMD_USE_SSE
-	__m128 see_res_one = _mm_xor_ps(_mm_shuffle_ps(left.sse, left.sse, _MM_SHUFFLE(0, 0, 0, 0)), _mm_setr_ps(0.f, -0.f, 0.f, -0.f));
+	__m128 sse_res_one = _mm_xor_ps(_mm_shuffle_ps(left.sse, left.sse, _MM_SHUFFLE(0, 0, 0, 0)), _mm_setr_ps(0.f, -0.f, 0.f, -0.f));
 	__m128 sse_res_two = _mm_shuffle_ps(right.sse, right.sse, _MM_SHUFFLE(0, 1, 2, 3));
-	__m128 SSEResultThree = _mm_mul_ps(sse_res_two, see_res_one);
+	__m128 sse_res_three = _mm_mul_ps(sse_res_two, sse_res_one);
 
-	see_res_one = _mm_xor_ps(_mm_shuffle_ps(left.sse, left.sse, _MM_SHUFFLE(1, 1, 1, 1)) , _mm_setr_ps(0.f, 0.f, -0.f, -0.f));
+	sse_res_one = _mm_xor_ps(_mm_shuffle_ps(left.sse, left.sse, _MM_SHUFFLE(1, 1, 1, 1)) , _mm_setr_ps(0.f, 0.f, -0.f, -0.f));
 	sse_res_two = _mm_shuffle_ps(right.sse, right.sse, _MM_SHUFFLE(1, 0, 3, 2));
-	SSEResultThree = _mm_add_ps(SSEResultThree, _mm_mul_ps(sse_res_two, see_res_one));
+	sse_res_three = _mm_add_ps(sse_res_three, _mm_mul_ps(sse_res_two, sse_res_one));
 
-	see_res_one = _mm_xor_ps(_mm_shuffle_ps(left.sse, left.sse, _MM_SHUFFLE(2, 2, 2, 2)), _mm_setr_ps(-0.f, 0.f, 0.f, -0.f));
+	sse_res_one = _mm_xor_ps(_mm_shuffle_ps(left.sse, left.sse, _MM_SHUFFLE(2, 2, 2, 2)), _mm_setr_ps(-0.f, 0.f, 0.f, -0.f));
 	sse_res_two = _mm_shuffle_ps(right.sse, right.sse, _MM_SHUFFLE(2, 3, 0, 1));
-	SSEResultThree = _mm_add_ps(SSEResultThree, _mm_mul_ps(sse_res_two, see_res_one));
+	sse_res_three = _mm_add_ps(sse_res_three, _mm_mul_ps(sse_res_two, sse_res_one));
 
-	see_res_one = _mm_shuffle_ps(left.sse, left.sse, _MM_SHUFFLE(3, 3, 3, 3));
+	sse_res_one = _mm_shuffle_ps(left.sse, left.sse, _MM_SHUFFLE(3, 3, 3, 3));
 	sse_res_two = _mm_shuffle_ps(right.sse, right.sse, _MM_SHUFFLE(3, 2, 1, 0));
-	result.sse = _mm_add_ps(SSEResultThree, _mm_mul_ps(sse_res_two, see_res_one));
+	result.sse = _mm_add_ps(sse_res_three, _mm_mul_ps(sse_res_two, sse_res_one));
 #elif defined(SIMD_USE_NEON)
-	float32x4_t Right1032 = vrev64q_f32(right.neon);
-	float32x4_t Right3210 = vcombine_f32(vget_high_f32(Right1032), vget_low_f32(Right1032));
-	float32x4_t Right2301 = vrev64q_f32(Right3210);
+	float32x4_t right_1032 = vrev64q_f32(right.neon);
+	float32x4_t right_3210 = vcombine_f32(vget_high_f32(right_1032), vget_low_f32(right_1032));
+	float32x4_t right_2301 = vrev64q_f32(right_3210);
 
-	float32x4_t FirstSign = {1.0f, -1.0f, 1.0f, -1.0f};
-	result.neon = vmulq_f32(Right3210, vmulq_f32(vdupq_laneq_f32(left.neon, 0), FirstSign));
-	float32x4_t SecondSign = {1.0f, 1.0f, -1.0f, -1.0f};
-	result.neon = vfmaq_f32(result.neon, Right2301, vmulq_f32(vdupq_laneq_f32(left.neon, 1), SecondSign));
-	float32x4_t ThirdSign = {-1.0f, 1.0f, 1.0f, -1.0f};
-	result.neon = vfmaq_f32(result.neon, Right1032, vmulq_f32(vdupq_laneq_f32(left.neon, 2), ThirdSign));
+	float32x4_t first_sign = {1.0f, -1.0f, 1.0f, -1.0f};
+	result.neon = vmulq_f32(right_3210, vmulq_f32(vdupq_laneq_f32(left.neon, 0), first_sign));
+	float32x4_t second_sign = {1.0f, 1.0f, -1.0f, -1.0f};
+	result.neon = vfmaq_f32(result.neon, right_2301, vmulq_f32(vdupq_laneq_f32(left.neon, 1), second_sign));
+	float32x4_t third_sign = {-1.0f, 1.0f, 1.0f, -1.0f};
+	result.neon = vfmaq_f32(result.neon, right_1032, vmulq_f32(vdupq_laneq_f32(left.neon, 2), third_sign));
 	result.neon = vfmaq_laneq_f32(result.neon, right.neon, left.neon, 3);
 
 #else
@@ -170,17 +169,17 @@ static inline f32 dot_quat(Quat left, Quat right) {
 	f32 result;
 
 #ifdef SIMD_USE_SSE
-	__m128 see_res_one = _mm_mul_ps(left.sse, right.sse);
-	__m128 sse_res_two = _mm_shuffle_ps(see_res_one, see_res_one, _MM_SHUFFLE(2, 3, 0, 1));
-	see_res_one = _mm_add_ps(see_res_one, sse_res_two);
-	sse_res_two = _mm_shuffle_ps(see_res_one, see_res_one, _MM_SHUFFLE(0, 1, 2, 3));
-	see_res_one = _mm_add_ps(see_res_one, sse_res_two);
-	_mm_store_ss(&result, see_res_one);
+	__m128 sse_res_one = _mm_mul_ps(left.sse, right.sse);
+	__m128 sse_res_two = _mm_shuffle_ps(sse_res_one, sse_res_one, _MM_SHUFFLE(2, 3, 0, 1));
+	sse_res_one = _mm_add_ps(sse_res_one, sse_res_two);
+	sse_res_two = _mm_shuffle_ps(sse_res_one, sse_res_one, _MM_SHUFFLE(0, 1, 2, 3));
+	sse_res_one = _mm_add_ps(sse_res_one, sse_res_two);
+	_mm_store_ss(&result, sse_res_one);
 #elif defined(SIMD_USE_NEON)
-	float32x4_t NEONMultiplyResult = vmulq_f32(left.neon, right.neon);
-	float32x4_t NEONHalfAdd = vpaddq_f32(NEONMultiplyResult, NEONMultiplyResult);
-	float32x4_t NEONFullAdd = vpaddq_f32(NEONHalfAdd, NEONHalfAdd);
-	result = vgetq_lane_f32(NEONFullAdd, 0);
+	float32x4_t neon_multiply_result = vmulq_f32(left.neon, right.neon);
+	float32x4_t neon_half_add = vpaddq_f32(neon_multiply_result, neon_multiply_result);
+	float32x4_t neon_full_add = vpaddq_f32(neon_half_add, neon_half_add);
+	result = vgetq_lane_f32(neon_full_add, 0);
 #else
 	result = ((left.x * right.x) + (left.z * right.z)) + ((left.y * right.y) + (left.w * right.w));
 #endif
@@ -190,6 +189,7 @@ static inline f32 dot_quat(Quat left, Quat right) {
 
 static inline Quat inv_quat(Quat left) {
 	Quat result;
+
 	result.x = -left.x;
 	result.y = -left.y;
 	result.z = -left.z;
@@ -199,11 +199,8 @@ static inline Quat inv_quat(Quat left) {
 }
 
 static inline Quat norm_quat(Quat q) {
-	/* Take advantage of sse implementation in norm_vec4 */
-	Vec4 vec = vec4(q.x, q.y, q.z, q.w);
-	vec = norm_vec4(vec);
+	Vec4 vec = norm_vec4(vec4(q.x, q.y, q.z, q.w));
 	Quat result = quat(vec.x, vec.y, vec.z, vec.w);
-
 	return result;
 }
 
@@ -213,9 +210,9 @@ static inline Quat _mix_quat(Quat left, f32 mix_left, Quat right, f32 mix_right)
 #ifdef SIMD_USE_SSE
 	__m128 scalar_left = _mm_set1_ps(mix_left);
 	__m128 scalar_right = _mm_set1_ps(mix_right);
-	__m128 see_res_one = _mm_mul_ps(left.sse, scalar_left);
+	__m128 sse_res_one = _mm_mul_ps(left.sse, scalar_left);
 	__m128 sse_res_two = _mm_mul_ps(right.sse, scalar_right);
-	result.sse = _mm_add_ps(see_res_one, sse_res_two);
+	result.sse = _mm_add_ps(sse_res_one, sse_res_two);
 #elif defined(SIMD_USE_NEON)
 	float32x4_t scaled_left = vmulq_n_f32(left.neon, mix_left);
 	float32x4_t scaled_right = vmulq_n_f32(right.neon, mix_right);
@@ -233,7 +230,6 @@ static inline Quat _mix_quat(Quat left, f32 mix_left, Quat right, f32 mix_right)
 static inline Quat norm_lerp(Quat left, f32 t, Quat right) {
 	Quat result = _mix_quat(left, 1.0f-t, right, t);
 	result = norm_quat(result);
-
 	return result;
 }
 
@@ -244,7 +240,7 @@ static inline Quat slerp(Quat left, f32 t, Quat right) {
 
 	if (cos_theta < 0.0f) { /* Take shortest path on Hyper-sphere */
 		cos_theta = -cos_theta;
-		right = quaternion(-right.x, -right.y, -right.z, -right.w);
+		right = quat(-right.x, -right.y, -right.z, -right.w);
 	}
 
 	/* Use Normalized Linear interpolation when vecs are roughly not L.I. */
@@ -262,8 +258,8 @@ static inline Quat slerp(Quat left, f32 t, Quat right) {
 	return result;
 }
 
-// This method taken from Mike Day at insomniac Games.
-// https://d3cw3dd2w32x2b.cloudfront.net/wp-content/uploads/2015/01/mat-to-quaternion.pdf
+// This method taken from Mike Day at Insomniac Games.
+// https://d3cw3dd2w32x2b.cloudfront.net/wp-content/uploads/2015/01/matrix-to-quat.pdf
 //
 // Note that as mentioned at the top of the paper, the paper assumes the mat
 // would be *post*-multiplied to a vec to rotate it, meaning the mat is
@@ -390,7 +386,7 @@ static inline Quat quat_from_axis_angle_lh(Vec3 axis, f32 angle) {
 static inline Quat quat_from_norm_pair(Vec3 left, Vec3 right) {
 	Quat result;
 
-	result.xyz = cross(left, right);
+	result.xyz = cross_vec3(left, right);
 	result.w = 1.0f + dot_vec3(left, right);
 
 	return norm_quat(result);

@@ -75,7 +75,7 @@ static inline f32 invsqrt_f32(f32 value) {
 // Interpolation utilities
 //
 
-static inline f32 lerp(f32 a, f32 t, f32 b) {
+static inline f32 lerp_f32(f32 a, f32 t, f32 b) {
 	return (1.0f - t) * a + t * b;
 }
 
