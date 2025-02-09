@@ -19,7 +19,7 @@ echo !COMPILE_INFO! Files: %sources% !LOG_END!
 
 :: Build the editor
 set assembly=editor
-set cflags=-g -Wall -Werror
+set cflags=-g -Wall -Werror -std=c17
 set includes=-Ieditor/src -Iengine/src
 set linker=-Lbin -lhaunt.lib
 set defines=-D_DEBUG -DDLL_IMPORT

@@ -7,7 +7,7 @@ sources=$(find engine/src -name "*.c")
 
 # Build the engine
 assembly="haunt"
-cflags="-g -shared -Wall -Werror -Wno-gnu-folding-constant"
+cflags="-g -shared -Wall -Werror -Wno-gnu-folding-constant -std=c17"
 includes="-Iengine/src"
 linker="-lX11"
 defines="-D_DEBUG -DDLL_EXPORT"
