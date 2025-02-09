@@ -17,29 +17,32 @@ Objective: Provide all of the foundation necessary to make a basic 2D or 3D game
     - This will also be a necessity for any server development support we choose to include in the future.
   - [ ] Setup .clang-format for automatic formatting
   - [ ] Cleanup unnecessary forward declarations... It makes things messy
-- Core systems
-  - [x] Logging
-  - Memory
-    - [ ] Memory_Arena
-      - Arena should be the foundation for all memory allocations in Haunt.
-        - Make sure we define an arena for anything that needs to allocate memory.
-    - [ ] platform_memory_reserve, platform_memory_commit
-  - Window
-    - [x] Create and display window
-    - [ ] Show engine version in window title
-  - Input
-    - [x] Input system
-    - [x] Win32 Platform Input
-      - [x] Test key, mouse button, mouse move, and scroll events
-    - [ ] Linux Platform Input
-      - [ ] Test key, mouse button, mouse move, and scroll events
-  - Event
-    - [x] Event system
-    - [ ] Test custom events
-    - [x] Win32 Platform Event
-      - [x] Test engine events
-    - [ ] Linux Platform Event
-      - [ ] Test engine events
+- [x] Logging
+- Memory
+  - [ ] Memory_Arena
+    - Arena should be the foundation for all memory allocations in Haunt.
+      - Make sure we define an arena for anything that needs to allocate memory.
+  - [ ] platform_memory_reserve, platform_memory_commit
+- Window
+  - [x] Create and display window
+  - [ ] Show engine version in window title
+- Input
+  - [x] Input system
+  - [x] Win32 Platform Input
+    - [x] Test key, mouse button, mouse move, and scroll events
+  - [ ] Linux Platform Input
+    - [ ] Test key, mouse button, mouse move, and scroll events
+- Event
+  - [x] Event system
+  - [ ] Test custom events
+  - [x] Win32 Platform Event
+    - [x] Test engine events
+  - [ ] Linux Platform Event
+    - [ ] Test engine events
+- Audio
+  - [ ] Audio system
+  - [ ] Play music
+  - [ ] Play one-shot audio
 - Math
   - [x] Include all common linear algebra functions
 - Collections
