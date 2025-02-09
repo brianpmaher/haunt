@@ -4,6 +4,8 @@
 
 #include "entry/app.h"
 
+#define ENGINE_VERSION "0.1.0"
+
 export b8 _engine_init(const App_Config* config);
 
 export b8 _engine_update(void);

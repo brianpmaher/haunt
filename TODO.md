@@ -25,7 +25,10 @@ Objective: Provide all of the foundation necessary to make a basic 2D or 3D game
     - [ ] Memory_Arena
       - Arena should be the foundation for all memory allocations in Haunt.
         - Make sure we define an arena for anything that needs to allocate memory.
-  - [ ] platform_memory_reserve, platform_memory_commit
+    - [ ] platform_memory_reserve, platform_memory_commit
+  - Window
+    - [x] Create and display window
+    - [ ] Show engine version in window title
   - [ ] Input
     - [x] Input system
     - [ ] Test all input types
