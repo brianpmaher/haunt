@@ -1,7 +1,6 @@
 #pragma once
 
 #include "core/export.h"
-
 #include "entry/app.h"
 
 #define ENGINE_VERSION "0.1.0"

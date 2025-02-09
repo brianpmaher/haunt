@@ -14,9 +14,7 @@
 #endif
 
 #include "core/context.h"
-
-#include "math/vector4.h"
-
+#include "math/linalg.h"
 #include "platform/platform.h"
 
 #define GL_DEBUG_ENABLED 1
