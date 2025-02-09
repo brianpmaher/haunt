@@ -20,12 +20,5 @@
 	},
 	"markdownlint.config": {
 		"no-inline-html": false,
-	},
-	"cSpell.words": [
-		"endlocal",
-		"MSAA",
-		"popd",
-		"pushd",
-		"setlocal"
-	]
+	}
 }
