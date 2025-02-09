@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/api.h"
+#include "core/export.h"
 #include "core/types.h"
 
 #define MEMORY_TRACKING_ENABLED      1

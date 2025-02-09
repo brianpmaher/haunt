@@ -22,6 +22,10 @@
 		"no-inline-html": false,
 	},
 	"cSpell.words": [
-		"MSAA"
+		"endlocal",
+		"MSAA",
+		"popd",
+		"pushd",
+		"setlocal"
 	]
 }

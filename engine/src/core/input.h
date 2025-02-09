@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/api.h"
+#include "core/export.h"
 #include "core/types.h"
 
 typedef enum Key {
@@ -129,6 +129,7 @@ typedef enum Mouse_Button {
 	MOUSE_BUTTON_LEFT,
 	MOUSE_BUTTON_MIDDLE,
 	MOUSE_BUTTON_RIGHT,
+
 	MOUSE_BUTTON_COUNT,
 } Mouse_Button;
 

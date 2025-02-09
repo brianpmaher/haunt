@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/api.h"
+#include "core/export.h"
 
 #define ASSERT_ENABLED 1
 
