@@ -55,6 +55,7 @@ Objective: Provide all of the foundation necessary to make a basic 2D or 3D game
     - [x] Windows
     - [ ] Linux
   - [x] Support gl debug callback
+  - [ ] Compile shaders
   - [ ] Render triangle
   - [ ] Render quad
   - [ ] Render text
