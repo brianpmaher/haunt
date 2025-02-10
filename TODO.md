@@ -18,6 +18,7 @@ Objective: Provide all of the foundation necessary to make a basic 2D or 3D game
     - This will also be a necessity for any server development support we choose to include in the future.
   - [ ] Setup .clang-format for automatic formatting
   - [ ] Cleanup unnecessary forward declarations... It makes things messy
+  - [ ] Trim down function names. Consider putting entire header declaration into haunt.h, similar to raylib.h for a single place to view and document all types and functions.
 - [x] Logging
 - Memory
   - [ ] Memory_Arena
