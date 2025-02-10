@@ -29,10 +29,6 @@ typedef union Event_Context {
 
 typedef b8 (*On_Event)(Event_Code code, Event_Context* context, void* sender, void* listener);
 
-b8 event_system_init(void);
-
-void event_system_shutdown(void);
-
 export b8 event_register(Event_Code code, void* listener, On_Event on_event);
 
 export b8 event_unregister(Event_Code code, void* listener, On_Event on_event);

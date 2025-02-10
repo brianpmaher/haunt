@@ -10,6 +10,7 @@ Objective: Provide all of the foundation necessary to make a basic 2D or 3D game
   - [x] Windows build system
   - [x] Add gitattributes
   - [x] Linux build system
+  - [ ] Setup CMake
   - [ ] Separate public functionality into `include` directory to keep separate from internal headers
   - [ ] Document public types and functions
   - [ ] Generate documentation from `include` directory

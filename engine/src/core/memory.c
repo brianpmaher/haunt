@@ -58,10 +58,7 @@ static char* get_usage_string(void) {
 }
 #endif
 
-void memory_system_init(void) {
-}
-
-void memory_system_shutdown(void) {
+void memory_report_allocations(void) {
 #if MEMORY_TRACKING_ENABLED
 	if (stats.total_allocated > 0) {
 		log_warn("Memory leak detected\n%s", get_usage_string());

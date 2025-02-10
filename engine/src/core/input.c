@@ -31,12 +31,6 @@ typedef struct Input_System {
 
 static Input_System input_system = {0};
 
-void input_system_init(void) {
-}
-
-void input_system_shutdown(void) {
-}
-
 static void fire_events(void) {
 	// Fire key events
 	for (u32 key = 0; key < KEY_COUNT; key++) {
@@ -91,12 +85,12 @@ static void reset_state(void) {
 	input_system.mouse.wheel = 0;
 }
 
-void input_system_update(void) {
+void input_update(void) {
 	fire_events();
 	reset_state();
 }
 
-void input_system_process_key(Key key, b8 pressed) {
+void input_process_key(Key key, b8 pressed) {
 	if (!input_system.key.down[key]) {
 		input_system.key.pressed[key] = pressed;
 	}
@@ -104,17 +98,17 @@ void input_system_process_key(Key key, b8 pressed) {
 	input_system.key.down[key] = pressed;
 }
 
-void input_system_process_mouse_button(Mouse_Button button, b8 pressed) {
+void input_process_mouse_button(Mouse_Button button, b8 pressed) {
 	input_system.mouse.pressed[button] = pressed;
 	input_system.mouse.released[button] = !pressed;
 	input_system.mouse.down[button] = pressed;
 }
 
-void input_system_process_mouse_wheel(i32 y) {
+void input_process_mouse_wheel(i32 y) {
 	input_system.mouse.wheel = y;
 }
 
-void input_system_process_mouse_position(i32 x, i32 y) {
+void input_process_mouse_position(i32 x, i32 y) {
 	input_system.mouse.position.x = x;
 	input_system.mouse.position.y = y;
 }

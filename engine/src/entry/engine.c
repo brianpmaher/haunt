@@ -6,7 +6,7 @@
 #include "core/input.h"
 #include "math/linalg.h"
 #include "platform/platform.h"
-#include "render/render.h"
+#include "graphics/renderer.h"
 
 typedef struct Engine {
 	b8 running;
@@ -28,16 +28,11 @@ static b8 handle_window_close(Event_Code code, Event_Context* context, void* sen
 static b8 handle_window_resize(Event_Code code, Event_Context* context, void* sender, void* listener) {
 	engine.width = context->vals[0];
 	engine.height = context->vals[1];
-	render_system_resize(engine.width, engine.height);
+	renderer_resize(engine.width, engine.height);
 	return false;
 }
 
 b8 _engine_init(const App_Config* config) {
-	if (!logging_system_init()) return false;
-	memory_system_init();
-	event_system_init();
-	input_system_init();
-
 	engine.running = true;
 	engine.suspended = false;
 
@@ -55,14 +50,14 @@ b8 _engine_init(const App_Config* config) {
 		return false;
 	}
 
-	render_system_init();
+	renderer_init();
 
 	log_debug("Engine initialized");
 	return true;
 }
 
 b8 _engine_update(void) {
-	input_system_update();
+	input_update();
 
 	if (!platform_pump_messages(&engine.platform)) {
 		engine.running = false;
@@ -78,21 +73,14 @@ b8 _engine_render(void) {
 		sin(time) * 2.0 / 2.0,
 		sin(time - 2.0 * pi / 3.0) * 2.0 / 2.0,
 		sin(time - 4.0 * pi / 3.0) * 2.0 / 2.0);
-	render_set_clear_color(color);
-	render_clear();
+	set_clear_color(color);
+	clear_screen();
 	return platform_swap_buffers(&engine.platform);
-}
-
-static void shutdown_subsystems(void) {
-	input_system_shutdown();
-	event_system_shutdown();
-	logging_system_shutdown();
-	memory_system_shutdown();
 }
 
 void _engine_shutdown(void) {
 	platform_shutdown(&engine.platform);
-	shutdown_subsystems();
+	memory_report_allocations();
 
 	log_debug("Engine shutdown");
 }

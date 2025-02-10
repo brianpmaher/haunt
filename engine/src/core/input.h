@@ -133,19 +133,15 @@ typedef enum Mouse_Button {
 	MOUSE_BUTTON_COUNT,
 } Mouse_Button;
 
-void input_system_init(void);
+void input_update(void);
 
-void input_system_shutdown(void);
+void input_process_key(Key key, b8 pressed);
 
-void input_system_update(void);
+void input_process_mouse_button(Mouse_Button button, b8 pressed);
 
-void input_system_process_key(Key key, b8 pressed);
+void input_process_mouse_wheel(i32 y);
 
-void input_system_process_mouse_button(Mouse_Button button, b8 pressed);
-
-void input_system_process_mouse_wheel(i32 y);
-
-void input_system_process_mouse_position(i32 x, i32 y);
+void input_process_mouse_position(i32 x, i32 y);
 
 // Key pressed this frame
 export b8 input_is_key_pressed(Key key);

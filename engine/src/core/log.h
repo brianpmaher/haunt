@@ -18,10 +18,6 @@ typedef enum Log_Level {
 	LOG_LEVEL_COUNT,
 } Log_Level;
 
-b8 logging_system_init();
-
-void logging_system_shutdown();
-
 export void log_output(Log_Level level, const char* message, ...);
 
 #define log_fatal(message, ...) log_output(LOG_LEVEL_FATAL, message, ##__VA_ARGS__)

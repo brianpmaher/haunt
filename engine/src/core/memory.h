@@ -35,9 +35,15 @@ typedef enum Memory_Tag {
 	MEMORY_TAG_COUNT,
 } Memory_Tag;
 
-void memory_system_init(void);
+//
+// Lifecycle
+//
 
-void memory_system_shutdown(void);
+void memory_report_allocations(void);
+
+//
+// Memory functions
+//
 
 export void* memory_alloc(u64 size, Memory_Tag tag);
 

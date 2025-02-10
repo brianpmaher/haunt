@@ -13,7 +13,7 @@
 #include <Windowsx.h> // GET_X_LPARAM, GET_Y_LPARAM
 
 // Must be included after Windows.h
-#include "render/render_opengl.h"
+#include "graphics/renderer_opengl.h"
 
 typedef struct Clock {
 	f64 frequency;
@@ -442,19 +442,19 @@ static LRESULT CALLBACK process_message(HWND hwnd, UINT msg, WPARAM wparam, LPAR
 			b8 pressed = msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN;
 			WORD vkcode = LOWORD(wparam);
 			Key key = (Key)vkcode;
-			input_system_process_key(key, pressed);
+			input_process_key(key, pressed);
 		} break;
 		case WM_MOUSEMOVE: {
 			i32 x = GET_X_LPARAM(lparam);
 			i32 y = GET_Y_LPARAM(lparam);
-			input_system_process_mouse_position(x, y);
+			input_process_mouse_position(x, y);
 		} break;
 		case WM_MOUSEWHEEL: {
 			i32 delta = GET_WHEEL_DELTA_WPARAM(wparam);
 			if (delta != 0) {
 				// Flatten delta for OS-independent handling
 				delta = delta > 0 ? 1 : -1;
-				input_system_process_mouse_wheel(delta);
+				input_process_mouse_wheel(delta);
 			}
 		} break;
 		case WM_LBUTTONDOWN:
@@ -465,11 +465,11 @@ static LRESULT CALLBACK process_message(HWND hwnd, UINT msg, WPARAM wparam, LPAR
 		case WM_RBUTTONUP: {
 			b8 pressed = msg == WM_LBUTTONDOWN || msg == WM_MBUTTONDOWN || msg == WM_RBUTTONDOWN;
 			if (msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP) {
-				input_system_process_mouse_button(MOUSE_BUTTON_LEFT, pressed);
+				input_process_mouse_button(MOUSE_BUTTON_LEFT, pressed);
 			} else if (msg == WM_MBUTTONDOWN || msg == WM_MBUTTONUP) {
-				input_system_process_mouse_button(MOUSE_BUTTON_MIDDLE, pressed);
+				input_process_mouse_button(MOUSE_BUTTON_MIDDLE, pressed);
 			} else if (msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP) {
-				input_system_process_mouse_button(MOUSE_BUTTON_RIGHT, pressed);
+				input_process_mouse_button(MOUSE_BUTTON_RIGHT, pressed);
 			}
 		} break;
 	}

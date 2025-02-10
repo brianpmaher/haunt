@@ -29,14 +29,6 @@ void assert_handler(const char* expression, const char* message, const char* fil
 	log_output(LOG_LEVEL_FATAL, "Assertion failed: (%s), message: \"%s\", file: \"%s\", line: %d", expression, message, file, line);
 }
 
-b8 logging_system_init() {
-	return true;
-}
-
-void logging_system_shutdown() {
-	// TODO: Cleanup logging / close log file
-}
-
 void log_output(Log_Level level, const char* message, ...) {
 	b8 is_error = level <= LOG_LEVEL_ERROR;
 
