@@ -1,5 +1,7 @@
 #pragma once
 
+#include "render/render.h"
+
 #include "core/context.h"
 #include "core/types.h"
 
@@ -19,12 +21,3 @@
 #endif
 
 #define GL_DEBUG_ENABLED 1
-#define VSYNC_ENABLED    1
-#define SRGB_ENABLED     1
-#define MSAA_ENABLED     1
-
-void gl_init(void);
-
-static inline void gl_resize(i32 width, i32 height) {
-	glViewport(0, 0, width, height);
-}

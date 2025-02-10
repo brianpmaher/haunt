@@ -1,7 +1,12 @@
-#include "renderer/opengl.h"
+#include "render/render.h"
+#include "render/render_opengl.h"
 
 #include "core/log.h"
+#include "core/context.h"
+#include "core/types.h"
+
 #include "platform/platform.h"
+
 
 // TODO: Linux implementation?
 #if GL_DEBUG_ENABLED
@@ -18,9 +23,22 @@ static void gl_debug_callback(GLenum source, GLenum type, GLuint id, GLenum seve
 }
 #endif
 
-void gl_init(void) {
+void render_system_init(void) {
 #if GL_DEBUG_ENABLED
 	glDebugMessageCallback(&gl_debug_callback, NULL);
 	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 #endif
+}
+
+void render_system_resize(i32 width, i32 height) {
+	glViewport(0, 0, width, height);
+}
+
+void render_set_clear_color(Color color) {
+	glClearColor(color.r, color.g, color.b, color.a);
+}
+
+// TODO: Pass other clear bits?
+void render_clear(void) {
+	glClear(GL_COLOR_BUFFER_BIT);
 }

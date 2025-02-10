@@ -13,7 +13,7 @@
 #include <Windowsx.h> // GET_X_LPARAM, GET_Y_LPARAM
 
 // Must be included after Windows.h
-#include "renderer/opengl.h"
+#include "render/render_opengl.h"
 
 typedef struct Clock {
 	f64 frequency;
@@ -168,13 +168,13 @@ b8 platform_start(Platform* platform, const char* app_name, i32 x, i32 y, i32 wi
 			WGL_DEPTH_BITS_ARB,     24,
 			WGL_STENCIL_BITS_ARB,   8,
 
-#if SRGB_ENABLED
+#if RENDER_SRGB_ENABLED
 			// sRGB framebuffer from WGL_ARB_framebuffer_sRGB extension
 		    // https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_framebuffer_sRGB.txt
 		    WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB, GL_TRUE,
 #endif
 
-#if MSAA_ENABLED
+#if RENDER_MSAA_ENABLED
 			// Multisampled framebuffer from WGL_ARB_multisample extension
 		    // https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_multisample.txt
 		    WGL_SAMPLE_BUFFERS_ARB, 1,
@@ -226,7 +226,7 @@ b8 platform_start(Platform* platform, const char* app_name, i32 x, i32 y, i32 wi
 		gladLoadGL();
 	}
 
-	wglSwapIntervalEXT(VSYNC_ENABLED);
+	wglSwapIntervalEXT(RENDER_VSYNC_ENABLED);
 
 	show_window(internal);
 

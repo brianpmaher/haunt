@@ -6,7 +6,7 @@
 #include "core/input.h"
 #include "math/linalg.h"
 #include "platform/platform.h"
-#include "renderer/opengl.h"
+#include "render/render.h"
 
 typedef struct Engine {
 	b8 running;
@@ -28,26 +28,15 @@ static b8 handle_window_close(Event_Code code, Event_Context* context, void* sen
 static b8 handle_window_resize(Event_Code code, Event_Context* context, void* sender, void* listener) {
 	engine.width = context->vals[0];
 	engine.height = context->vals[1];
-	gl_resize(engine.width, engine.height);
+	render_system_resize(engine.width, engine.height);
 	return false;
 }
 
-static b8 init_subsystems(void) {
-	if (!logging_system_init()) {
-		return false;
-	}
+b8 _engine_init(const App_Config* config) {
+	if (!logging_system_init()) return false;
 	memory_system_init();
 	event_system_init();
 	input_system_init();
-
-	return true;
-}
-
-b8 _engine_init(const App_Config* config) {
-	if (!init_subsystems()) {
-		log_fatal("Failed to init subsystems");
-		return false;
-	}
 
 	engine.running = true;
 	engine.suspended = false;
@@ -66,7 +55,7 @@ b8 _engine_init(const App_Config* config) {
 		return false;
 	}
 
-	gl_init();
+	render_system_init();
 
 	log_debug("Engine initialized");
 	return true;
@@ -85,12 +74,12 @@ b8 _engine_update(void) {
 
 b8 _engine_render(void) {
 	f64 time = platform_get_time(&engine.platform);
-	f32 red = sin(time) * 2.0 / 2.0;
-	f32 green = sin(time - 2.0 * pi / 3.0) * 2.0 / 2.0;
-	f32 blue = sin(time - 4.0 * pi / 3.0) * 2.0 / 2.0;
-	glClearColor(red, green, blue, 1.0);
-	glClear(GL_COLOR_BUFFER_BIT);
-
+	Color color = color_rgb(
+		sin(time) * 2.0 / 2.0,
+		sin(time - 2.0 * pi / 3.0) * 2.0 / 2.0,
+		sin(time - 4.0 * pi / 3.0) * 2.0 / 2.0);
+	render_set_clear_color(color);
+	render_clear();
 	return platform_swap_buffers(&engine.platform);
 }
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "math/types.h"
+#include "math/base.h"
 
 static inline Vec4 vec4(f32 x, f32 y, f32 z, f32 w) {
 	Vec4 vec;
