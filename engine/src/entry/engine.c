@@ -19,11 +19,29 @@ typedef struct Engine {
 
 static Engine engine;
 
-static b8 init_subsystems(void);
+static b8 handle_window_close(Event_Code code, Event_Context* context, void* sender, void* listener) {
+	engine.running = false;
+	event_fire(EVENT_TYPE_APP_QUIT, (Event_Context){0}, null);
+	return false;
+}
 
-static void shutdown_subsystems(void);
+static b8 handle_window_resize(Event_Code code, Event_Context* context, void* sender, void* listener) {
+	engine.width = context->vals[0];
+	engine.height = context->vals[1];
+	gl_resize(engine.width, engine.height);
+	return false;
+}
 
-static b8 handle_window_close(Event_Code code, Event_Context* context, void* sender, void* listener);
+static b8 init_subsystems(void) {
+	if (!logging_system_init()) {
+		return false;
+	}
+	memory_system_init();
+	event_system_init();
+	input_system_init();
+
+	return true;
+}
 
 b8 _engine_init(const App_Config* config) {
 	if (!init_subsystems()) {
@@ -35,6 +53,7 @@ b8 _engine_init(const App_Config* config) {
 	engine.suspended = false;
 
 	event_register(EVENT_TYPE_WINDOW_CLOSE, null, handle_window_close);
+	event_register(EVENT_TYPE_WINDOW_RESIZE, null, handle_window_resize);
 
 	if (!platform_start(
 			&engine.platform,
@@ -50,17 +69,6 @@ b8 _engine_init(const App_Config* config) {
 	gl_init();
 
 	log_debug("Engine initialized");
-	return true;
-}
-
-static b8 init_subsystems(void) {
-	if (!logging_system_init()) {
-		return false;
-	}
-	memory_system_init();
-	event_system_init();
-	input_system_init();
-
 	return true;
 }
 
@@ -86,13 +94,6 @@ b8 _engine_render(void) {
 	return platform_swap_buffers(&engine.platform);
 }
 
-void _engine_shutdown(void) {
-	platform_shutdown(&engine.platform);
-	shutdown_subsystems();
-
-	log_debug("Engine shutdown");
-}
-
 static void shutdown_subsystems(void) {
 	input_system_shutdown();
 	event_system_shutdown();
@@ -100,12 +101,13 @@ static void shutdown_subsystems(void) {
 	memory_system_shutdown();
 }
 
-b8 _engine_is_running(void) {
-	return engine.running;
+void _engine_shutdown(void) {
+	platform_shutdown(&engine.platform);
+	shutdown_subsystems();
+
+	log_debug("Engine shutdown");
 }
 
-static b8 handle_window_close(Event_Code code, Event_Context* context, void* sender, void* listener) {
-	engine.running = false;
-	event_fire(EVENT_TYPE_APP_QUIT, (Event_Context){0}, null);
-	return true;
+b8 _engine_is_running(void) {
+	return engine.running;
 }

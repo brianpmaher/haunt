@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/context.h"
+#include "core/types.h"
 
 #ifdef PLATFORM_WINDOWS
 #define WIN32_LEAN_AND_MEAN
@@ -23,3 +24,7 @@
 #define MSAA_ENABLED     1
 
 void gl_init(void);
+
+static inline void gl_resize(i32 width, i32 height) {
+	glViewport(0, 0, width, height);
+}
