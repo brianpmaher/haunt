@@ -143,31 +143,23 @@ void input_process_mouse_wheel(i32 y);
 
 void input_process_mouse_position(i32 x, i32 y);
 
-// Key pressed this frame
 export b8 input_is_key_pressed(Key key);
 
-// Key released this frame
 export b8 input_is_key_released(Key key);
 
-// Key is down
 export b8 input_is_key_down(Key key);
 
-// Key is up
 export b8 input_is_key_up(Key key);
 
-// Key pressed this frame
 export b8 input_is_mouse_button_pressed(Mouse_Button button);
 
-// Key released this frame
 export b8 input_is_mouse_button_released(Mouse_Button button);
 
-// Key is down
 export b8 input_is_mouse_button_down(Mouse_Button button);
 
-// Key is up
 export b8 input_is_mouse_button_up(Mouse_Button button);
 
-export i32 input_get_mouse_wheel_delta(void);
+export i32 input_get_mouse_wheel(void);
 
 export void input_get_mouse_position(i32* x, i32* y);
 
