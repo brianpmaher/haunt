@@ -1,20 +1,14 @@
-# Haunt Game Engine
+# Haunt Engine
 
 <p align="center">
   <img src="./docs/media/haunt_logo_white.png" alt="haunt logo">
 </p>
 
-<p align="center">
-  <a href="https://brainmade.org/">
-    <img src="https://img.shields.io/badge/brainmade.org-FFFFFF?style=flat&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iNzkiIHZpZXdCb3g9IjAgMCA2NyA3OSIgZmlsbD0ibm9uZSI%2BPHBhdGggZmlsbD0iIzAwMCIgZD0iTTUyLjYxMiA3OC43ODJIMjMuMzNhMi41NTkgMi41NTkgMCAwIDEtMi41Ni0yLjU1OHYtNy42NzdoLTcuOTczYTIuNTYgMi41NiAwIDAgMS0yLjU2LTIuNTZWNTUuMzE1bC04LjgyLTQuMzk3YTIuNTU5IDIuNTU5IDAgMCAxLS45ODYtMy43MWw5LjgwNy0xNC43MTR2LTQuMzVDMTAuMjQgMTIuNTk5IDIyLjg0MyAwIDM4LjM4OCAwIDUzLjkzMiAwIDY2LjUzNCAxMi42IDY2LjUzOCAyOC4xNDNjLS42MzIgMjcuODI0LTEwLjc2IDIzLjUxNi0xMS4xOCAzNC4wNDVsLS4xODcgMTQuMDM1YTIuNTkgMi41OSAwIDAgMS0uNzUgMS44MSAyLjU1IDIuNTUgMCAwIDEtMS44MDkuNzVabS0yNi43MjMtNS4xMTdoMjQuMTY0bC4yODYtMTQuNTQyYy0uMjYzLTYuNjU2IDExLjcxNi04LjI0MyAxMS4wOC0zMC43MzQtLjM1OC0xMi43MTMtMTAuMzEzLTIzLjI3MS0yMy4wMzEtMjMuMjcxLTEyLjcxOCAwLTIzLjAyOSAxMC4zMDctMjMuMDMyIDIzLjAyNXY1LjExN2MwIC41MDYtLjE1IDEtLjQzIDEuNDJsLTguNjMgMTIuOTQxIDcuNjQ1IDMuODJhMi41NTkgMi41NTkgMCAwIDEgMS40MTUgMi4yOTF2OS42OTdoNy45NzRhMi41NTkgMi41NTkgMCAwIDEgMi41NiAyLjU1OXY3LjY3N1oiLz48cGF0aCBmaWxsPSIjMDAwIiBkPSJNNDAuMzcyIDU4LjIyMlYzOC45MzRjLjExOCAwIC4yMzcuMDE4LjM1NS4wMTggOS43NjktLjAxMiAxNy4wNS05LjAxMiAxNS4wMjItMTguNTY3YTIuMzY2IDIuMzY2IDAgMCAwLTEuODIxLTEuODIyYy04LjEwNi0xLjczLTE2LjEyMSAzLjI5Mi0xOC4wOTggMTEuMzQxLS4wMjQtLjAyNC0uMDQzLS4wNS0uMDY2LS4wNzNhMTUuMzIzIDE1LjMyMyAwIDAgMC0xNC4wNi00LjE3IDIuMzY1IDIuMzY1IDAgMCAwLTEuODIxIDEuODJjLTIuMDI4IDkuNTU1IDUuMjUyIDE4LjU1NCAxNS4wMiAxOC41NjguMjM2IDAgLjQ5Mi0uMDI4LjczOC0uMDR2MTIuMjEzaDQuNzMxWm0yLjgzOS0zMi4xNDNhMTAuNjQ2IDEwLjY0NiAwIDAgMSA4LjEyNC0zLjEwNmMuMzUgNi4zNC00Ljg4OCAxMS41NzctMTEuMjI4IDExLjIzYTEwLjU4IDEwLjU4IDAgMCAxIDMuMTA0LTguMTI0Wk0yNy40MDMgMzguMTkzYTEwLjYwNyAxMC42MDcgMCAwIDEtMy4xMTgtOC4xMjNjNi4zNDQtLjM1OCAxMS41ODcgNC44ODYgMTEuMjI4IDExLjIzLTMuMDIzLjE2OS01Ljk3My0uOTYxLTguMTEtMy4xMDdaIi8%2BPC9zdmc%2B" alt="brainmade logo">
-  </a>
-</p>
+## Work in progress
 
-Haunt is a game engine I'm developing for the kinds of games I want to make and how I want to make them.
+Haunt is not ready for use and is very much in development.
 
-More info to come...
-
-![Clear colors](./docs/media/clear_colors.gif)
+Haunt is an ambitious project and is intending to serve as a game engine for all of my future projects.
 
 ## Index
 
@@ -24,41 +18,23 @@ More info to come...
 
 ## Development
 
-All scripts should be run from the project root directory.
+1. Clone the repository: `git clone https://github.com/brianpmaher/haunt.git`
+2. From wtihin the repository, clone submodules: `git submodule update --init`
+3. TODO: Build and run the project
 
-Scripts for each host platform are location within `scripts/<platform>`. For example, Windows scripts are all within `scripts\windows`.
+## Supported platforms
 
-### Windows
+The following platforms are currently supported as build targets:
 
-To setup the project for the first time, or after changes have been made, run `scripts\windows\setup.bat` from a cmd terminal.
+- Windows
+- MacOS
+- Linux
 
-#### Windows Scripts
+The following platforms are intended for future support:
 
-- `setup.bat` - Setup the project and all of its dependencies
-- `build-all.bat` - Build the engine and editor
-- `build-engine.bat` - Build the engine
-- `build-editor.bat` - Build the editor
-
-### Linux
-
-To setup the project for the first time, or after changes have been made, run `scripts/linux/setup.bat` from a bash terminal.
-
-#### Linux Scripts
-
-- `setup.sh` - Setup the project and all of its dependencies
-- `build-all.sh` - Build the engine and editor
-- `build-engine.sh` - Build the engine
-- `build-editor.sh` - Build the editor
-
-### MacOS
-
-<span style="color:yellow">MacOS platform setup has not yet started. Open to contributions.</span>.
-
-## Platforms
-
-Windows is the only officially supported target platform at the moment.
-
-Haunt is intended to be a cross-platform engine, so Linux, MacOS, iOS, and Android support are all planned for future releases.
+- Web
+- iOS
+- Android
 
 ## Copyright
 
@@ -66,7 +42,7 @@ Unless otherwise indicated, the code in this repository is copyrighted by Brian 
 
 Sections of the code that are covered by other copyrights and licenses are explicitly indicated in the source files or in the [ATTRIBUTION.md](ATTRIBUTION.md) file.
 
-The `engine/deps` directory contains third-party dependencies, which are covered by their own licenses and copyrights.
+The `deps` directory in each subproject contains third-party dependencies, which are covered by their own licenses and copyrights.
 
 Copyright (C) 2025 Brian Maher <https://brianpmaher.com>
 

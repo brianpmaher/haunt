@@ -1,24 +1,11 @@
 {
-	"[bat]": {
-		"editor.insertSpaces": false
-	},
-	"[json]": {
-		"editor.insertSpaces": false
-	},
-	"[c]": {
-		"editor.insertSpaces": false
-	},
-	"[shellscript]": {
-		"editor.insertSpaces": false
-	},
-	"[glsl]": {
-		"editor.insertSpaces": false
-	},
 	"files.associations": {
 		"*.h": "c",
-		"*.c": "c"
+		"*.c": "c",
+		"*.cpp": "cpp"
 	},
 	"markdownlint.config": {
 		"no-inline-html": false,
-	}
+	},
+	"cmake.buildDirectory": "${workspaceFolder}/build"
 }

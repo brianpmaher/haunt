@@ -2,9 +2,7 @@
 
 Much of this project wouldn't be possible without things I've learned and used from programmers greater than myself.
 
-I acknowledge and thank them for their contributions to open source and especially to those who take the time to teach others.
-
-Below are a list of attributions for code used either directly or modified and are in use in this project.
+Below are a list of attributions for code and papers used either directly or modified in this project.
 
 ## Project setup
 
@@ -21,10 +19,6 @@ The function for determining a quaternion from a 4x4 matrix was adapted from: [C
 ### A Faster Quaternion Vector Multiplication
 
 The function for rotating a vector by a quaternion was adapted from: [A Faster Quaternion Vector Multiplication](https://blog.molecular-matters.com/2013/05/24/a-faster-quaternion-vector-multiplication/). The blog lists all source code as licensed under [The MIT License](https://blog.molecular-matters.com/source-code-license/). Credit to the original algorithm goes to [Fabian Giesen](https://fgiesen.wordpress.com/) (ryg of Farbrausch fame), who posted this to the [Molly Rocket](https://mollyrocket.com/) forums years ago.
-
-## Windows CMD colors
-
-Credit to [Michele Locati](https://github.com/mlocati) for the [color codes script](https://gist.github.com/mlocati/fdabcaeb8071d5c75a2d51712db24011#file-win10colors-cmd).
 
 ## Font and Logo
 

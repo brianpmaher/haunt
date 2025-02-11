@@ -1,10 +1,16 @@
 {
 	"recommendations": [
+		"twxs.cmake",
+		"ms-vscode.cmake-tools",
 		"ms-vscode.cpptools",
+		"ms-vscode.cpptools-extension-pack",
+		"ms-vscode.cpptools-themes",
 		"slevesque.shader",
 		"aaron-bond.better-comments",
 		"bierner.markdown-checkbox",
-		"eamodio.gitlens",
-		"davidanson.vscode-markdownlint"
+		"davidanson.vscode-markdownlint",
+		"slevesque.vscode-3dviewer",
+		"naumovs.color-highlight",
+		"eamodio.gitlens"
 	]
 }
