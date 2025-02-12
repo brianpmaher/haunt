@@ -3,7 +3,8 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/haunt.core/include"
+                "${workspaceFolder}/haunt.core/include",
+                "${workspaceFolder}/haunt.core/deps/SDL/include"
             ],
             "defines": [
                 "_DEBUG",
@@ -20,7 +21,8 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/haunt.core/include"
+                "${workspaceFolder}/haunt.core/include",
+                "${workspaceFolder}/haunt.core/deps/SDL/include"
             ],
             "defines": [
                 "_DEBUG",
