@@ -1,1 +1,0 @@
-add_executable(example_hello_world)

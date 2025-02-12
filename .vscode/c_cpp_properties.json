@@ -3,9 +3,7 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/engine/src/**",
-                "${workspaceFolder}/engine/deps",
-                "${workspaceFolder}/engine/deps/glad/include"
+                "${workspaceFolder}/haunt.core/include"
             ],
             "defines": [
                 "_DEBUG",
@@ -13,24 +11,23 @@
                 "_UNICODE",
                 "DLL_EXPORT"
             ],
-            "windowsSdkVersion": "10.0.19041.0",
-            "compilerPath": "C:\\Program Files\\LLVM\\bin\\clang.exe",
-            "cStandard": "c17",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "clang-x64"
+            "windowsSdkVersion": "10.0.22621.0",
+            "compilerPath": "cl.exe",
+            "cStandard": "c11",
+            "intelliSenseMode": "windows-msvc-x64",
+            "configurationProvider": "ms-vscode.cmake-tools"
         },
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/engine/src/**"
+                "${workspaceFolder}/haunt.core/include"
             ],
             "defines": [
                 "_DEBUG",
                 "DLL_EXPORT"
             ],
             "compilerPath": "/usr/bin/clang",
-            "cStandard": "c17",
-            "cppStandard": "c++17",
+            "cStandard": "c11",
             "intelliSenseMode": "linux-clang-x64"
         }
     ],

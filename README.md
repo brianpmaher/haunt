@@ -8,7 +8,7 @@
 
 Haunt is not ready for use and is very much in development.
 
-Haunt is an ambitious project and is intending to serve as a game engine for all of my future projects.
+Haunt is an ambitious project and is intending to serve as a game engine for future projects.
 
 ## Index
 
