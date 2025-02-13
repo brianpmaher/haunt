@@ -71,7 +71,7 @@ static LRESULT CALLBACK process_message(HWND hwnd, UINT msg, WPARAM wparam, LPAR
 	case WM_SYSKEYUP: {
 		b8 pressed = msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN;
 		WORD vkcode = LOWORD(wparam);
-		Input_Key key = (Input_Key)vkcode;
+		Key key = (Key)vkcode;
 		input_process_key(key, pressed);
 	} break;
 	case WM_MOUSEMOVE: {

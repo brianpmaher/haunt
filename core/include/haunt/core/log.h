@@ -1,5 +1,4 @@
-#ifndef HAUNT_CORE_LOG_H
-#define HAUNT_CORE_LOG_H
+#pragma once
 
 #include "haunt/core/export.h"
 #include "haunt/core/types.h"
@@ -19,40 +18,32 @@ typedef enum Log_Level {
 	LOG_LEVEL_COUNT,
 } Log_Level;
 
-#define log_fatal(message, ...) \
-	_log(LOG_LEVEL_FATAL, message, ##__VA_ARGS__)
+#define log_fatal(message, ...) _log(LOG_LEVEL_FATAL, message, ##__VA_ARGS__)
 
-#define log_error(message, ...) \
-	_log(LOG_LEVEL_ERROR, message, ##__VA_ARGS__)
+#define log_error(message, ...) _log(LOG_LEVEL_ERROR, message, ##__VA_ARGS__)
 
 #if LOG_WARN_ENABLED
-#define log_warn(message, ...) \
-	_log(LOG_LEVEL_WARN, message, ##__VA_ARGS__)
+#define log_warn(message, ...) _log(LOG_LEVEL_WARN, message, ##__VA_ARGS__)
 #else
 #define log_warn(message, ...)
 #endif
 
 #if LOG_INFO_ENABLED
-#define log_info(message, ...) \
-	_log(LOG_LEVEL_INFO, message, ##__VA_ARGS__)
+#define log_info(message, ...) _log(LOG_LEVEL_INFO, message, ##__VA_ARGS__)
 #else
 #define log_info(message, ...)
 #endif
 
 #if LOG_DEBUG_ENABLED
-#define log_debug(message, ...) \
-	_log(LOG_LEVEL_DEBUG, message, ##__VA_ARGS__)
+#define log_debug(message, ...) _log(LOG_LEVEL_DEBUG, message, ##__VA_ARGS__)
 #else
 #define log_debug(message, ...)
 #endif
 
 #if LOG_TRACE_ENABLED
-#define log_trace(message, ...) \
-	_log(LOG_LEVEL_TRACE, message, ##__VA_ARGS__)
+#define log_trace(message, ...) _log(LOG_LEVEL_TRACE, message, ##__VA_ARGS__)
 #else
 #define log_trace(message, ...)
 #endif
 
 export void _log(Log_Level level, const char* message, ...);
-
-#endif // HAUNT_CORE_LOG_H

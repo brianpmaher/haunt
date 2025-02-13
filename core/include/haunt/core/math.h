@@ -1,5 +1,4 @@
-#ifndef HAUNT_CORE_MATH_H
-#define HAUNT_CORE_MATH_H
+#pragma once
 
 #define C11_GENERICS_ENABLED 1
 
@@ -360,8 +359,7 @@ static inline Vec2 rotatet_vec2(Vec2 v, f32 angle) {
 	f32 sin_angle = sinf(angle);
 	f32 cos_angle = cosf(angle);
 
-	return vec2(v.x * cos_angle - v.y * sin_angle,
-	            v.x * sin_angle + v.y * cos_angle);
+	return vec2(v.x * cos_angle - v.y * sin_angle, v.x * sin_angle + v.y * cos_angle);
 }
 
 //
@@ -642,8 +640,7 @@ static inline Vec4 div_vec4_f32(Vec4 left, f32 right) {
 }
 
 static inline b8 eq_vec4(Vec4 left, Vec4 right) {
-	return left.x == right.x && left.y == right.y && left.z == right.z &&
-	       left.w == right.w;
+	return left.x == right.x && left.y == right.y && left.z == right.z && left.w == right.w;
 }
 
 static inline f32 dot_vec4(Vec4 left, Vec4 right) {
@@ -651,22 +648,18 @@ static inline f32 dot_vec4(Vec4 left, Vec4 right) {
 
 #ifdef SIMD_USE_SSE
 	__m128 see_res_one = _mm_mul_ps(left.sse, right.sse);
-	__m128 sse_res_two =
-		_mm_shuffle_ps(see_res_one, see_res_one, _MM_SHUFFLE(2, 3, 0, 1));
+	__m128 sse_res_two = _mm_shuffle_ps(see_res_one, see_res_one, _MM_SHUFFLE(2, 3, 0, 1));
 	see_res_one = _mm_add_ps(see_res_one, sse_res_two);
-	sse_res_two =
-		_mm_shuffle_ps(see_res_one, see_res_one, _MM_SHUFFLE(0, 1, 2, 3));
+	sse_res_two = _mm_shuffle_ps(see_res_one, see_res_one, _MM_SHUFFLE(0, 1, 2, 3));
 	see_res_one = _mm_add_ps(see_res_one, sse_res_two);
 	_mm_store_ss(&result, see_res_one);
 #elif defined(SIMD_USE_NEON)
 	float32x4_t neon_multiply_result = vmulq_f32(left.neon, right.neon);
-	float32x4_t neon_half_add =
-		vpaddq_f32(neon_multiply_result, neon_multiply_result);
+	float32x4_t neon_half_add = vpaddq_f32(neon_multiply_result, neon_multiply_result);
 	float32x4_t neon_full_add = vpaddq_f32(neon_half_add, neon_half_add);
 	result = vgetq_lane_f32(neon_full_add, 0);
 #else
-	result = ((left.x * right.x) + (left.z * right.z)) +
-	         ((left.y * right.y) + (left.w * right.w));
+	result = ((left.x * right.x) + (left.z * right.z)) + ((left.y * right.y) + (left.w * right.w));
 #endif
 
 	return result;
@@ -781,8 +774,7 @@ static inline Mat2 div_mat2_f32(Mat2 mat, f32 scalar) {
 }
 
 static inline f32 determinant_mat2(Mat2 mat) {
-	return mat.elements[0][0] * mat.elements[1][1] -
-	       mat.elements[0][1] * mat.elements[1][0];
+	return mat.elements[0][0] * mat.elements[1][1] - mat.elements[0][1] * mat.elements[1][0];
 }
 
 static inline Mat2 inv_general_mat2(Mat2 mat) {
@@ -975,8 +967,8 @@ static inline Mat4 transpose_mat4(Mat4 mat) {
 
 #ifdef SIMD_USE_SSE
 	result = mat;
-	_MM_TRANSPOSE4_PS(result.columns[0].sse, result.columns[1].sse,
-	                  result.columns[2].sse, result.columns[3].sse);
+	_MM_TRANSPOSE4_PS(result.columns[0].sse, result.columns[1].sse, result.columns[2].sse,
+	                  result.columns[3].sse);
 #elif defined(SIMD_USE_NEON)
 	float32x4x4_t transposed = vld4q_f32((f32*)mat.columns);
 	result.columns[0].neon = transposed.val[0];
@@ -1031,25 +1023,18 @@ static inline Vec4 linear_combine_vec4_mat4(Vec4 left, Mat4 right) {
 	Vec4 result;
 
 #ifdef SIMD_USE_SSE
-	result.sse = _mm_mul_ps(_mm_shuffle_ps(left.sse, left.sse, 0x00),
-	                        right.columns[0].sse);
-	result.sse = _mm_add_ps(result.sse,
-	                        _mm_mul_ps(_mm_shuffle_ps(left.sse, left.sse, 0x55),
-	                                   right.columns[1].sse));
-	result.sse = _mm_add_ps(result.sse,
-	                        _mm_mul_ps(_mm_shuffle_ps(left.sse, left.sse, 0xaa),
-	                                   right.columns[2].sse));
-	result.sse = _mm_add_ps(result.sse,
-	                        _mm_mul_ps(_mm_shuffle_ps(left.sse, left.sse, 0xff),
-	                                   right.columns[3].sse));
+	result.sse = _mm_mul_ps(_mm_shuffle_ps(left.sse, left.sse, 0x00), right.columns[0].sse);
+	result.sse = _mm_add_ps(
+		result.sse, _mm_mul_ps(_mm_shuffle_ps(left.sse, left.sse, 0x55), right.columns[1].sse));
+	result.sse = _mm_add_ps(
+		result.sse, _mm_mul_ps(_mm_shuffle_ps(left.sse, left.sse, 0xaa), right.columns[2].sse));
+	result.sse = _mm_add_ps(
+		result.sse, _mm_mul_ps(_mm_shuffle_ps(left.sse, left.sse, 0xff), right.columns[3].sse));
 #elif defined(SIMD_USE_NEON)
 	result.neon = vmulq_laneq_f32(right.columns[0].neon, left.neon, 0);
-	result.neon =
-		vfmaq_laneq_f32(result.neon, right.columns[1].neon, left.neon, 1);
-	result.neon =
-		vfmaq_laneq_f32(result.neon, right.columns[2].neon, left.neon, 2);
-	result.neon =
-		vfmaq_laneq_f32(result.neon, right.columns[3].neon, left.neon, 3);
+	result.neon = vfmaq_laneq_f32(result.neon, right.columns[1].neon, left.neon, 1);
+	result.neon = vfmaq_laneq_f32(result.neon, right.columns[2].neon, left.neon, 2);
+	result.neon = vfmaq_laneq_f32(result.neon, right.columns[3].neon, left.neon, 3);
 #else
 	result.x = left.elements[0] * right.columns[0].x;
 	result.y = left.elements[0] * right.columns[0].y;
@@ -1192,22 +1177,18 @@ static inline Mat4 inv_general_mat4(Mat4 mat) {
 	b32 = mul_vec3_f32(b32, inv_det);
 
 	Mat4 result;
-	result.columns[0] =
-		vec4_from_vec3(add_vec3(cross_vec3(mat.columns[1].xyz, b32),
-	                            mul_vec3_f32(c23, mat.columns[1].w)),
-	                   -dot_vec3(mat.columns[1].xyz, c23));
-	result.columns[1] =
-		vec4_from_vec3(sub_vec3(cross_vec3(b32, mat.columns[0].xyz),
-	                            mul_vec3_f32(c23, mat.columns[0].w)),
-	                   +dot_vec3(mat.columns[0].xyz, c23));
-	result.columns[2] =
-		vec4_from_vec3(add_vec3(cross_vec3(mat.columns[3].xyz, b10),
-	                            mul_vec3_f32(c01, mat.columns[3].w)),
-	                   -dot_vec3(mat.columns[3].xyz, c01));
-	result.columns[3] =
-		vec4_from_vec3(sub_vec3(cross_vec3(b10, mat.columns[2].xyz),
-	                            mul_vec3_f32(c01, mat.columns[2].w)),
-	                   +dot_vec3(mat.columns[2].xyz, c01));
+	result.columns[0] = vec4_from_vec3(
+		add_vec3(cross_vec3(mat.columns[1].xyz, b32), mul_vec3_f32(c23, mat.columns[1].w)),
+		-dot_vec3(mat.columns[1].xyz, c23));
+	result.columns[1] = vec4_from_vec3(
+		sub_vec3(cross_vec3(b32, mat.columns[0].xyz), mul_vec3_f32(c23, mat.columns[0].w)),
+		+dot_vec3(mat.columns[0].xyz, c23));
+	result.columns[2] = vec4_from_vec3(
+		add_vec3(cross_vec3(mat.columns[3].xyz, b10), mul_vec3_f32(c01, mat.columns[3].w)),
+		-dot_vec3(mat.columns[3].xyz, c01));
+	result.columns[3] = vec4_from_vec3(
+		sub_vec3(cross_vec3(b10, mat.columns[2].xyz), mul_vec3_f32(c01, mat.columns[2].w)),
+		+dot_vec3(mat.columns[2].xyz, c01));
 
 	return transpose_mat4(result);
 }
@@ -1289,48 +1270,37 @@ static inline Quat mul_quat(Quat left, Quat right) {
 	Quat result;
 
 #ifdef SIMD_USE_SSE
-	__m128 sse_res_one =
-		_mm_xor_ps(_mm_shuffle_ps(left.sse, left.sse, _MM_SHUFFLE(0, 0, 0, 0)),
-	               _mm_setr_ps(0.f, -0.f, 0.f, -0.f));
-	__m128 sse_res_two =
-		_mm_shuffle_ps(right.sse, right.sse, _MM_SHUFFLE(0, 1, 2, 3));
+	__m128 sse_res_one = _mm_xor_ps(_mm_shuffle_ps(left.sse, left.sse, _MM_SHUFFLE(0, 0, 0, 0)),
+	                                _mm_setr_ps(0.f, -0.f, 0.f, -0.f));
+	__m128 sse_res_two = _mm_shuffle_ps(right.sse, right.sse, _MM_SHUFFLE(0, 1, 2, 3));
 	__m128 sse_res_three = _mm_mul_ps(sse_res_two, sse_res_one);
 
-	sse_res_one =
-		_mm_xor_ps(_mm_shuffle_ps(left.sse, left.sse, _MM_SHUFFLE(1, 1, 1, 1)),
-	               _mm_setr_ps(0.f, 0.f, -0.f, -0.f));
+	sse_res_one = _mm_xor_ps(_mm_shuffle_ps(left.sse, left.sse, _MM_SHUFFLE(1, 1, 1, 1)),
+	                         _mm_setr_ps(0.f, 0.f, -0.f, -0.f));
 	sse_res_two = _mm_shuffle_ps(right.sse, right.sse, _MM_SHUFFLE(1, 0, 3, 2));
-	sse_res_three =
-		_mm_add_ps(sse_res_three, _mm_mul_ps(sse_res_two, sse_res_one));
+	sse_res_three = _mm_add_ps(sse_res_three, _mm_mul_ps(sse_res_two, sse_res_one));
 
-	sse_res_one =
-		_mm_xor_ps(_mm_shuffle_ps(left.sse, left.sse, _MM_SHUFFLE(2, 2, 2, 2)),
-	               _mm_setr_ps(-0.f, 0.f, 0.f, -0.f));
+	sse_res_one = _mm_xor_ps(_mm_shuffle_ps(left.sse, left.sse, _MM_SHUFFLE(2, 2, 2, 2)),
+	                         _mm_setr_ps(-0.f, 0.f, 0.f, -0.f));
 	sse_res_two = _mm_shuffle_ps(right.sse, right.sse, _MM_SHUFFLE(2, 3, 0, 1));
-	sse_res_three =
-		_mm_add_ps(sse_res_three, _mm_mul_ps(sse_res_two, sse_res_one));
+	sse_res_three = _mm_add_ps(sse_res_three, _mm_mul_ps(sse_res_two, sse_res_one));
 
 	sse_res_one = _mm_shuffle_ps(left.sse, left.sse, _MM_SHUFFLE(3, 3, 3, 3));
 	sse_res_two = _mm_shuffle_ps(right.sse, right.sse, _MM_SHUFFLE(3, 2, 1, 0));
-	result.sse =
-		_mm_add_ps(sse_res_three, _mm_mul_ps(sse_res_two, sse_res_one));
+	result.sse = _mm_add_ps(sse_res_three, _mm_mul_ps(sse_res_two, sse_res_one));
 #elif defined(SIMD_USE_NEON)
 	float32x4_t right_1032 = vrev64q_f32(right.neon);
-	float32x4_t right_3210 =
-		vcombine_f32(vget_high_f32(right_1032), vget_low_f32(right_1032));
+	float32x4_t right_3210 = vcombine_f32(vget_high_f32(right_1032), vget_low_f32(right_1032));
 	float32x4_t right_2301 = vrev64q_f32(right_3210);
 
 	float32x4_t first_sign = {1.0f, -1.0f, 1.0f, -1.0f};
-	result.neon = vmulq_f32(
-		right_3210, vmulq_f32(vdupq_laneq_f32(left.neon, 0), first_sign));
+	result.neon = vmulq_f32(right_3210, vmulq_f32(vdupq_laneq_f32(left.neon, 0), first_sign));
 	float32x4_t second_sign = {1.0f, 1.0f, -1.0f, -1.0f};
 	result.neon =
-		vfmaq_f32(result.neon, right_2301,
-	              vmulq_f32(vdupq_laneq_f32(left.neon, 1), second_sign));
+		vfmaq_f32(result.neon, right_2301, vmulq_f32(vdupq_laneq_f32(left.neon, 1), second_sign));
 	float32x4_t third_sign = {-1.0f, 1.0f, 1.0f, -1.0f};
 	result.neon =
-		vfmaq_f32(result.neon, right_1032,
-	              vmulq_f32(vdupq_laneq_f32(left.neon, 2), third_sign));
+		vfmaq_f32(result.neon, right_1032, vmulq_f32(vdupq_laneq_f32(left.neon, 2), third_sign));
 	result.neon = vfmaq_laneq_f32(result.neon, right.neon, left.neon, 3);
 
 #else
@@ -1400,22 +1370,18 @@ static inline f32 dot_quat(Quat left, Quat right) {
 
 #ifdef SIMD_USE_SSE
 	__m128 sse_res_one = _mm_mul_ps(left.sse, right.sse);
-	__m128 sse_res_two =
-		_mm_shuffle_ps(sse_res_one, sse_res_one, _MM_SHUFFLE(2, 3, 0, 1));
+	__m128 sse_res_two = _mm_shuffle_ps(sse_res_one, sse_res_one, _MM_SHUFFLE(2, 3, 0, 1));
 	sse_res_one = _mm_add_ps(sse_res_one, sse_res_two);
-	sse_res_two =
-		_mm_shuffle_ps(sse_res_one, sse_res_one, _MM_SHUFFLE(0, 1, 2, 3));
+	sse_res_two = _mm_shuffle_ps(sse_res_one, sse_res_one, _MM_SHUFFLE(0, 1, 2, 3));
 	sse_res_one = _mm_add_ps(sse_res_one, sse_res_two);
 	_mm_store_ss(&result, sse_res_one);
 #elif defined(SIMD_USE_NEON)
 	float32x4_t neon_multiply_result = vmulq_f32(left.neon, right.neon);
-	float32x4_t neon_half_add =
-		vpaddq_f32(neon_multiply_result, neon_multiply_result);
+	float32x4_t neon_half_add = vpaddq_f32(neon_multiply_result, neon_multiply_result);
 	float32x4_t neon_full_add = vpaddq_f32(neon_half_add, neon_half_add);
 	result = vgetq_lane_f32(neon_full_add, 0);
 #else
-	result = ((left.x * right.x) + (left.z * right.z)) +
-	         ((left.y * right.y) + (left.w * right.w));
+	result = ((left.x * right.x) + (left.z * right.z)) + ((left.y * right.y) + (left.w * right.w));
 #endif
 
 	return result;
@@ -1438,8 +1404,7 @@ static inline Quat norm_quat(Quat q) {
 	return result;
 }
 
-static inline Quat _mix_quat(Quat left, f32 mix_left, Quat right,
-                             f32 mix_right) {
+static inline Quat _mix_quat(Quat left, f32 mix_left, Quat right, f32 mix_right) {
 	Quat result;
 
 #ifdef SIMD_USE_SSE
@@ -1554,28 +1519,24 @@ static inline Quat quat_from_mat4_rh(Mat4 mat) {
 
 	if (mat.elements[2][2] < 0.0f) {
 		if (mat.elements[0][0] > mat.elements[1][1]) {
-			t = 1 + mat.elements[0][0] - mat.elements[1][1] -
-			    mat.elements[2][2];
+			t = 1 + mat.elements[0][0] - mat.elements[1][1] - mat.elements[2][2];
 			q = quat(t, mat.elements[0][1] + mat.elements[1][0],
 			         mat.elements[2][0] + mat.elements[0][2],
 			         mat.elements[1][2] - mat.elements[2][1]);
 		} else {
-			t = 1 - mat.elements[0][0] + mat.elements[1][1] -
-			    mat.elements[2][2];
+			t = 1 - mat.elements[0][0] + mat.elements[1][1] - mat.elements[2][2];
 			q = quat(mat.elements[0][1] + mat.elements[1][0], t,
 			         mat.elements[1][2] + mat.elements[2][1],
 			         mat.elements[2][0] - mat.elements[0][2]);
 		}
 	} else {
 		if (mat.elements[0][0] < -mat.elements[1][1]) {
-			t = 1 - mat.elements[0][0] - mat.elements[1][1] +
-			    mat.elements[2][2];
+			t = 1 - mat.elements[0][0] - mat.elements[1][1] + mat.elements[2][2];
 			q = quat(mat.elements[2][0] + mat.elements[0][2],
 			         mat.elements[1][2] + mat.elements[2][1], t,
 			         mat.elements[0][1] - mat.elements[1][0]);
 		} else {
-			t = 1 + mat.elements[0][0] + mat.elements[1][1] +
-			    mat.elements[2][2];
+			t = 1 + mat.elements[0][0] + mat.elements[1][1] + mat.elements[2][2];
 			q = quat(mat.elements[1][2] - mat.elements[2][1],
 			         mat.elements[2][0] - mat.elements[0][2],
 			         mat.elements[0][1] - mat.elements[1][0], t);
@@ -1593,28 +1554,24 @@ static inline Quat quat_from_mat4_lh(Mat4 mat) {
 
 	if (mat.elements[2][2] < 0.0f) {
 		if (mat.elements[0][0] > mat.elements[1][1]) {
-			t = 1 + mat.elements[0][0] - mat.elements[1][1] -
-			    mat.elements[2][2];
+			t = 1 + mat.elements[0][0] - mat.elements[1][1] - mat.elements[2][2];
 			q = quat(t, mat.elements[0][1] + mat.elements[1][0],
 			         mat.elements[2][0] + mat.elements[0][2],
 			         mat.elements[2][1] - mat.elements[1][2]);
 		} else {
-			t = 1 - mat.elements[0][0] + mat.elements[1][1] -
-			    mat.elements[2][2];
+			t = 1 - mat.elements[0][0] + mat.elements[1][1] - mat.elements[2][2];
 			q = quat(mat.elements[0][1] + mat.elements[1][0], t,
 			         mat.elements[1][2] + mat.elements[2][1],
 			         mat.elements[0][2] - mat.elements[2][0]);
 		}
 	} else {
 		if (mat.elements[0][0] < -mat.elements[1][1]) {
-			t = 1 - mat.elements[0][0] - mat.elements[1][1] +
-			    mat.elements[2][2];
+			t = 1 - mat.elements[0][0] - mat.elements[1][1] + mat.elements[2][2];
 			q = quat(mat.elements[2][0] + mat.elements[0][2],
 			         mat.elements[1][2] + mat.elements[2][1], t,
 			         mat.elements[1][0] - mat.elements[0][1]);
 		} else {
-			t = 1 + mat.elements[0][0] + mat.elements[1][1] +
-			    mat.elements[2][2];
+			t = 1 + mat.elements[0][0] + mat.elements[1][1] + mat.elements[2][2];
 			q = quat(mat.elements[2][1] - mat.elements[1][2],
 			         mat.elements[0][2] - mat.elements[2][0],
 			         mat.elements[1][0] - mat.elements[0][2], t);
@@ -1663,8 +1620,8 @@ static inline Quat quat_from_vec_pair(Vec3 left, Vec3 right) {
 // 1 (the GL convention). left, right, bottom, and top specify the coordinates
 // of their respective clipping planes. near_plane and far_plane specify the
 // distances to the near and far clipping planes.
-static inline Mat4 orthographic_rh_no(f32 left, f32 right, f32 bottom, f32 top,
-                                      f32 near_plane, f32 far_plane) {
+static inline Mat4 orthographic_rh_no(f32 left, f32 right, f32 bottom, f32 top, f32 near_plane,
+                                      f32 far_plane) {
 	Mat4 result = {0};
 
 	result.elements[0][0] = 2.0f / (right - left);
@@ -1683,8 +1640,8 @@ static inline Mat4 orthographic_rh_no(f32 left, f32 right, f32 bottom, f32 top,
 // 1 (the DirectX convention). left, right, bottom, and top specify the
 // coordinates of their respective clipping planes. near_plane and far_plane
 // specify the distances to the near and far clipping planes.
-static inline Mat4 orthographic_rh_zo(f32 left, f32 right, f32 bottom, f32 top,
-                                      f32 near_plane, f32 far_plane) {
+static inline Mat4 orthographic_rh_zo(f32 left, f32 right, f32 bottom, f32 top, f32 near_plane,
+                                      f32 far_plane) {
 	Mat4 result = {0};
 
 	result.elements[0][0] = 2.0f / (right - left);
@@ -1703,10 +1660,9 @@ static inline Mat4 orthographic_rh_zo(f32 left, f32 right, f32 bottom, f32 top,
 // 1 (the GL convention). left, right, bottom, and top specify the coordinates
 // of their respective clipping planes. near_plane and far_plane specify the
 // distances to the near and far clipping planes.
-static inline Mat4 orthographic_lh_no(f32 left, f32 right, f32 bottom, f32 top,
-                                      f32 near_plane, f32 far_plane) {
-	Mat4 result =
-		orthographic_rh_no(left, right, bottom, top, near_plane, far_plane);
+static inline Mat4 orthographic_lh_no(f32 left, f32 right, f32 bottom, f32 top, f32 near_plane,
+                                      f32 far_plane) {
+	Mat4 result = orthographic_rh_no(left, right, bottom, top, near_plane, far_plane);
 	result.elements[2][2] = -result.elements[2][2];
 	return result;
 }
@@ -1715,10 +1671,9 @@ static inline Mat4 orthographic_lh_no(f32 left, f32 right, f32 bottom, f32 top,
 // (the DirectX convention). left, right, bottom, and top specify the
 // coordinates of their respective clipping planes. near_plane and far_plane
 // specify the distances to the near and far clipping planes.
-static inline Mat4 orthographic_lh_zo(f32 left, f32 right, f32 bottom, f32 top,
-                                      f32 near_plane, f32 far_plane) {
-	Mat4 result =
-		orthographic_rh_zo(left, right, bottom, top, near_plane, far_plane);
+static inline Mat4 orthographic_lh_zo(f32 left, f32 right, f32 bottom, f32 top, f32 near_plane,
+                                      f32 far_plane) {
+	Mat4 result = orthographic_rh_zo(left, right, bottom, top, near_plane, far_plane);
 	result.elements[2][2] = -result.elements[2][2];
 	return result;
 }
@@ -1740,8 +1695,7 @@ static inline Mat4 inv_orthographic(Mat4 ortho_mat) {
 	return result;
 }
 
-static inline Mat4 perspective_rh_no(f32 fov, f32 aspect_ratio, f32 near_plane,
-                                     f32 far_plane) {
+static inline Mat4 perspective_rh_no(f32 fov, f32 aspect_ratio, f32 near_plane, f32 far_plane) {
 	Mat4 result = {0};
 
 	// See
@@ -1752,14 +1706,12 @@ static inline Mat4 perspective_rh_no(f32 fov, f32 aspect_ratio, f32 near_plane,
 	result.elements[2][3] = -1.0f;
 
 	result.elements[2][2] = (near_plane + far_plane) / (near_plane - far_plane);
-	result.elements[3][2] =
-		(2.0f * near_plane * far_plane) / (near_plane - far_plane);
+	result.elements[3][2] = (2.0f * near_plane * far_plane) / (near_plane - far_plane);
 
 	return result;
 }
 
-static inline Mat4 perspective_rh_zo(f32 fov, f32 aspect_ratio, f32 near_plane,
-                                     f32 far_plane) {
+static inline Mat4 perspective_rh_zo(f32 fov, f32 aspect_ratio, f32 near_plane, f32 far_plane) {
 	Mat4 result = {0};
 
 	// See
@@ -1775,8 +1727,7 @@ static inline Mat4 perspective_rh_zo(f32 fov, f32 aspect_ratio, f32 near_plane,
 	return result;
 }
 
-static inline Mat4 perspective_lh_no(f32 fov, f32 aspect_ratio, f32 near_plane,
-                                     f32 far_plane) {
+static inline Mat4 perspective_lh_no(f32 fov, f32 aspect_ratio, f32 near_plane, f32 far_plane) {
 	Mat4 result = perspective_rh_no(fov, aspect_ratio, near_plane, far_plane);
 
 	result.elements[2][2] = -result.elements[2][2];
@@ -1785,8 +1736,7 @@ static inline Mat4 perspective_lh_no(f32 fov, f32 aspect_ratio, f32 near_plane,
 	return result;
 }
 
-static inline Mat4 perspective_lh_zo(f32 fov, f32 aspect_ratio, f32 near_plane,
-                                     f32 far_plane) {
+static inline Mat4 perspective_lh_zo(f32 fov, f32 aspect_ratio, f32 near_plane, f32 far_plane) {
 	Mat4 result = perspective_rh_zo(fov, aspect_ratio, near_plane, far_plane);
 
 	result.elements[2][2] = -result.elements[2][2];
@@ -1803,8 +1753,7 @@ static inline Mat4 inv_perspective_rh(Mat4 perspective_mat) {
 	result.elements[2][2] = 0.0f;
 
 	result.elements[2][3] = 1.0f / perspective_mat.elements[3][2];
-	result.elements[3][3] =
-		perspective_mat.elements[2][2] * result.elements[2][3];
+	result.elements[3][3] = perspective_mat.elements[2][2] * result.elements[2][3];
 	result.elements[3][2] = perspective_mat.elements[2][3];
 
 	return result;
@@ -1818,8 +1767,7 @@ static inline Mat4 inv_perspective_lh(Mat4 perspective_mat) {
 	result.elements[2][2] = 0.0f;
 
 	result.elements[2][3] = 1.0f / perspective_mat.elements[3][2];
-	result.elements[3][3] =
-		perspective_mat.elements[2][2] * -result.elements[2][3];
+	result.elements[3][3] = perspective_mat.elements[2][2] * -result.elements[2][3];
 	result.elements[3][2] = perspective_mat.elements[2][3];
 
 	return result;
@@ -1855,21 +1803,15 @@ static inline Mat4 rotate_rh(f32 angle, Vec3 axis) {
 	f32 cos_value = 1.0f - cos_theta;
 
 	result.elements[0][0] = (axis.x * axis.x * cos_value) + cos_theta;
-	result.elements[0][1] =
-		(axis.x * axis.y * cos_value) + (axis.z * sin_theta);
-	result.elements[0][2] =
-		(axis.x * axis.z * cos_value) - (axis.y * sin_theta);
+	result.elements[0][1] = (axis.x * axis.y * cos_value) + (axis.z * sin_theta);
+	result.elements[0][2] = (axis.x * axis.z * cos_value) - (axis.y * sin_theta);
 
-	result.elements[1][0] =
-		(axis.y * axis.x * cos_value) - (axis.z * sin_theta);
+	result.elements[1][0] = (axis.y * axis.x * cos_value) - (axis.z * sin_theta);
 	result.elements[1][1] = (axis.y * axis.y * cos_value) + cos_theta;
-	result.elements[1][2] =
-		(axis.y * axis.z * cos_value) + (axis.x * sin_theta);
+	result.elements[1][2] = (axis.y * axis.z * cos_value) + (axis.x * sin_theta);
 
-	result.elements[2][0] =
-		(axis.z * axis.x * cos_value) + (axis.y * sin_theta);
-	result.elements[2][1] =
-		(axis.z * axis.y * cos_value) - (axis.x * sin_theta);
+	result.elements[2][0] = (axis.z * axis.x * cos_value) + (axis.y * sin_theta);
+	result.elements[2][1] = (axis.z * axis.y * cos_value) - (axis.x * sin_theta);
 	result.elements[2][2] = (axis.z * axis.z * cos_value) + cos_theta;
 
 	return result;
@@ -1961,16 +1903,13 @@ static inline Mat4 inv_look_at(Mat4 mat) {
 	result.columns[3] = mul_vec4_f32(mat.columns[3], -1.0f);
 	result.elements[3][0] =
 		-1.0f * mat.elements[3][0] /
-		(rotation_mat.elements[0][0] + rotation_mat.elements[0][1] +
-	     rotation_mat.elements[0][2]);
+		(rotation_mat.elements[0][0] + rotation_mat.elements[0][1] + rotation_mat.elements[0][2]);
 	result.elements[3][1] =
 		-1.0f * mat.elements[3][1] /
-		(rotation_mat.elements[1][0] + rotation_mat.elements[1][1] +
-	     rotation_mat.elements[1][2]);
+		(rotation_mat.elements[1][0] + rotation_mat.elements[1][1] + rotation_mat.elements[1][2]);
 	result.elements[3][2] =
 		-1.0f * mat.elements[3][2] /
-		(rotation_mat.elements[2][0] + rotation_mat.elements[2][1] +
-	     rotation_mat.elements[2][2]);
+		(rotation_mat.elements[2][0] + rotation_mat.elements[2][1] + rotation_mat.elements[2][2]);
 	result.elements[3][3] = 1.0f;
 
 	return result;
@@ -1993,114 +1932,88 @@ static inline Vec3 rotate_vec3_axis_angle_rh(Vec3 v, Vec3 axis, f32 angle) {
 
 #if C11_GENERICS_ENABLED
 
-#define add(a, b)         \
-	_Generic((a),         \
-	    Vec2: add_vec2,   \
-	    Vec2i: add_vec2i, \
-	    Vec3: add_vec3,   \
-	    Vec4: add_vec4,   \
-	    Mat2: add_mat2,   \
-	    Mat3: add_mat3,   \
-	    Mat4: add_mat4,   \
+#define add(a, b)                                                                                  \
+	_Generic((a),                                                                                  \
+	    Vec2: add_vec2,                                                                            \
+	    Vec2i: add_vec2i,                                                                          \
+	    Vec3: add_vec3,                                                                            \
+	    Vec4: add_vec4,                                                                            \
+	    Mat2: add_mat2,                                                                            \
+	    Mat3: add_mat3,                                                                            \
+	    Mat4: add_mat4,                                                                            \
 	    Quat: add_quat)(a, b)
 
-#define sub(a, b)         \
-	_Generic((a),         \
-	    Vec2: sub_vec2,   \
-	    Vec2i: sub_vec2i, \
-	    Vec3: sub_vec3,   \
-	    Vec4: sub_vec4,   \
-	    Mat2: sub_mat2,   \
-	    Mat3: sub_mat3,   \
-	    Mat4: sub_mat4,   \
+#define sub(a, b)                                                                                  \
+	_Generic((a),                                                                                  \
+	    Vec2: sub_vec2,                                                                            \
+	    Vec2i: sub_vec2i,                                                                          \
+	    Vec3: sub_vec3,                                                                            \
+	    Vec4: sub_vec4,                                                                            \
+	    Mat2: sub_mat2,                                                                            \
+	    Mat3: sub_mat3,                                                                            \
+	    Mat4: sub_mat4,                                                                            \
 	    Quat: sub_quat)(a, b)
 
-#define mul(a, b)                \
-	_Generic((b),                \
-	    f32: _Generic((a),       \
-	        Vec2: mul_vec2_f32,  \
-	        Vec3: mul_vec3_f32,  \
-	        Vec4: mul_vec4_f32,  \
-	        Mat2: mul_mat2_f32,  \
-	        Mat3: mul_mat3_f32,  \
-	        Mat4: mul_mat4_f32,  \
-	        Quat: mul_quat_f32), \
-	    Mat2: mul_mat2,          \
-	    Mat3: mul_mat3,          \
-	    Mat4: mul_mat4,          \
-	    Quat: mul_quat,          \
-	    default: _Generic((a),   \
-	        Vec2: mul_vec2,      \
-	        Vec3: mul_vec3,      \
-	        Vec4: mul_vec4,      \
-	        Mat2: mul_mat2_vec2, \
-	        Mat3: mul_mat3_vec3, \
+#define mul(a, b)                                                                                  \
+	_Generic((b),                                                                                  \
+	    f32: _Generic((a),                                                                         \
+	        Vec2: mul_vec2_f32,                                                                    \
+	        Vec3: mul_vec3_f32,                                                                    \
+	        Vec4: mul_vec4_f32,                                                                    \
+	        Mat2: mul_mat2_f32,                                                                    \
+	        Mat3: mul_mat3_f32,                                                                    \
+	        Mat4: mul_mat4_f32,                                                                    \
+	        Quat: mul_quat_f32),                                                                   \
+	    Mat2: mul_mat2,                                                                            \
+	    Mat3: mul_mat3,                                                                            \
+	    Mat4: mul_mat4,                                                                            \
+	    Quat: mul_quat,                                                                            \
+	    default: _Generic((a),                                                                     \
+	        Vec2: mul_vec2,                                                                        \
+	        Vec3: mul_vec3,                                                                        \
+	        Vec4: mul_vec4,                                                                        \
+	        Mat2: mul_mat2_vec2,                                                                   \
+	        Mat3: mul_mat3_vec3,                                                                   \
 	        Mat4: mul_mat4_vec4))(a, b)
 
-#define div(a, b)                \
-	_Generic((b),                \
-	    f32: _Generic((a),       \
-	        Mat2: div_mat2_f32,  \
-	        Mat3: div_mat3_f32,  \
-	        Mat4: div_mat4_f32,  \
-	        Vec2: div_vec2_f32,  \
-	        Vec3: div_vec3_f32,  \
-	        Vec4: div_vec4_f32,  \
-	        Quat: div_quat_f32), \
-	    Mat2: div_mat2,          \
-	    Mat3: div_mat3,          \
-	    Mat4: div_mat4,          \
-	    Quat: div_quat,          \
-	    default: _Generic((a),   \
-	        Vec2: div_vec2,      \
-	        Vec3: div_vec3,      \
-	        Vec4: div_vec4))(a, b)
+#define div(a, b)                                                                                  \
+	_Generic((b),                                                                                  \
+	    f32: _Generic((a),                                                                         \
+	        Mat2: div_mat2_f32,                                                                    \
+	        Mat3: div_mat3_f32,                                                                    \
+	        Mat4: div_mat4_f32,                                                                    \
+	        Vec2: div_vec2_f32,                                                                    \
+	        Vec3: div_vec3_f32,                                                                    \
+	        Vec4: div_vec4_f32,                                                                    \
+	        Quat: div_quat_f32),                                                                   \
+	    Mat2: div_mat2,                                                                            \
+	    Mat3: div_mat3,                                                                            \
+	    Mat4: div_mat4,                                                                            \
+	    Quat: div_quat,                                                                            \
+	    default: _Generic((a), Vec2: div_vec2, Vec3: div_vec3, Vec4: div_vec4))(a, b)
 
-#define len(a) \
-	_Generic((a), Vec2: len_vec2, Vec3: len_vec3, Vec4: len_vec4)(a)
+#define len(a) _Generic((a), Vec2: len_vec2, Vec3: len_vec3, Vec4: len_vec4)(a)
 
-#define len_sqr(a)          \
-	_Generic((a),           \
-	    Vec2: len_sqr_vec2, \
-	    Vec3: len_sqr_vec3, \
-	    Vec4: len_sqr_vec4)(a)
+#define len_sqr(a) _Generic((a), Vec2: len_sqr_vec2, Vec3: len_sqr_vec3, Vec4: len_sqr_vec4)(a)
 
-#define norm(a) \
-	_Generic((a), Vec2: norm_vec2, Vec3: norm_vec3, Vec4: norm_vec4)(a)
+#define norm(a) _Generic((a), Vec2: norm_vec2, Vec3: norm_vec3, Vec4: norm_vec4)(a)
 
-#define dot(a, b) \
-	_Generic((a), Vec2: dot_vec2, Vec3: dot_vec3, Vec4: dot_vec4)(a, b)
+#define dot(a, b) _Generic((a), Vec2: dot_vec2, Vec3: dot_vec3, Vec4: dot_vec4)(a, b)
 
 #define cross(a, b) _Generic((a), Vec3: cross_vec3)(a, b)
 
-#define lerp(a, t, b)    \
-	_Generic((a),        \
-	    f32: lerp_f32,   \
-	    Vec2: lerp_vec2, \
-	    Vec3: lerp_vec3, \
-	    Vec4: lerp_vec4)(a, t, b)
+#define lerp(a, t, b)                                                                              \
+	_Generic((a), f32: lerp_f32, Vec2: lerp_vec2, Vec3: lerp_vec3, Vec4: lerp_vec4)(a, t, b)
 
-#define eq(a, b) \
-	_Generic((a), Vec2: eq_vec2, Vec3: eq_vec3, Vec4: eq_vec4)(a, b)
+#define eq(a, b) _Generic((a), Vec2: eq_vec2, Vec3: eq_vec3, Vec4: eq_vec4)(a, b)
 
-#define transpose(m)          \
-	_Generic((m),             \
-	    Mat2: transpose_mat2, \
-	    Mat3: transpose_mat3, \
-	    Mat4: transpose_mat4)(m)
+#define transpose(m)                                                                               \
+	_Generic((m), Mat2: transpose_mat2, Mat3: transpose_mat3, Mat4: transpose_mat4)(m)
 
-#define determinant(m)          \
-	_Generic((m),               \
-	    Mat2: determinant_mat2, \
-	    Mat3: determinant_mat3, \
-	    Mat4: determinant_mat4)(m)
+#define determinant(m)                                                                             \
+	_Generic((m), Mat2: determinant_mat2, Mat3: determinant_mat3, Mat4: determinant_mat4)(m)
 
-#define inv_general(m)          \
-	_Generic((m),               \
-	    Mat2: inv_general_mat2, \
-	    Mat3: inv_general_mat3, \
-	    Mat4: inv_general_mat4)(m)
+#define inv_general(m)                                                                             \
+	_Generic((m), Mat2: inv_general_mat2, Mat3: inv_general_mat3, Mat4: inv_general_mat4)(m)
 
 #endif // C11_GENERICS_ENABLED
-
-#endif // HAUNT_CORE_MATH_H

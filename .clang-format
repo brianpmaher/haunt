@@ -6,3 +6,4 @@ PointerAlignment: Left
 AllowShortFunctionsOnASingleLine: None
 AlignConsecutiveMacros: Consecutive
 ColumnLimit: 100
+AlignAfterOpenBracket: AlwaysBreak

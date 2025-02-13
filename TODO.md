@@ -15,3 +15,6 @@
   - [ ] Github actions
     - [ ] Build all
     - [ ] Run tests
+  - [ ] Document functions
+  - [ ] Generate documentation with Doxygen (via CMake?)
+  - [ ] Push Doxygen to Github Pages

@@ -1,5 +1,4 @@
-#ifndef HAUNT_CORE_INPUT_H
-#define HAUNT_CORE_INPUT_H
+#pragma once
 
 #include "haunt/core/export.h"
 #include "haunt/core/math.h"
@@ -156,5 +155,3 @@ export i32 get_mouse_wheel(void);
 export Vec2i get_mouse_position(void);
 
 export Vec2i get_mouse_position_delta(void);
-
-#endif // HAUNT_CORE_INPUT_H

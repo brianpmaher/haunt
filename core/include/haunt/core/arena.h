@@ -1,5 +1,4 @@
-#ifndef HAUNT_CORE_ARENA_H
-#define HAUNT_CORE_ARENA_H
+#pragma once
 
 /**
  * The arena module provides a way to allocate memory in a fast and efficient way by using memory
@@ -52,5 +51,3 @@ export void arena_clear(Arena* arena);
  */
 
 export void* _arena_push(Arena* arena, u64 size, u64 alignment);
-
-#endif // HAUNT_CORE_ARENA_H

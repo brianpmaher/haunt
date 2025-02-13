@@ -1,11 +1,11 @@
-#ifndef HAUNT_CORE_INTERNAL_PLATFORM_H
-#define HAUNT_CORE_INTERNAL_PLATFORM_H
+#pragma once
 
-#include "haunt/core/context.h"
 #include "haunt/core/types.h"
 
+typedef struct Platform_Internal Platform_Internal;
+
 typedef struct Platform {
-	void* internal;
+	Platform_Internal* internal;
 } Platform;
 
 typedef enum Platform_Console_Color {
@@ -47,5 +47,3 @@ f64 platform_get_time(Platform* platform);
 void platform_sleep(u64 ms);
 
 b8 platform_is_debugging(void);
-
-#endif // HAUNT_CORE_INTERNAL_PLATFORM_H

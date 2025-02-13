@@ -1,5 +1,4 @@
-#ifndef HAUNT_CORE_EXPORT_H
-#define HAUNT_CORE_EXPORT_H
+#pragma once
 
 #ifdef DLL_EXPORT
 #ifdef _MSC_VER
@@ -14,5 +13,3 @@
 #define export
 #endif
 #endif
-
-#endif // HAUNT_CORE_EXPORT_H

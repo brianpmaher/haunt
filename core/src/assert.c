@@ -1,7 +1,8 @@
 #include "haunt/core/assert.h"
 
-#include <stdio.h>
+#include "haunt/core/log.h"
 
-// TODO: Implement assert_handler
-void _assert(const char* expression, const char* message, const char* file, i32 line) {
+void _assert(const char* expression, const char* message, const char* file, int line) {
+	log_fatal(
+		"Assertion failed: %s\nMessage: %s\nFile: %s\nLine: %d", expression, message, file, line);
 }
