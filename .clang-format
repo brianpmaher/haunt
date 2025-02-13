@@ -4,6 +4,5 @@ IndentWidth: 4
 AccessModifierOffset: -4
 PointerAlignment: Left
 AllowShortFunctionsOnASingleLine: None
-IndentPPDirectives: BeforeHash
 AlignConsecutiveMacros: Consecutive
-ColumnLimit: 0
+ColumnLimit: 100
