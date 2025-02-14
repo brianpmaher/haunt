@@ -4,8 +4,10 @@
 
 - [ ] Setup build system
   - [x] Build haunt::core as a DLL
-  - [ ] Build glad as a DLL
-  - [ ] Build haunt::runtime as a static library
+  - [x] Build glad as a DLL
+  - [x] Build haunt::runtime as a DLL
+  - [ ] Allow each core service to have internal state
+  - [ ] Move core service initialization to separate headers
   - [ ] Build haunt::editor as a DLL
   - [ ] Build haunt::example as a DLL
 - [ ] Project
