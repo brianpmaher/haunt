@@ -47,24 +47,28 @@ static PFNWGLCHOOSEPIXELFORMATARBPROC wglChoosePixelFormatARB = null;
 static PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = null;
 static PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = null;
 
+static void set_window_data(HWND hwnd, Platform* platform) {
+	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)platform);
+}
+
+static Platform* get_window_data(HWND hwnd) {
+	LONG_PTR ptr = GetWindowLongPtr(hwnd, GWLP_USERDATA);
+	return (Platform*)ptr;
+}
+
 static LRESULT CALLBACK process_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+	Platform* platform = get_window_data(hwnd);
+
 	switch (msg) {
 	case WM_ERASEBKGND:
 		// Tell OS that engine is handling background erase to prevent flickering
 		return 1;
 	case WM_CLOSE:
-		event_fire(EVENT_TYPE_WINDOW_CLOSE, (Event_Context){0}, null);
+		platform->should_close = true;
 		return 0;
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		return 0;
-	case WM_SIZE: {
-		RECT r;
-		GetClientRect(hwnd, &r);
-		u32 width = r.right - r.left;
-		u32 height = r.bottom - r.top;
-		event_fire(EVENT_TYPE_WINDOW_RESIZE, (Event_Context){(i32)width, (i32)height}, null);
-	} break;
 	case WM_KEYDOWN:
 	case WM_SYSKEYDOWN:
 	case WM_KEYUP:
@@ -128,8 +132,9 @@ static b8 register_window_class(HINSTANCE hinst, const char* class_name) {
 	return true;
 }
 
-static HWND create_window(HINSTANCE hinst, const char* class_name, const char* app_name, i32 x,
-                          i32 y, i32 width, i32 height) {
+static HWND create_window(
+	HINSTANCE hinst, const char* class_name, const char* app_name, i32 x, i32 y, i32 width,
+	i32 height) {
 	// Set window properties
 	u32 client_x = x;
 	u32 client_y = y;
@@ -156,8 +161,9 @@ static HWND create_window(HINSTANCE hinst, const char* class_name, const char* a
 	window_height += border_rect.bottom - border_rect.top;
 
 	// Create window
-	HWND handle = CreateWindowExA(window_ex_style, class_name, app_name, window_style, window_x,
-	                              window_y, window_width, window_height, 0, 0, hinst, 0);
+	HWND handle = CreateWindowExA(
+		window_ex_style, class_name, app_name, window_style, window_x, window_y, window_width,
+		window_height, 0, 0, hinst, 0);
 	if (!handle) {
 		MessageBoxA(null, "Failed to create window", "Error", MB_OK | MB_ICONERROR);
 		log_fatal("Failed to create window");
@@ -208,9 +214,9 @@ static b8 cstring_equals(const char* a, const char* b, u64 blen) {
 
 static void load_wgl_functions(void) {
 	// WGL functions need valid GL context, so create dummy window for dummy GL context
-	HWND dummy =
-		CreateWindowExA(0, "STATIC", "DummyWindow", WS_OVERLAPPED, CW_USEDEFAULT, CW_USEDEFAULT,
-	                    CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, NULL, NULL);
+	HWND dummy = CreateWindowExA(
+		0, "STATIC", "DummyWindow", WS_OVERLAPPED, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+		CW_USEDEFAULT, NULL, NULL, NULL, NULL);
 	assert_message(dummy, "Failed to create dummy window");
 
 	HDC dc = GetDC(dummy);
@@ -289,7 +295,7 @@ static void load_wgl_functions(void) {
 	DestroyWindow(dummy);
 }
 
-b8 platform_start(Platform* platform, const char* app_name, i32 x, i32 y, i32 width, i32 height) {
+b8 platform_init(Platform* platform, const char* app_name, i32 x, i32 y, i32 width, i32 height) {
 	platform->internal = create_internal();
 	Platform_Internal* internal = (Platform_Internal*)platform->internal;
 
@@ -306,6 +312,8 @@ b8 platform_start(Platform* platform, const char* app_name, i32 x, i32 y, i32 wi
 		log_fatal("Failed to create window");
 		return false;
 	}
+
+	set_window_data(internal->hwnd, platform);
 
 	internal->device_context = GetDC(internal->hwnd);
 	HDC dc = internal->device_context;
@@ -390,7 +398,7 @@ b8 platform_start(Platform* platform, const char* app_name, i32 x, i32 y, i32 wi
 		gladLoadGL();
 	}
 
-	wglSwapIntervalEXT(RENDER_VSYNC_ENABLED);
+	wglSwapIntervalEXT(platform->graphics_settings.vsync ? 1 : 0);
 
 	show_window(internal);
 
@@ -409,7 +417,7 @@ void platform_shutdown(Platform* platform) {
 
 	UnregisterClassA(internal->class_name, internal->hinst);
 
-	memory_free(platform->internal, sizeof(Platform_Internal), MEMORY_TAG_PLATFORM);
+	platform_memory_free(platform->internal);
 }
 
 b8 platform_pump_messages(Platform* platform) {
@@ -426,17 +434,20 @@ b8 platform_swap_buffers(Platform* platform) {
 	return SwapBuffers(internal->device_context);
 }
 
-void* platform_memory_alloc(u64 size, b8 aligned) {
-	return VirtualAlloc(null, size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+void* platform_memory_reserve(u64 size) {
+	return VirtualAlloc(null, size, MEM_RESERVE, PAGE_READWRITE);
 }
 
-void platform_memory_free(void* block, b8 aligned) {
+void* platform_memory_commit(u64 size) {
+	return VirtualAlloc(null, size, MEM_COMMIT, PAGE_READWRITE);
+}
+
+void* platform_memory_alloc(u64 size) {
+	return VirtualAlloc(null, size, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+}
+
+void platform_memory_free(void* block) {
 	VirtualFree(block, 0, MEM_RELEASE);
-}
-
-void* platform_memory_zero(void* block, u64 size) {
-	ZeroMemory(block, size);
-	return block;
 }
 
 void* platform_memory_copy(void* dest, const void* src, u64 size) {
@@ -447,6 +458,11 @@ void* platform_memory_copy(void* dest, const void* src, u64 size) {
 void* platform_memory_set(void* dest, i32 value, u64 size) {
 	FillMemory(dest, size, value);
 	return dest;
+}
+
+void* platform_memory_zero(void* block, u64 size) {
+	ZeroMemory(block, size);
+	return block;
 }
 
 void platform_console_write(const char* message, Platform_Console_Color color) {
@@ -479,4 +495,14 @@ void platform_sleep(u64 ms) {
 
 b8 platform_is_debugging(void) {
 	return IsDebuggerPresent();
+}
+
+Vec2i platform_get_window_size(Platform* platform) {
+	Platform_Internal* internal = (Platform_Internal*)platform->internal;
+
+	RECT r;
+	GetClientRect(internal->hwnd, &r);
+	u32 width = r.right - r.left;
+	u32 height = r.bottom - r.top;
+	return (Vec2i){(i32)width, (i32)height};
 }

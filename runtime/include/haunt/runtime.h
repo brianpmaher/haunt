@@ -1,6 +1,3 @@
-#ifndef HAUNT_RUNTIME_H
-#define HAUNT_RUNTIME_H
+#pragma once
 
-// TODO: Define runtime API
-
-#endif // HAUNT_RUNTIME_H
+#include "haunt/runtime/app.h"

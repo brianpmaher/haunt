@@ -30,6 +30,15 @@ target_link_libraries(${PROJECT_NAME}
         glad
 )
 
+if(WIN32)
+    target_link_libraries(${PROJECT_NAME}
+        PRIVATE
+            user32
+            gdi32
+            opengl32
+    )
+endif()
+
 target_compile_definitions(${PROJECT_NAME}
     PRIVATE
         DLL_EXPORT

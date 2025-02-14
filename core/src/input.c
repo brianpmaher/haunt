@@ -1,5 +1,7 @@
 #include "input.h"
 
+#include "platform.h"
+
 // TODO: Use bit fields instead of array of bytes for these boolean states
 
 typedef struct Key_State {
@@ -32,10 +34,10 @@ static Input_State input = {0};
 
 void input_update(void) {
 	// Reset pressed and released
-	memory_zero(input.key.pressed, sizeof(input.key.pressed));
-	memory_zero(input.key.released, sizeof(input.key.released));
-	memory_zero(input.mouse.pressed, sizeof(input.mouse.pressed));
-	memory_zero(input.mouse.released, sizeof(input.mouse.released));
+	platform_memory_zero(input.key.pressed, sizeof(input.key.pressed));
+	platform_memory_zero(input.key.released, sizeof(input.key.released));
+	platform_memory_zero(input.mouse.pressed, sizeof(input.mouse.pressed));
+	platform_memory_zero(input.mouse.released, sizeof(input.mouse.released));
 
 	// Update prev positions
 	input.mouse.position.prev_x = input.mouse.position.x;
@@ -104,12 +106,12 @@ i32 get_mouse_wheel(void) {
 	return input.mouse.wheel;
 }
 
-void get_mouse_position(i32* x, i32* y) {
-	*x = input.mouse.position.x;
-	*y = input.mouse.position.y;
+Vec2i get_mouse_position(void) {
+	return vec2i(input.mouse.position.x, input.mouse.position.y);
 }
 
-void get_mouse_position_delta(i32* x, i32* y) {
-	*x = input.mouse.position.x - input.mouse.position.prev_x;
-	*y = input.mouse.position.y - input.mouse.position.prev_y;
+Vec2i get_mouse_position_delta(void) {
+	return sub_vec2i(
+		vec2i(input.mouse.position.x, input.mouse.position.y),
+		vec2i(input.mouse.position.prev_x, input.mouse.position.prev_y));
 }
