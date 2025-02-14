@@ -1,6 +1,5 @@
 #pragma once
 
-#include "haunt/core/arena.h"
 #include "haunt/core/assert.h"
 #include "haunt/core/export.h"
 #include "haunt/core/graphics.h"

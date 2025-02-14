@@ -20,3 +20,5 @@
   - [ ] Document functions
   - [ ] Generate documentation with Doxygen (via CMake?)
   - [ ] Push Doxygen to Github Pages
+- [ ] Memory
+  - [ ] Implement a memory arena

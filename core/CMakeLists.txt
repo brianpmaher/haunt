@@ -4,7 +4,6 @@ add_subdirectory(deps/glad)
 
 add_library(${PROJECT_NAME}
     SHARED
-        src/arena.c
         src/assert.c
         src/core.c
         src/input.c
