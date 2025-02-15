@@ -8,5 +8,6 @@
 #include "haunt/core/math.h"
 #include "haunt/core/simd.h"
 #include "haunt/core/types.h"
+#include "haunt/core/window.h"
 
 export const char* get_engine_version(void);

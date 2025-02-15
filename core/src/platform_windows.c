@@ -47,6 +47,8 @@ static PFNWGLCHOOSEPIXELFORMATARBPROC wglChoosePixelFormatARB = null;
 static PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = null;
 static PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = null;
 
+static Platform platform;
+
 static void set_window_data(HWND hwnd, Platform* platform) {
 	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)platform);
 }
@@ -295,9 +297,10 @@ static void load_wgl_functions(void) {
 	DestroyWindow(dummy);
 }
 
-b8 platform_init(Platform* platform, const char* app_name, i32 x, i32 y, i32 width, i32 height) {
-	platform->internal = create_internal();
-	Platform_Internal* internal = (Platform_Internal*)platform->internal;
+b8 _platform_init(const char* app_name) {
+	platform_memory_zero(&platform, sizeof(Platform));
+	platform.internal = create_internal();
+	Platform_Internal* internal = (Platform_Internal*)platform.internal;
 
 	load_wgl_functions();
 

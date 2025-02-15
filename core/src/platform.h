@@ -22,14 +22,6 @@ typedef enum Platform_Console_Color {
 	PLATFORM_CONSOLE_COLOR_COUNT,
 } Platform_Console_Color;
 
-b8 platform_init(Platform* platform, const char* app_name, i32 x, i32 y, i32 width, i32 height);
-
-void platform_shutdown(Platform* platform);
-
-b8 platform_pump_messages(Platform* platform);
-
-b8 platform_swap_buffers(Platform* platform);
-
 void* platform_memory_reserve(u64 size);
 void* platform_memory_commit(u64 size);
 void* platform_memory_alloc(u64 size);
