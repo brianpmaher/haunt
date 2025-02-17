@@ -4,13 +4,14 @@
 
 # Find source files
 sources=$(find engine/src -name "*.c")
+sources="$sources engine/deps/glad/src/glad.c"
 
 # Build the engine
 assembly="haunt"
-cflags="-g -shared -Wall -Werror -Wno-gnu-folding-constant -Wno-unused-function -std=c17"
-includes="-Iengine/src"
-linker="-lX11"
-defines="-D_DEBUG -DDLL_EXPORT"
+cflags="-g -shared -fPIC -Wall -Werror -Wno-gnu-folding-constant -Wno-unused-function -std=c17"
+includes="-Iengine/src -Iengine/deps -Iengine/deps/glad/include"
+linker="-lX11 -lGL -lm -lGLX"
+defines="-D_DEBUG -DDLL_EXPORT -DPLATFORM_LINUX"
 
 echo "Building $assembly..."
 clang $sources $cflags -o bin/lib$assembly.so $defines $includes $linker
