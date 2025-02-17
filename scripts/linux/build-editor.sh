@@ -9,7 +9,7 @@ sources=$(find editor/src -name "*.c")
 assembly="editor"
 cflags="-g -Wall -Werror -Wno-gnu-folding-constant -Wno-unused-function -std=c17"
 includes="-Ieditor/src -Iengine/src"
-linker="-Lbin -lhaunt -lX11"
+linker="-Lbin -lhaunt -lX11 -lm"
 defines="-D_DEBUG -DDLL_IMPORT"
 
 echo "Building $assembly..."

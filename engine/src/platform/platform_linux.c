@@ -6,6 +6,9 @@
 
 #ifdef PLATFORM_LINUX
 
+// GLAD must come before any OpenGL headers
+#include <glad/glad.h>
+
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/keysym.h>
@@ -15,6 +18,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <GL/glx.h>
 
 typedef struct Clock {
 	f64 frequency;
@@ -29,6 +33,7 @@ typedef struct Platform_Internal {
 	XSetWindowAttributes window_attributes;
 	Atom wm_delete_window;
 	Clock clock;
+	GLXContext gl_context;
 } Platform_Internal;
 
 static const char* console_colors[PLATFORM_CONSOLE_COLOR_COUNT] = {
@@ -47,15 +52,18 @@ static Platform_Internal* create_internal(void) {
 }
 
 b8 platform_start(Platform* platform, const char* app_name, i32 x, i32 y, i32 width, i32 height) {
+	log_info("Platform start...");
 	platform->internal = create_internal();
 	Platform_Internal* internal = (Platform_Internal*)platform->internal;
 
 	// Open X display
+	log_info("Opening X display...");
 	internal->display = XOpenDisplay(NULL);
 	if (!internal->display) {
 		log_fatal("Failed to open X display");
 		return false;
 	}
+	log_info("X display opened successfully");
 
 	// Get default screen
 	int screen = DefaultScreen(internal->display);
@@ -125,6 +133,27 @@ b8 platform_start(Platform* platform, const char* app_name, i32 x, i32 y, i32 wi
 	XMapWindow(internal->display, internal->window);
 	XFlush(internal->display);
 
+	// After window creation, create OpenGL context
+	log_info("Creating OpenGL context...");
+	internal->gl_context = glXCreateContext(internal->display, internal->visual_info, NULL, GL_TRUE);
+	if (!internal->gl_context) {
+		log_fatal("Failed to create OpenGL context");
+		return false;
+	}
+
+	// Make the context current
+	if (!glXMakeCurrent(internal->display, internal->window, internal->gl_context)) {
+		log_fatal("Failed to make OpenGL context current");
+		return false;
+	}
+
+	// Initialize GLAD
+	log_info("Initializing GLAD...");
+	if (!gladLoadGL()) {
+		log_fatal("Failed to initialize GLAD");
+		return false;
+	}
+
 	return true;
 }
 
@@ -132,6 +161,10 @@ void platform_shutdown(Platform* platform) {
 	Platform_Internal* internal = (Platform_Internal*)platform->internal;
 
 	if (internal->display) {
+		if (internal->gl_context) {
+			glXMakeCurrent(internal->display, None, NULL);
+			glXDestroyContext(internal->display, internal->gl_context);
+		}
 		if (internal->window) {
 			XDestroyWindow(internal->display, internal->window);
 		}
@@ -167,9 +200,10 @@ b8 platform_pump_messages(Platform* platform) {
 	return true;
 }
 
-b8 platform_swap_buffers(void) {
-	log_error("platform_swap_buffers is not implemented for the Linux platform");
-	return false;
+b8 platform_swap_buffers(Platform* platform) {
+	Platform_Internal* internal = (Platform_Internal*)platform->internal;
+	glXSwapBuffers(internal->display, internal->window);
+	return true;
 }
 
 void* platform_memory_alloc(u64 size, b8 aligned) {
@@ -202,14 +236,14 @@ void platform_console_write_error(const char* message, Platform_Console_Color co
 	fprintf(stderr, "%s%s\033[0m", console_colors[color], message);
 }
 
-f64 platform_get_time() {
+f64 platform_get_time(Platform* platform) {
 	struct timeval now;
 	gettimeofday(&now, NULL);
 	return (f64)now.tv_sec + (f64)now.tv_usec / 1000000.0;
 }
 
 void platform_sleep(u64 ms) {
-	usleep(ms * 1000);
+	sleep(ms * 1000);
 }
  
 b8 platform_is_debugging(void) {
