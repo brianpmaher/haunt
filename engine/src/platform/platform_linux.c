@@ -3,6 +3,8 @@
 #include "core/context.h"
 #include "core/log.h"
 #include "core/memory.h"
+#include "core/input.h"
+#include "core/event.h"
 
 #ifdef PLATFORM_LINUX
 
@@ -180,6 +182,81 @@ void platform_shutdown(Platform* platform) {
 	memory_free(platform->internal, sizeof(Platform_Internal), MEMORY_TAG_PLATFORM);
 }
 
+static Key x11_keycode_to_key(KeySym keysym) {
+	switch (keysym) {
+		case XK_BackSpace: return KEY_BACKSPACE;
+		case XK_Return: return KEY_RETURN;
+		case XK_Tab: return KEY_TAB;
+		case XK_Pause: return KEY_PAUSE;
+		case XK_Caps_Lock: return KEY_CAPS_LOCK;
+		case XK_Escape: return KEY_ESCAPE;
+		case XK_space: return KEY_SPACE;
+		case XK_Page_Up: return KEY_PAGE_UP;
+		case XK_Page_Down: return KEY_PAGE_DOWN;
+		case XK_End: return KEY_END;
+		case XK_Home: return KEY_HOME;
+		case XK_Left: return KEY_LEFT;
+		case XK_Up: return KEY_UP;
+		case XK_Right: return KEY_RIGHT;
+		case XK_Down: return KEY_DOWN;
+		case XK_Insert: return KEY_INSERT;
+		case XK_Delete: return KEY_DELETE;
+		case XK_0: return KEY_0;
+		case XK_1: return KEY_1;
+		case XK_2: return KEY_2;
+		case XK_3: return KEY_3;
+		case XK_4: return KEY_4;
+		case XK_5: return KEY_5;
+		case XK_6: return KEY_6;
+		case XK_7: return KEY_7;
+		case XK_8: return KEY_8;
+		case XK_9: return KEY_9;
+		case XK_a: return KEY_A;
+		case XK_b: return KEY_B;
+		case XK_c: return KEY_C;
+		case XK_d: return KEY_D;
+		case XK_e: return KEY_E;
+		case XK_f: return KEY_F;
+		case XK_g: return KEY_G;
+		case XK_h: return KEY_H;
+		case XK_i: return KEY_I;
+		case XK_j: return KEY_J;
+		case XK_k: return KEY_K;
+		case XK_l: return KEY_L;
+		case XK_m: return KEY_M;
+		case XK_n: return KEY_N;
+		case XK_o: return KEY_O;
+		case XK_p: return KEY_P;
+		case XK_q: return KEY_Q;
+		case XK_r: return KEY_R;
+		case XK_s: return KEY_S;
+		case XK_t: return KEY_T;
+		case XK_u: return KEY_U;
+		case XK_v: return KEY_V;
+		case XK_w: return KEY_W;
+		case XK_x: return KEY_X;
+		case XK_y: return KEY_Y;
+		case XK_z: return KEY_Z;
+		case XK_Shift_L:
+		case XK_Shift_R: return KEY_SHIFT;
+		case XK_Control_L:
+		case XK_Control_R: return KEY_CONTROL;
+		case XK_Alt_L:
+		case XK_Alt_R: return KEY_ALT;
+		default: return KEY_COUNT; // Invalid/unsupported key
+	}
+}
+
+// Add this helper function to convert X11 button to our engine's mouse button
+static Mouse_Button x11_button_to_mouse_button(unsigned int button) {
+	switch (button) {
+		case Button1: return MOUSE_BUTTON_LEFT;
+		case Button2: return MOUSE_BUTTON_MIDDLE;
+		case Button3: return MOUSE_BUTTON_RIGHT;
+		default: return MOUSE_BUTTON_COUNT;  // Invalid button
+	}
+}
+
 b8 platform_pump_messages(Platform* platform) {
 	Platform_Internal* internal = (Platform_Internal*)platform->internal;
 
@@ -188,12 +265,70 @@ b8 platform_pump_messages(Platform* platform) {
 		XNextEvent(internal->display, &event);
 
 		switch (event.type) {
+			case KeyPress:
+			case KeyRelease: {
+				// Get the key symbol
+				KeySym keysym = XLookupKeysym(&event.xkey, 0);
+				Key key = x11_keycode_to_key(keysym);
+				
+				// Only handle valid keys
+				if (key != KEY_COUNT) {
+					// Create event context
+					Event_Context context = {0};
+					context.vals[0] = key;
+					
+					// Fire the appropriate event
+					if (event.type == KeyPress) {
+						event_fire(EVENT_TYPE_KEY_PRESS, context, null);
+					} else {
+						event_fire(EVENT_TYPE_KEY_RELEASE, context, null);
+					}
+				}
+			} break;
+
+			case ButtonPress:
+			case ButtonRelease: {
+				// Handle mouse wheel
+				if (event.xbutton.button == Button4) {  // Mouse wheel up
+					Event_Context context = {0};
+					context.vals[0] = 1;  // Positive for scroll up
+					event_fire(EVENT_TYPE_MOUSE_WHEEL, context, null);
+					break;
+				}
+				if (event.xbutton.button == Button5) {  // Mouse wheel down
+					Event_Context context = {0};
+					context.vals[0] = -1;  // Negative for scroll down
+					event_fire(EVENT_TYPE_MOUSE_WHEEL, context, null);
+					break;
+				}
+
+				// Handle mouse buttons
+				Mouse_Button button = x11_button_to_mouse_button(event.xbutton.button);
+				if (button != MOUSE_BUTTON_COUNT) {
+					Event_Context context = {0};
+					context.vals[0] = button;
+					
+					if (event.type == ButtonPress) {
+						event_fire(EVENT_TYPE_MOUSE_BUTTON_PRESS, context, null);
+					} else {
+						event_fire(EVENT_TYPE_MOUSE_BUTTON_RELEASE, context, null);
+					}
+				}
+			} break;
+
+			case MotionNotify: {
+				// Handle mouse movement
+				Event_Context context = {0};
+				context.vals[0] = event.xmotion.x;
+				context.vals[1] = event.xmotion.y;
+				event_fire(EVENT_TYPE_MOUSE_MOVE, context, null);
+			} break;
+
 			case ClientMessage:
 				if ((Atom)event.xclient.data.l[0] == internal->wm_delete_window) {
 					return false;
 				}
 				break;
-			// TODO: Handle other events
 		}
 	}
 
