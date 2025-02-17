@@ -247,6 +247,16 @@ static Key x11_keycode_to_key(KeySym keysym) {
 	}
 }
 
+// Add this helper function to convert X11 button to our engine's mouse button
+static Mouse_Button x11_button_to_mouse_button(unsigned int button) {
+	switch (button) {
+		case Button1: return MOUSE_BUTTON_LEFT;
+		case Button2: return MOUSE_BUTTON_MIDDLE;
+		case Button3: return MOUSE_BUTTON_RIGHT;
+		default: return MOUSE_BUTTON_COUNT;  // Invalid button
+	}
+}
+
 b8 platform_pump_messages(Platform* platform) {
 	Platform_Internal* internal = (Platform_Internal*)platform->internal;
 
@@ -274,6 +284,44 @@ b8 platform_pump_messages(Platform* platform) {
 						event_fire(EVENT_TYPE_KEY_RELEASE, context, null);
 					}
 				}
+			} break;
+
+			case ButtonPress:
+			case ButtonRelease: {
+				// Handle mouse wheel
+				if (event.xbutton.button == Button4) {  // Mouse wheel up
+					Event_Context context = {0};
+					context.vals[0] = 1;  // Positive for scroll up
+					event_fire(EVENT_TYPE_MOUSE_WHEEL, context, null);
+					break;
+				}
+				if (event.xbutton.button == Button5) {  // Mouse wheel down
+					Event_Context context = {0};
+					context.vals[0] = -1;  // Negative for scroll down
+					event_fire(EVENT_TYPE_MOUSE_WHEEL, context, null);
+					break;
+				}
+
+				// Handle mouse buttons
+				Mouse_Button button = x11_button_to_mouse_button(event.xbutton.button);
+				if (button != MOUSE_BUTTON_COUNT) {
+					Event_Context context = {0};
+					context.vals[0] = button;
+					
+					if (event.type == ButtonPress) {
+						event_fire(EVENT_TYPE_MOUSE_BUTTON_PRESS, context, null);
+					} else {
+						event_fire(EVENT_TYPE_MOUSE_BUTTON_RELEASE, context, null);
+					}
+				}
+			} break;
+
+			case MotionNotify: {
+				// Handle mouse movement
+				Event_Context context = {0};
+				context.vals[0] = event.xmotion.x;
+				context.vals[1] = event.xmotion.y;
+				event_fire(EVENT_TYPE_MOUSE_MOVE, context, null);
 			} break;
 
 			case ClientMessage:
