@@ -29,6 +29,7 @@ typedef enum Memory_Tag {
 	MEMORY_TAG_ENGINE,
 	MEMORY_TAG_RENDER,
 	MEMORY_TAG_EDITOR,
+	MEMORY_TAG_SHADER,
 	// Application
 	MEMORY_TAG_APP,
 	// Count
