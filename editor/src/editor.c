@@ -1,4 +1,5 @@
 #include <haunt.h>
+#include "graphics/shader.h"
 
 typedef struct Editor {
 	b8 should_quit;
@@ -16,6 +17,22 @@ App_Config app_config(void) {
 	return config;
 }
 
+static void test_shader_loading(void) {
+	Shader shader;
+	b8 result = shader_create_from_files(
+		&shader,
+		"engine/assets/shaders/basic.vert",
+		"engine/assets/shaders/basic.frag"
+	);
+
+	if (result) {
+		log_info("Shader loaded successfully!");
+		shader_destroy(&shader);
+	} else {
+		log_error("Failed to load shader!");
+	}
+}
+
 App_Result app_start(void** state, int argc, char** argv) {
 	log_info("Haunt editor started");
 
@@ -25,6 +42,9 @@ App_Result app_start(void** state, int argc, char** argv) {
 
 	// Register events
 	event_register(EVENT_TYPE_KEY_PRESS, editor, handle_key_press);
+
+	// Test shader loading
+	test_shader_loading();
 
 	return APP_RESULT_CONTINUE;
 }
